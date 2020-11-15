@@ -5,7 +5,7 @@ OBJECTS = vm.o models/model-base.o models/text-display.o ui/file.o ui/window.o v
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${OBJECTS} -o ${EXEC}
+	${CXX} ${OBJECTS} -o ${EXEC} -lncurses
 
 -include ${DEPENDS}
 
