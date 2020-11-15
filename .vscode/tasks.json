@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Make Program",
+            "type": "shell",
+            "command": "(cd ~/vm && make)",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Delete Files",
+            "type": "shell",
+            "command": "(cd ~/vm && make clean)"
+        }
+    ]
+}
