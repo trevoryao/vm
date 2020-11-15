@@ -9,12 +9,19 @@
 
 using namespace std;
 
-namespace vm {
+using namespace vm::controllers;
+using namespace vm::views;
+
+namespace vm::models {
 void ModelBase::addView(unique_ptr<ViewBase> v) {
     views.emplace_back(move(v));
 }
 
 void ModelBase::addController(unique_ptr<ControllerBase> c) {
     controllers.emplace_back(move(c));
+}
+
+void ModelBase::displayViews() {
+    for (auto &v : views) v->displayView();
 }
 }

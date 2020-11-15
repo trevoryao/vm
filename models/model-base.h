@@ -9,16 +9,17 @@
 
 using std::unique_ptr;
 
-namespace vm {
+namespace vm::models {
 class ModelBase {
 private:
-    std::vector<unique_ptr<ViewBase>> views;
-    std::vector<unique_ptr<ControllerBase>> controllers;
+    std::vector<unique_ptr<views::ViewBase>> views;
+    std::vector<unique_ptr<controllers::ControllerBase>> controllers;
 protected:
-    void addView(unique_ptr<ViewBase> v);
-    void addController(unique_ptr<ControllerBase> c);
+    void addView(unique_ptr<views::ViewBase> v);
+    void addController(unique_ptr<controllers::ControllerBase> c);
 public:
     virtual ~ModelBase() = default;
+    void displayViews();
 };
 }
 

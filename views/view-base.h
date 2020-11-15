@@ -1,12 +1,17 @@
 #ifndef __VIEW_BASE_H__
 #define __VIEW_BASE_H__
 
-namespace vm {
+#include <string>
+
+namespace vm::views {
 class ViewBase {
 public:
     virtual ~ViewBase() = default;
-    
-    virtual void update() = 0;
+    // TODO: update for each type of view, char, string, type
+    virtual void update(char c) = 0;
+    virtual void update(char c, int y, int x) = 0;
+    virtual void update(const std::string &s, int y, int x) = 0;
+    virtual void update(const std::string &s, int y, int x) = 0;
     virtual void displayView() = 0;
 };
 }
