@@ -12,9 +12,15 @@ using namespace std;
 
 namespace models {
 TextDisplay::TextDisplay(const string &fileName) {
-    fstream fs{fileName};
-    ui::File f{fs};
-    text = f.read();
+    if (fileName != "") {
+        fstream fs{fileName};
+        ui::File f{fs};
+        text = f.read();
+    }
+    
+    initscr();
+	raw();
+	noecho();
     
     addView(make_unique<views::TextView>(*this));
 }
@@ -24,7 +30,8 @@ const vector<string> &TextDisplay::getText() { return text; }
 void TextDisplay::run() {
     while (true) {
         displayViews();
-        break;
     }
 }
+
+TextDisplay::~TextDisplay() { endwin(); }
 }

@@ -7,7 +7,7 @@
 #include "model-base.h"
 
 namespace models {
-class TextDisplay : ModelBase {
+class TextDisplay final : ModelBase {
 private:
     std::vector<std::string> text;
 public:
@@ -16,6 +16,8 @@ public:
     const std::vector<std::string> &getText();
     
     void run();
+    
+    ~TextDisplay();
 };
 }
 

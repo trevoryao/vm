@@ -14,11 +14,9 @@ int main(int argc, char *argv[]) {
         return 2;
     }
     
-    initscr();
-	raw();
-	noecho();
+    
     models::TextDisplay textModel{argc == 2 ? argv[1] : ""};
     textModel.run();
-    endwin();
+    
     return 0;
 }
