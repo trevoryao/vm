@@ -14,7 +14,6 @@ int main(int argc, char *argv[]) {
         return 2;
     }
     
-    
     models::TextDisplay textModel{argc == 2 ? argv[1] : ""};
     textModel.run();
     

@@ -28,5 +28,6 @@ void TextView::displayView() {
     for (auto &s : instance.getText()) window.writeStr(s, y++, x);
     int max_y = getmaxy(window.get());
     while (y <= max_y) window.writeChar('~', y++, x);
+    window.refresh();
 }
 }

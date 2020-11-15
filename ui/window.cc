@@ -27,23 +27,21 @@ Window::operator bool() const { return window; }
 WINDOW *Window::get() const noexcept { return window; }
 
 void Window::writeChar(char c) { 
-    waddch(window, c); 
-    wrefresh(window);
+    waddch(window, c);
 }
 void Window::writeChar(char c, int y, int x) { 
     mvwaddch(window, y, x, c);
-    wrefresh(window);
 }
 
 void Window::writeStr(const std::string &s) { 
     waddstr(window, s.c_str());
-    wrefresh(window);
 }
 
 void Window::writeStr(const std::string &s, int y, int x) { 
     mvwaddstr(window, y, x, s.c_str());
-    wrefresh(window);
 }
+
+void Window::refresh() { wrefresh(window); }
 
 Window::~Window() {
     if (window) {

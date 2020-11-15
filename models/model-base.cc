@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 
+#include "../controllers/action.h"
 #include "../controllers/controller-base.h"
 #include "../views/view-base.h"
 
@@ -23,5 +24,9 @@ void ModelBase::addController(unique_ptr<ControllerBase> c) {
 
 void ModelBase::displayViews() {
     for (auto &v : views) v->displayView();
+}
+
+controllers::Action ModelBase::getAction() {
+    return v[0]->action();
 }
 }

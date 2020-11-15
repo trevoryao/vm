@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "../controllers/keyboard.h"
 #include "../ui/file.h"
 #include "../views/text-view.h"
 
@@ -23,13 +24,16 @@ TextDisplay::TextDisplay(const string &fileName) {
 	noecho();
     
     addView(make_unique<views::TextView>(*this));
+    addController(make_unique<controllers::Keyboard>());
 }
 
 const vector<string> &TextDisplay::getText() { return text; }
 
 void TextDisplay::run() {
+    displayViews();
+    
     while (true) {
-        displayViews();
+        
     }
 }
 

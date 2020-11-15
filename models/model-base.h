@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "../controllers/action.h"
 #include "../controllers/controller-base.h"
 #include "../views/view-base.h"
 
@@ -17,6 +18,7 @@ private:
 protected:
     void addView(unique_ptr<views::ViewBase> v);
     void addController(unique_ptr<controllers::ControllerBase> c);
+    controllers::Action getAction();
 public:
     virtual ~ModelBase() = default;
     void displayViews();
