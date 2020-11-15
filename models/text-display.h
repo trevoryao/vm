@@ -6,7 +6,7 @@
 
 #include "model-base.h"
 
-namespace vm::models {
+namespace models {
 class TextDisplay : ModelBase {
 private:
     std::vector<std::string> text;

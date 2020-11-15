@@ -6,10 +6,10 @@
 
 using namespace std;
 
-namespace vm::ui {
+namespace ui {
 File::File(fstream &f): f{f} { }
 
-vector<string> &File::read() {
+vector<string> File::read() {
     vector<string> tmpFile;
     string line;
     while (getline(f, line)) tmpFile.push_back(line);

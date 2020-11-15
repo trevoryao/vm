@@ -7,7 +7,7 @@
 #include "../ui/window.h"
 #include "view-base.h"
 
-namespace vm::views {
+namespace views {
 class TextView final : public ViewBase {
 private:
     ui::Window window;

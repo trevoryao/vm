@@ -4,11 +4,10 @@
 #include <ncurses.h>
 #include <string>
 
-namespace vm::ui {
+namespace ui {
 class Window {
 private:
     WINDOW *window;
-    static int instances;
 public:
     Window() noexcept;
     Window(int height, int width, int y, int x) noexcept;

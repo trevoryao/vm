@@ -1,7 +1,7 @@
 #ifndef __CONTROLLER_BASE_H__
 #define __CONTROLLER_BASE_H__
 
-namespace vm::controllers {
+namespace controllers {
 class ControllerBase {
 public:
     virtual ~ControllerBase() = default;

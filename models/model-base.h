@@ -9,7 +9,7 @@
 
 using std::unique_ptr;
 
-namespace vm::models {
+namespace models {
 class ModelBase {
 private:
     std::vector<unique_ptr<views::ViewBase>> views;

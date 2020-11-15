@@ -9,10 +9,10 @@
 
 using namespace std;
 
-using namespace vm::controllers;
-using namespace vm::views;
+using namespace controllers;
+using namespace views;
 
-namespace vm::models {
+namespace models {
 void ModelBase::addView(unique_ptr<ViewBase> v) {
     views.emplace_back(move(v));
 }

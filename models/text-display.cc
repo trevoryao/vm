@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace vm::models {
+namespace models {
 TextDisplay::TextDisplay(const string &fileName) {
     fstream fs{fileName};
     ui::File f{fs};
@@ -24,6 +24,7 @@ const vector<string> &TextDisplay::getText() { return text; }
 void TextDisplay::run() {
     while (true) {
         displayViews();
+        break;
     }
 }
 }

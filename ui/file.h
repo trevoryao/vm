@@ -5,14 +5,14 @@
 #include <string>
 #include <vector>
 
-namespace vm::ui {
+namespace ui {
 class File {
 private:
     std::fstream &f;
 public:
     explicit File(std::fstream &f);
 
-    std::vector<std::string> &read();
+    std::vector<std::string> read();
 
     void write(const std::vector<std::string> &tmpFile);
 };
