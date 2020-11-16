@@ -14,7 +14,7 @@ namespace models {
 class ModelBase {
 private:
     std::vector<unique_ptr<views::ViewBase>> views;
-    std::vector<unique_ptr<controllers::ControllerBase>> controllers;
+    unique_ptr<controllers::ControllerBase> controller;
 protected:
     void addView(unique_ptr<views::ViewBase> v);
     void addController(unique_ptr<controllers::ControllerBase> c);

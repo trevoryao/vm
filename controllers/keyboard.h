@@ -7,7 +7,7 @@
 #include "controller-base.h"
 
 namespace controllers {
-class Keyboard : public ControllerBase {
+class Keyboard final : public ControllerBase {
 private:
     std::map<char, Action> keyMap;
 public:

@@ -5,10 +5,12 @@
 #include <string>
 #include <vector>
 
+#include "../controllers/action.h"
 #include "../controllers/keyboard.h"
 #include "../ui/file.h"
 #include "../views/text-view.h"
 
+using namespace controllers;
 using namespace std;
 
 namespace models {
@@ -33,7 +35,11 @@ void TextDisplay::run() {
     displayViews();
     
     while (true) {
-        
+        Action action = getAction();
+        switch (action) {
+            case Action::QUIT: return;
+            default: continue;
+        }
     }
 }
 

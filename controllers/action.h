@@ -2,7 +2,7 @@
 #define __ACTION_H__
 
 namespace controllers {
-enum Action { QUIT }
+enum Action { INVALID, QUIT };
 }
 
-$endif
+#endif

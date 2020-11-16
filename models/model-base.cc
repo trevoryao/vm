@@ -19,7 +19,7 @@ void ModelBase::addView(unique_ptr<ViewBase> v) {
 }
 
 void ModelBase::addController(unique_ptr<ControllerBase> c) {
-    controllers.emplace_back(move(c));
+    controller = move(c);
 }
 
 void ModelBase::displayViews() {
@@ -27,6 +27,6 @@ void ModelBase::displayViews() {
 }
 
 controllers::Action ModelBase::getAction() {
-    return v[0]->action();
+    return controller->action();
 }
 }
