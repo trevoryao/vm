@@ -7,11 +7,12 @@
 #include <vector>
 #include <utility>
 
-#include "../controllers/action.h"
+#include "../actions/action.h"
 #include "../controllers/input.h"
 #include "../ui/file.h"
 #include "../views/text-view.h"
 
+using namespace actions;
 using namespace controllers;
 using namespace std;
 
@@ -60,13 +61,15 @@ const vector<string> &TextDisplay::getText() { return text; }
 
 void TextDisplay::run() {
     displayViews();
-    //SignalHandler handler;
     
     while (true) {
-        Action action = getAction();
-        switch (action) {
-            case Action::QUIT: return;
-            case Action::RESIZE: resizeViews(); break;
+        auto action = getAction();
+        switch (action.getType()) {
+            case ActionType::RESIZE: resizeViews(); break;
+            case ActionType::MVT: this->move(dynamic_cast<Movement *>(action.get())->getMvt());
+            case ActionType::CMDS: { //execCmd(dynamic_cast<Command *>(action.get())->getCmd()) 
+                if (dynamic_cast<Command *>(action.get())->getCmd() == QUIT) return;
+            }
             default: break;
         }
     }
@@ -99,6 +102,10 @@ void TextDisplay::resizeText(int maxX) {
     
     text = newText;
     displayViews();
+}
+
+void TextDisplay::move(MovementType movement) {
+    
 }
 
 TextDisplay::~TextDisplay() { endwin(); }

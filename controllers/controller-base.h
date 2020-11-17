@@ -1,13 +1,15 @@
 #ifndef __CONTROLLER_BASE_H__
 #define __CONTROLLER_BASE_H__
 
-#include "action.h"
+#include <memory>
+
+class actions::Action;
 
 namespace controllers {
 class ControllerBase {
 public:
     virtual ~ControllerBase() = default;
-    virtual Action action() = 0;
+    virtual std::unique_ptr<actions::Action> action() = 0;
 };
 }
 

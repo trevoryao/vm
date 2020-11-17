@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "model-base.h"
+#include "../actions/action-enums.h"
 
 namespace models {
 class TextDisplay final : ModelBase {
@@ -18,6 +19,8 @@ public:
     void run();
     
     void resizeText(int maxX);
+    
+    void move(actions::MovementType movement);
     
     ~TextDisplay();
 };
