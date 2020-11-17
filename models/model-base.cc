@@ -26,6 +26,10 @@ void ModelBase::displayViews() {
     for (auto &v : views) v->displayView();
 }
 
+void ModelBase::resizeViews() {
+    for (auto &v : views) v->resizeView();
+}
+
 controllers::Action ModelBase::getAction() {
     return controller->action();
 }

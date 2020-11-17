@@ -12,7 +12,7 @@ private:
 public:
     explicit File(std::fstream &f);
 
-    std::vector<std::string> read();
+    std::string read();
 
     void write(const std::vector<std::string> &tmpFile);
 };

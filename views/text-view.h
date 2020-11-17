@@ -21,6 +21,10 @@ public:
     void update(const std::string &s, int y, int x);
     
     void displayView() override;
+    
+    void resizeView() override;
+    
+    int getMaxWidth();
 };
 }
 

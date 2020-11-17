@@ -17,6 +17,8 @@ public:
     
     void run();
     
+    void resizeText(int maxX);
+    
     ~TextDisplay();
 };
 }

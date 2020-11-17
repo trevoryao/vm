@@ -1,6 +1,7 @@
 #include "file.h"
 
 #include <fstream>
+#include <streambuf>
 #include <string>
 #include <vector>
 
@@ -9,11 +10,13 @@ using namespace std;
 namespace ui {
 File::File(fstream &f): f{f} { }
 
-vector<string> File::read() {
-    vector<string> tmpFile;
-    string line;
-    while (getline(f, line)) tmpFile.push_back(line);
-    return tmpFile;
+string File::read() {
+    string file;
+    f.seekg(0, ios::end);   
+    file.resize(f.tellg());
+    f.seekg(0, ios::beg);
+    f.read(&file[0], file.size());
+    return file;
 }
 
 void File::write(const vector<string> &tmpFile) {

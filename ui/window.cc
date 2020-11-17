@@ -10,9 +10,10 @@ namespace ui {
 Window::Window() noexcept : window{nullptr} { }
 
 Window::Window(int height, int width, int x, int y) noexcept {
-    //window = newwin(height, width, x, y);
-    window = stdscr;
+    wrefresh(stdscr);
+    window = newwin(height, width, x, y);
     keypad(window, TRUE);
+    scrollok(window, false);
 }
 
 Window::Window(Window &&other): window{other.window} { other.window = nullptr; }
@@ -42,6 +43,19 @@ void Window::writeStr(const std::string &s, int y, int x) {
 }
 
 void Window::refresh() { wrefresh(window); }
+
+void Window::move(int y, int x) { wmove(window, y, x); }
+
+pair<int, int> Window::getCursor() {
+    int y, x;
+    getyx(window, y, x);
+    return make_pair(y, x);
+}
+
+void Window::resize(int y, int x) { 
+    wresize(window, y, x);
+    wclear(window);
+}
 
 Window::~Window() {
     if (window) {

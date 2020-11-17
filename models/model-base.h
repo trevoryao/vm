@@ -22,6 +22,7 @@ protected:
 public:
     virtual ~ModelBase() = default;
     void displayViews();
+    void resizeViews();
 };
 }
 

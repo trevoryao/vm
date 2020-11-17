@@ -15,7 +15,7 @@ namespace views {
 TextView::TextView(TextDisplay &instance): window{}, instance{instance} {
     int row, col;
     getmaxyx(stdscr, row, col);
-    window = ui::Window{row - 1, col, 0, 0};
+    window = ui::Window{row - 2, col - 1, 0, 0};
 }
 
 void TextView::update(char c) { window.writeChar(c); }
@@ -28,6 +28,16 @@ void TextView::displayView() {
     for (auto &s : instance.getText()) window.writeStr(s, y++, x);
     int max_y = getmaxy(window.get());
     while (y <= max_y) window.writeChar('~', y++, x);
+    window.move(0, 0);
     window.refresh();
 }
+
+void TextView::resizeView() {
+    int y, x;
+    getmaxyx(stdscr, y, x);
+    window.resize(y - 2, x - 1);
+    instance.resizeText(x);
+}
+
+int TextView::getMaxWidth() { return getmaxx(window.get()); }
 }

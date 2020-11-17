@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 #include <string>
+#include <utility>
 
 namespace ui {
 class Window {
@@ -21,13 +22,21 @@ public:
     
     WINDOW *get() const noexcept;
     
+    // void clear();
+    
+    // TODO: keywords (colour)
     void writeChar(char c);
     void writeChar(char c, int y, int x);
     void writeStr(const std::string &s);
     void writeStr(const std::string &s, int y, int x);
     
     void refresh();
-    // TODO: keywords (colour)
+    
+    void move(int y, int x);
+    
+    std::pair<int, int> getCursor();
+    
+    void resize(int y, int x);
     
     ~Window();
 };

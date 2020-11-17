@@ -1,5 +1,5 @@
-#ifndef __KEYBOARD_H__
-#define __KEYBOARD_H__
+#ifndef __INPUT_H__
+#define __INPUT_H__
 
 #include <map>
 
@@ -7,7 +7,7 @@
 #include "controller-base.h"
 
 namespace controllers {
-class Keyboard final : public ControllerBase {
+class Input final : public ControllerBase {
 private:
     std::map<char, Action> keyMap;
 public:

@@ -12,7 +12,10 @@ public:
     virtual void update(char c, int y, int x) = 0;
     virtual void update(const std::string &s) = 0;
     virtual void update(const std::string &s, int y, int x) = 0;
+    
     virtual void displayView() = 0;
+    
+    virtual void resizeView() = 0;
 };
 }
 
