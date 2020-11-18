@@ -4,7 +4,7 @@
 #include <vector>
 #include <utility>
 
-#include "../controllers/action.h"
+#include "../actions/action.h"
 #include "../controllers/controller-base.h"
 #include "../views/view-base.h"
 
@@ -19,7 +19,11 @@ void ModelBase::addView(unique_ptr<ViewBase> v) {
 }
 
 void ModelBase::addController(unique_ptr<ControllerBase> c) {
-    controller = move(c);
+    controllers.emplace_back(move(c));
+}
+
+unique_ptr<actions::Action> ModelBase::getAction(int i) {
+    return controllers[i]->action();
 }
 
 void ModelBase::displayViews() {
@@ -30,7 +34,7 @@ void ModelBase::resizeViews() {
     for (auto &v : views) v->resizeView();
 }
 
-controllers::Action ModelBase::getAction() {
-    return controller->action();
+void ModelBase::moveCursor(int y, int x) {
+    for (auto &v : views) v->moveCursor(y, x);
 }
 }

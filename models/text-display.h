@@ -11,18 +11,23 @@ namespace models {
 class TextDisplay final : ModelBase {
 private:
     std::vector<std::string> text;
+    bool insertMode; // 0 is cmd, 1 is insert
+    int topLine, botLine, curY, curX, maxY, maxX;
 public:
     explicit TextDisplay(const std::string &fileName);
     
     const std::vector<std::string> &getText();
     
+    void setMaxY(int y);
+    void setMaxX(int x);
+    
     void run();
     
     void resizeText(int maxX);
-    
-    void move(actions::MovementType movement);
-    
+
     ~TextDisplay();
+private:
+    void move(actions::MovementType movement);
 };
 }
 

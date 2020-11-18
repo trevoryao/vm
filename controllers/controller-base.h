@@ -3,7 +3,7 @@
 
 #include <memory>
 
-class actions::Action;
+#include "../actions/action.h"
 
 namespace controllers {
 class ControllerBase {

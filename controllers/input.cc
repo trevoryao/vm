@@ -1,5 +1,6 @@
 #include "input.h"
 
+#include <memory>
 #include <ncurses.h>
 #include <string>
 
@@ -8,22 +9,24 @@
 #include "../actions/command.h"
 #include "../actions/movement.h"
 
+using namespace actions;
 using namespace std;
 
 namespace controllers {
 Input::Input() {
     typeMap = {
-        {KEY_RESIZE, RESIZE},
-        {'h', MVT},
-        {'l', MVT},
-        {'k', MVT},
-        {'j', MVT},
-        {'b', MVT},
-        {'w', MVT},
-        {'0', MVT},
-        {'^', MVT},
-        {'$', MVT},
-        {':', CMDS},
+        {ERR, ActionType::NONE},
+        {KEY_RESIZE, ActionType::RESIZE},
+        {'h', ActionType::MVT},
+        {'l', ActionType::MVT},
+        {'k', ActionType::MVT},
+        {'j', ActionType::MVT},
+        {'b', ActionType::MVT},
+        {'w', ActionType::MVT},
+        {'0', ActionType::MVT},
+        {'^', ActionType::MVT},
+        {'$', ActionType::MVT},
+        {'q', ActionType::CMDS},
     };
     
     mvtMap = {
@@ -43,13 +46,29 @@ Input::Input() {
     };
 }
 
-Action Input::action() {
+unique_ptr<Action> Input::action() {
     int c = getch();
-    
+
+    if (typeMap.count(c) == 0) return make_unique<Action>();
+
     switch (typeMap.at(c)) {
         case RESIZE: return make_unique<Action>(RESIZE);
         case MVT: return make_unique<Movement>(mvtMap.at(c));
-        case CMDS: return make_unique<Command>(cmdMap.at(c));
+        case CMDS: {
+            return make_unique<Command>(QUIT);
+            /*
+            string cmd = ":";
+            int ch; // switch to buffer?
+            nodelay(stdscr, false);
+            while (ch = getch()) { // should rewrite this system to display on screen
+                cmd.push_back(ch);
+                if (cmdMap.count(ch) == 1) {
+                    nodelay(stdscr, true);
+                    return make_unique<Command>(cmdMap.at(cmd));
+                }
+            }*/
+        }
+        default: return make_unique<Action>();
     }
 }
 }

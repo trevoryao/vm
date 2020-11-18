@@ -15,7 +15,7 @@ namespace views {
 TextView::TextView(TextDisplay &instance): window{}, instance{instance} {
     int row, col;
     getmaxyx(stdscr, row, col);
-    window = ui::Window{row - 2, col - 1, 0, 0};
+    window = ui::Window{row - 1, col, 0, 0};
 }
 
 void TextView::update(char c) { window.writeChar(c); }
@@ -25,8 +25,11 @@ void TextView::update(const std::string &s, int y, int x) { window.writeStr(s, y
 
 void TextView::displayView() {
     int y = 0, x = 0;
-    for (auto &s : instance.getText()) window.writeStr(s, y++, x);
-    int max_y = getmaxy(window.get());
+    int max_y = getMaxHeight();
+    for (auto &s : instance.getText()) {
+        if (y > max_y) break;
+        window.writeStr(s, y++, x);
+    }
     while (y <= max_y) window.writeChar('~', y++, x);
     window.move(0, 0);
     window.refresh();
@@ -35,9 +38,17 @@ void TextView::displayView() {
 void TextView::resizeView() {
     int y, x;
     getmaxyx(stdscr, y, x);
-    window.resize(y - 2, x - 1);
+    window.resize(y - 1, x);
     instance.resizeText(x);
+    instance.setMaxY(y - 1);
+    instance.setMaxX(x);
 }
 
+int TextView::getMaxHeight() { return getmaxy(window.get()); }
 int TextView::getMaxWidth() { return getmaxx(window.get()); }
+
+void TextView::moveCursor(int y, int x) { 
+    window.move(y, x); 
+    window.refresh(); 
+}
 }

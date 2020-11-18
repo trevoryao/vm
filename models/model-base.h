@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "../controllers/action.h"
+#include "../actions/action.h"
 #include "../controllers/controller-base.h"
 #include "../views/view-base.h"
 
@@ -14,15 +14,16 @@ namespace models {
 class ModelBase {
 private:
     std::vector<unique_ptr<views::ViewBase>> views;
-    unique_ptr<controllers::ControllerBase> controller;
+    std::vector<unique_ptr<controllers::ControllerBase>> controllers;
 protected:
     void addView(unique_ptr<views::ViewBase> v);
     void addController(unique_ptr<controllers::ControllerBase> c);
-    controllers::Action getAction();
+    unique_ptr<actions::Action> getAction(int i);
 public:
     virtual ~ModelBase() = default;
     void displayViews();
     void resizeViews();
+    void moveCursor(int y, int x);
 };
 }
 

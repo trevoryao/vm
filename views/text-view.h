@@ -15,16 +15,19 @@ private:
 public:
     TextView(models::TextDisplay &instance);
     
-    void update(char c);
-    void update(char c, int y, int x);
-    void update(const std::string &s);
-    void update(const std::string &s, int y, int x);
+    void update(char c) override;
+    void update(char c, int y, int x) override;
+    void update(const std::string &s) override;
+    void update(const std::string &s, int y, int x) override;
     
     void displayView() override;
     
     void resizeView() override;
     
-    int getMaxWidth();
+    int getMaxHeight() override;
+    int getMaxWidth() override;
+    
+    void moveCursor(int y, int x) override;
 };
 }
 

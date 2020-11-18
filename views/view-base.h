@@ -16,6 +16,11 @@ public:
     virtual void displayView() = 0;
     
     virtual void resizeView() = 0;
+    
+    virtual int getMaxHeight() = 0;
+    virtual int getMaxWidth() = 0;
+
+    virtual void moveCursor(int y, int x) = 0;
 };
 }
 
