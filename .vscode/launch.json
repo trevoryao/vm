@@ -20,7 +20,7 @@
                 }
             ],
             "preLaunchTask": "Make Program",
-            "postDebugTask": "Delete Files",
+            // "postDebugTask": "Delete Files",
         }
     ]
 }
