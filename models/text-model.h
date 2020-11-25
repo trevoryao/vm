@@ -6,17 +6,21 @@
 
 #include "model-base.h"
 #include "../actions/action-enums.h"
+#include "text.h"
 
 namespace models {
-class TextDisplay final : ModelBase {
+class TextModel final : ModelBase {
 private:
-    std::vector<std::string> text;
+    std::string fileName;
+    Text text;
     bool insertMode; // 0 is cmd, 1 is insert
     int topLine, botLine, curY, curX, maxY, maxX;
 public:
-    explicit TextDisplay(const std::string &fileName);
+    explicit TextModel(const std::string &fileName);
     
+    const std::string &getName();
     const std::vector<std::string> &getText();
+    void getCursor(int &y, int &x);
     
     void setMaxY(int y);
     void setMaxX(int x);
@@ -25,7 +29,7 @@ public:
     
     void resizeText(int maxX);
 
-    ~TextDisplay();
+    ~TextModel();
 private:
     void move(actions::MovementType movement);
 };

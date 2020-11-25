@@ -32,11 +32,13 @@ public:
     
     void refresh();
     
+    void clear();
+    
     void move(int y, int x);
     
     std::pair<int, int> getCursor();
     
-    void resize(int y, int x);
+    void resize(int rows, int cols, int y, int x);
     
     ~Window();
 };

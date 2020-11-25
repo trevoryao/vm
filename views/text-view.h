@@ -3,21 +3,17 @@
 
 #include <string>
 
-#include "../models/text-display.h"
-#include "../ui/window.h"
+#include "../models/text-model.h"
 #include "view-base.h"
 
 namespace views {
 class TextView final : public ViewBase {
 private:
-    ui::Window window;
-    models::TextDisplay &instance;
+    models::TextModel &instance;
 public:
-    TextView(models::TextDisplay &instance);
+    TextView(models::TextModel &instance);
     
-    void update(char c) override;
     void update(char c, int y, int x) override;
-    void update(const std::string &s) override;
     void update(const std::string &s, int y, int x) override;
     
     void displayView() override;

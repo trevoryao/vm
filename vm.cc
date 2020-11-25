@@ -4,7 +4,7 @@
 
 #include <ncurses.h>
 
-#include "models/text-display.h"
+#include "models/text-model.h"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
         return 2;
     }
     
-    models::TextDisplay textModel{argc == 2 ? argv[1] : ""};
+    models::TextModel textModel{argc == 2 ? argv[1] : ""};
     textModel.run();
     
     return 0;

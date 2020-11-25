@@ -3,30 +3,23 @@
 #include <ncurses.h>
 #include <string>
 
-#include "../models/text-display.h"
+#include "../models/text-model.h"
 #include "../ui/window.h"
 #include "view-base.h"
-
-#include <iostream>
 
 using namespace models;
 
 namespace views {
-TextView::TextView(TextDisplay &instance): window{}, instance{instance} {
-    int row, col;
-    getmaxyx(stdscr, row, col);
-    window = ui::Window{row - 1, col, 0, 0};
-}
+TextView::TextView(TextModel &instance) : ViewBase{getmaxy(stdscr) - 1, getmaxx(stdscr), 0, 0}, 
+    instance{instance} { }
 
-void TextView::update(char c) { window.writeChar(c); }
 void TextView::update(char c, int y, int x) { window.writeChar(c, y, x); }
-void TextView::update(const std::string &s) { window.writeStr(s); }
 void TextView::update(const std::string &s, int y, int x) { window.writeStr(s, y, x); }
 
 void TextView::displayView() {
     int y = 0, x = 0;
     int max_y = getMaxHeight();
-    for (auto &s : instance.getText()) {
+    for (auto &s : instance.getText()) { // change to reg loop starting at topLine to botLine
         if (y > max_y) break;
         window.writeStr(s, y++, x);
     }
@@ -38,8 +31,9 @@ void TextView::displayView() {
 void TextView::resizeView() {
     int y, x;
     getmaxyx(stdscr, y, x);
-    window.resize(y - 1, x);
+    window.resize(y - 1, x, 0, 0);
     instance.resizeText(x);
+    displayView();
     instance.setMaxY(y - 1);
     instance.setMaxX(x);
 }

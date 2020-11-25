@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace ui {
+namespace models {
 File::File(fstream &f): f{f} { }
 
 string File::read() {

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace ui {
+namespace models {
 class File {
 private:
     std::fstream &f;

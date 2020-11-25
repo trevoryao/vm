@@ -44,6 +44,8 @@ void Window::writeStr(const std::string &s, int y, int x) {
 
 void Window::refresh() { wrefresh(window); }
 
+void Window::clear() { wclear(window); }
+
 void Window::move(int y, int x) { wmove(window, y, x); }
 
 pair<int, int> Window::getCursor() {
@@ -51,10 +53,17 @@ pair<int, int> Window::getCursor() {
     getyx(window, y, x);
     return make_pair(y, x);
 }
-
-void Window::resize(int y, int x) { 
-    wresize(window, y, x);
-    wclear(window);
+// may have to rewrite to delete and make new
+void Window::resize(int rows, int cols, int y, int x) { 
+    // wresize(window, y, x);
+    // wclear(window);
+    if (window) {
+        delwin(window);
+    }
+    wrefresh(stdscr);
+    window = newwin(rows, cols, x, y);
+    keypad(window, TRUE);
+    scrollok(window, false);
 }
 
 Window::~Window() {
