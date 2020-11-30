@@ -4,7 +4,7 @@
 #include <vector>
 #include <utility>
 
-#include "../actions/action.h"
+#include "../actions/i-action.h"
 #include "../controllers/controller-base.h"
 #include "../views/view-base.h"
 
@@ -23,7 +23,7 @@ void ModelBase::addController(unique_ptr<ControllerBase> c) {
 }
 
 unique_ptr<actions::Action> ModelBase::getAction(int i) {
-    return controllers[i]->action();
+    return controllers[i]->getAction();
 }
 
 void ModelBase::displayViews() {

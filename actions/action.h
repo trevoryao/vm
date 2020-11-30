@@ -1,19 +1,16 @@
-
-#ifndef __ACTION_H__
-#define __ACTION_H__
-
-#include "action-enums.h"
+#ifndef __ACTION_BASE_H__
+#define __ACTION_BASE_H__
 
 namespace actions {
 class Action {
 private:
-    ActionType type;
+    int mult;
 public:
-    Action(ActionType type = ActionType::NONE);
-    
-    ActionType getType();
+    Action(int n);
     
     virtual ~Action() = default;
+    
+    int getMult();
 };
 }
 

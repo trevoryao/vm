@@ -7,7 +7,7 @@
 #include <vector>
 #include <utility>
 
-#include "../actions/action.h"
+#include "../actions/i-action.h"
 #include "../actions/command.h"
 #include "../actions/movement.h"
 #include "../controllers/input.h"

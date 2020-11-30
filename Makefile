@@ -1,4 +1,4 @@
-CXX = g++-5
+CXX = g++
 CXXFLAGS = -std=c++14 -Wall -MMD -g
 EXEC = vm
 OBJECTS = vm.o controllers/input.o models/model-base.o models/text-model.o models/file.o \

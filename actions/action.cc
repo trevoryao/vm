@@ -1,7 +1,9 @@
 #include "action.h"
 
-namespace actions {
-Action::Action(ActionType type): type{type} { }
+#include "bad-entry.h"
 
-ActionType Action::getType() { return type; }
+namespace actions {
+Action::Action(int n) : mult{n} { }
+
+void Action::getAction(int c) { throw BadEntry{c}; }
 }

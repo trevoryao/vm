@@ -1,17 +1,25 @@
 #ifndef __MOVEMENT_H__
 #define __MOVEMENT_H__
 
-#include "action.h"
-#include "action-enums.h"
+#include "i-action.h"
 
 namespace actions {
-class Movement final : public Action {
-private:
-    MovementType mvt;
+enum class MvtType {
+    // NONE, // null
+    LEFT, // h
+    RIGHT, // l
+    UP, // k
+    DOWN, // j
+    WORD_LEFT, // b
+    WORD_RIGHT, // w
+    BEG_LINE, // 0
+    BEG_CH, // ^
+    END_CH, // $
+};
+
+class Movement final : public IAction<MvtType> {
 public:
-    Movement(MovementType mvt);
-    
-    MovementType getMvt();
+    Movement(MvtType value, int n = 1);
 };
 }
 
