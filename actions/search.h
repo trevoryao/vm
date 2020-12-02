@@ -16,7 +16,7 @@ class Search final : public IAction<SearchType> {
 private:
     char search;
 public:
-    Search(SearchType value, int n = 1, char search = EOF);
+    Search(SearchType value, int n = 1, char search = -1);
     
     char getSearch();
 };

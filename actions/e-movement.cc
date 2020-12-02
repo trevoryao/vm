@@ -1,6 +1,6 @@
 #include "e-movement.h"
 
-#include "actions.h"
+#include "action.h"
 
 namespace actions {
 EMovement::EMovement(EMvtType value, int mult, int lineNum) : 

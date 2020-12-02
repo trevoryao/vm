@@ -11,7 +11,7 @@ using namespace models;
 
 // attach cursor coordinates to corner!
 namespace views {
-StatusView::StatusView(TextModel &instance): ViewBase{1, getmaxx(stdscr),
+StatusView::StatusView(TextModel &instance) : ViewBase{1, getmaxx(stdscr),
     getmaxy(stdscr) - 1, 0}, hasName{false}, instance{instance} { }
 
 void StatusView::update(char c, int y, int x) { }

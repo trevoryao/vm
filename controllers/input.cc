@@ -169,7 +169,7 @@ unique_ptr<Action> Input::parseAction(int c, int n) { // TODO: multiplier
             case ActionType::TEXT_EDIT: return make_unique<TextEdit>(textEditMap.at(c), n);
             // get search later
             case ActionType::SEARCH: return make_unique<Search>(searchMap.at(c), n);
-            default: break; // should never happen
+            default: return unique_ptr<Action>{};
         }
     } catch (out_of_range &e) {
         string ctrl = unctrl(c);
@@ -253,9 +253,15 @@ unique_ptr<Action> Input::action(Incomplete *a) {
             }
             try {
                 switch (a->getFragment()[0]) {
-                    case 'c': return make_unique<Insert>(InsType::CH_MVT, a->getMult(), mvtMap.at(c));
-                    case 'd': return make_unique<TextEdit>(TextEditType::DEL_MVT, a->getMult(), mvtMap.at(c));
-                    case 'y': return make_unique<TextEdit>(TextEditType::YANK_MVT, a->getMult(), mvtMap.at(c));
+                    case 'c': 
+                        return make_unique<Insert>(InsType::CH_MVT, 1, 
+                            make_unique<Movement>(mvtMap.at(c), a->getMult()));
+                    case 'd': 
+                        return make_unique<TextEdit>(TextEditType::DEL_MVT, 1,
+                            make_unique<Movement>(mvtMap.at(c), a->getMult()));
+                    case 'y': 
+                        return make_unique<TextEdit>(TextEditType::YANK_MVT, 1,
+                            make_unique<Movement>(mvtMap.at(c), a->getMult()));
                     default: break;
                 }
             } catch (out_of_range &e) {
@@ -278,4 +284,12 @@ unique_ptr<Action> Input::action(ESearch *a) {
         
     }
 }*/
+
+unique_ptr<Action> Input::action(ESearch *a) {
+    return unique_ptr<ESearch>();
+}
+
+unique_ptr<Action> Input::action(Search *a) {
+    return unique_ptr<Search>();
+}
 }

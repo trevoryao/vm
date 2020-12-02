@@ -7,7 +7,7 @@
 #include "view-base.h"
 
 namespace views {
-class StatusView : public ViewBase {
+class StatusView final : public ViewBase {
 private:
     bool hasName;
     models::TextModel &instance;

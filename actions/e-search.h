@@ -13,7 +13,7 @@ private:
     bool canExec;
     std::string search;
 public:
-    ESearch(ESearchType value, int n, const std::string &search = "");
+    ESearch(ESearchType value, int n = 1, const std::string &search = "");
     
     const std::string &getSearch();
 };

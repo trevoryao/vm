@@ -6,7 +6,7 @@
 namespace actions {
 enum class ReplaceType { RPL_UNDER, RPL };
 
-class Replace final : IAction<ReplaceType> {
+class Replace final : public IAction<ReplaceType> {
 public:
     Replace(ReplaceType value, int n = 1);
 };
