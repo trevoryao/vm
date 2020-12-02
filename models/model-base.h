@@ -4,7 +4,11 @@
 #include <memory>
 #include <vector>
 
-#include "../actions/i-action.h"
+#include "mode-type.h"
+#include "../actions/action.h"
+#include "../actions/e-search.h"
+#include "../actions/incomplete.h"
+#include "../actions/search.h"
 #include "../controllers/controller-base.h"
 #include "../views/view-base.h"
 
@@ -14,11 +18,16 @@ namespace models {
 class ModelBase {
 private:
     std::vector<unique_ptr<views::ViewBase>> views;
-    std::vector<unique_ptr<controllers::ControllerBase>> controllers;
+    unique_ptr<controllers::ControllerBase> inputController;
+    unique_ptr<controllers::ControllerBase> keyController;
 protected:
     void addView(unique_ptr<views::ViewBase> v);
-    void addController(unique_ptr<controllers::ControllerBase> c);
-    unique_ptr<actions::Action> getAction(int i);
+    void addInputController(unique_ptr<controllers::ControllerBase> c);
+    void addKeyController(unique_ptr<controllers::ControllerBase> c);
+    unique_ptr<actions::Action> getAction(ModeType m);
+    unique_ptr<actions::Action> getAction(actions::Incomplete *a);
+    unique_ptr<actions::Action> getAction(actions::ESearch *a);
+    unique_ptr<actions::Action> getAction(actions::Search *a);
 public:
     virtual ~ModelBase() = default;
     void displayViews();

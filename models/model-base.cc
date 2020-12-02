@@ -4,13 +4,14 @@
 #include <vector>
 #include <utility>
 
+#include "mode-type.h"
 #include "../actions/i-action.h"
 #include "../controllers/controller-base.h"
 #include "../views/view-base.h"
 
-using namespace std;
-
+using namespace actions;
 using namespace controllers;
+using namespace std;
 using namespace views;
 
 namespace models {
@@ -18,12 +19,28 @@ void ModelBase::addView(unique_ptr<ViewBase> v) {
     views.emplace_back(move(v));
 }
 
-void ModelBase::addController(unique_ptr<ControllerBase> c) {
-    controllers.emplace_back(move(c));
+void ModelBase::addInputController(unique_ptr<ControllerBase> c) {
+    inputController = move(c);
 }
 
-unique_ptr<actions::Action> ModelBase::getAction(int i) {
-    return controllers[i]->getAction();
+void ModelBase::addKeyController(unique_ptr<ControllerBase> c) {
+    keyController = move(c);
+}
+
+unique_ptr<Action> ModelBase::getAction(ModeType m) {
+    return m == ModeType::CMD ? inputController->getAction() : keyController->getAction();
+}
+
+unique_ptr<Action> ModelBase::getAction(Incomplete *a) {
+    return inputController->getAction(a);
+}
+
+unique_ptr<Action> ModelBase::getAction(ESearch *a) {
+    return inputController->getAction(a);
+}
+
+unique_ptr<Action> ModelBase::getAction(Search *a) {
+    return inputController->getAction(a);
 }
 
 void ModelBase::displayViews() {

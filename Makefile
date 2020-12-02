@@ -1,17 +1,28 @@
 CXX = g++
-CXXFLAGS = -std=c++14 -Wall -MMD -g
+CXXFLAGS = -std=c++14 -Wall -MMD
 EXEC = vm
-OBJECTS = vm.o controllers/input.o models/model-base.o models/text-model.o models/file.o \
-	ui/window.o views/text-view.o actions/action.o actions/command.o actions/movement.o \
-	views/status-view.o views/view-base.o models/text.o
+SRCDIR = .
+OBJDIR = objs
+BINDIR = bin
+SOURCES := $(wildcard $(SRCDIR)/*.cc)
+OBJECTS := $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(SOURCES))
 DEPENDS = ${OBJECTS:.o=.d}
 
-${EXEC}: ${OBJECTS}
-	${CXX} ${OBJECTS} -o ${EXEC} -lncurses
+${BINDIR}/${EXEC}: ${OBJECTS} | ${BINDIR}
+	${CXX} ${OBJECTS} -o ${BINDIR}/${EXEC}
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cc | ${OBJDIR}
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+${BINDIR}:
+	mkdir $@
+
+${OBJDIR}:
+	mkdir $@
 
 -include ${DEPENDS}
 
 .PHONY: clean
 
 clean:
-	rm ${OBJECTS} ${DEPENDS} ${EXEC}
+	rm -r ${OBJDIR} ${BINDIR} 

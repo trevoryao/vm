@@ -3,7 +3,9 @@
 #include "bad-entry.h"
 
 namespace actions {
-Action::Action(int n) : mult{n} { }
+Action::Action(ActionType type, int n) : type{type}, mult{n} { }
 
-void Action::getAction(int c) { throw BadEntry{c}; }
+ActionType Action::getType() { return type; }
+
+int Action::getMult() { return mult; }
 }

@@ -37,3 +37,7 @@
 # other
 *.mdj
 *.pdf
+
+# binaries
+bin
+objs

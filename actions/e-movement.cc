@@ -1,8 +1,10 @@
 #include "e-movement.h"
 
+#include "actions.h"
+
 namespace actions {
-EMovement::EMovement(EMvtType value, int mult, int lineNum) : IAction{value, mult}, 
-    lineNum{lineNum} { }
+EMovement::EMovement(EMvtType value, int mult, int lineNum) : 
+    IAction{ActionType::E_MVT, value, mult}, lineNum{lineNum} { }
 
 int EMovement::getLineNum() { return lineNum; }
 }

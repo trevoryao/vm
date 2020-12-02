@@ -265,10 +265,17 @@ unique_ptr<Action> Input::action(Incomplete *a) {
     }
     return make_unique<Global>(GlobalType::NONE);
 }
-
+/*
 unique_ptr<Action> Input::action(ESearch *a) {
     int c = getch();
     
     if (c == ERR) return make_unique<Global>(GlobalType::NONE);
-}
+    if (c == ESC)
+    // usual text editing stuffs
+    // if esc, clear
+    // if empty, clear
+    if (32 <= c && c <= 126) {
+        
+    }
+}*/
 }
