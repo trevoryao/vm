@@ -3,6 +3,10 @@
 
 #include "i-action.h"
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class ScrollType {
     PG_FWD,
@@ -15,6 +19,8 @@ class Scroll final : public IAction<ScrollType> {
 public:
     Scroll(ScrollType value);
     Scroll(ScrollType value, int n);
+    
+    void execAction(models::TextModel &t) { }
 };
 }
 

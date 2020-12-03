@@ -6,6 +6,10 @@
 
 #include "i-action.h"
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class EMvtType { TOP, BOTTOM, LINE_NUM };
 
@@ -16,6 +20,8 @@ public:
     EMovement(EMvtType value, int mult, int lineNum = 0);
     
     int getLineNum();
+    
+    void execAction(models::TextModel &t) { }
 };
 }
 

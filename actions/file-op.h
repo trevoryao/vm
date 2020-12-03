@@ -3,6 +3,10 @@
 
 #include "i-action.h"
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class FileOpType {
     WRITE,
@@ -15,6 +19,8 @@ enum class FileOpType {
 class FileOp final : public IAction<FileOpType> {
 public:
     FileOp(FileOpType value);
+    
+    void execAction(models::TextModel &t) { }
 };
 }
 

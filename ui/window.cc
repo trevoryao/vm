@@ -43,10 +43,11 @@ void Window::writeStr(const std::string &s, int y, int x) {
 }
 
 void Window::writeInfoStr(const std::string &s, int y, int x) {
-    int y, x;
-    getyx(stdscr, y, x);
+    // original x & y coordinates
+    int oY = getcury(stdscr);
+    int oX = getcurx(stdscr);
     writeStr(s, y, x);
-    move(y, x);
+    move(oY, oX);
 }
 
 void Window::refresh() { wrefresh(window); }

@@ -71,12 +71,12 @@ void TextModel::setMaxY(int y) { maxY = y; }
 void TextModel::setMaxX(int x) { maxX = x; }
 
 void TextModel::setStaticCmd(Incomplete *a) {
-    staticCmd = make_unique<Incomplete>(a);
+    staticCmd = make_unique<Incomplete>(*a);
     updateStaticView(staticCmd->getFragment());
 }
 
 void TextModel::setExecCmd(Incomplete *a) {
-    execCmd = make_unique<Incomplete>(a);
+    execCmd = make_unique<Incomplete>(*a);
     updateExecView(execCmd->getFragment());
 }
 
@@ -239,7 +239,7 @@ void TextModel::searchWordRight(int n) {
     /*
     -1 is nothing yet, 0 is word, 1 is non-blank, 2 is empty line
     */
-    while (y < text.getText().size()) {
+    while (y < static_cast<int>(text.getText().size())) {
         if (y != curY && x != curX) x = 0;
         
         if (text.getText()[y].size() == 0) {
@@ -250,7 +250,7 @@ void TextModel::searchWordRight(int n) {
             }
         }
         
-        while (x < text.getText()[y].size()) {
+        while (x < static_cast<int>(text.getText()[y].size())) {
             switch (t) {
                 case -1: {
                     char c = text.getText()[y][x];

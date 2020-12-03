@@ -7,6 +7,10 @@
 
 using std::unique_ptr;
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class TextEditType {
     DEL_LINE,
@@ -29,6 +33,8 @@ public:
     TextEdit(TextEditType value, int n = 1, unique_ptr<Movement> mvt = unique_ptr<Movement>{});
     
     Movement *getMvt();
+    
+    void execAction(models::TextModel &t) { }
 };
 }
 

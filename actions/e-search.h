@@ -5,6 +5,10 @@
 
 #include <string>
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class ESearchType { NEW_FWD_SEARCH, NEW_PREV_SEARCH };
 
@@ -16,6 +20,8 @@ public:
     ESearch(ESearchType value, int n = 1, const std::string &search = "");
     
     const std::string &getSearch();
+    
+    void execAction(models::TextModel &t) { }
 };
 }
 

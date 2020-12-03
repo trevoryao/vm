@@ -3,6 +3,10 @@
 
 #include "i-action.h"
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class KeyType {
     ALPHA_NUM,
@@ -23,6 +27,8 @@ public:
     Keyboard(KeyType value, char key);
     
     char getKey();
+    
+    void execAction(models::TextModel &t) { }
 };
 }
 

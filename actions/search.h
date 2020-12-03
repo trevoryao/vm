@@ -3,6 +3,10 @@
 
 #include "i-action.h"
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class SearchType {
     NEXT_CHAR,
@@ -19,6 +23,8 @@ public:
     Search(SearchType value, int n = 1, char search = -1);
     
     char getSearch();
+    
+    void execAction(models::TextModel &t) { }
 };
 }
 
