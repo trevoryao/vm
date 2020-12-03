@@ -1,10 +1,8 @@
 #include "scroll.h"
 
-#include "action.h"
-
 namespace actions {
-Scroll::Scroll(ScrollType value) : IAction{ActionType::SCROLL, value, 
+Scroll::Scroll(ScrollType value) : IAction{value,
     (value == ScrollType::PG_FWD || value == ScrollType::PG_BACK) ? 1 : -1} { }
 
-Scroll::Scroll(ScrollType value, int n) : IAction{ActionType::SCROLL, value, n} { }
+Scroll::Scroll(ScrollType value, int n) : IAction{value, n} { }
 }

@@ -8,6 +8,7 @@
 
 #include "mode-type.h"
 #include "../actions/action.h"
+#include "../actions/bad-entry.h"
 #include "../actions/e-movement.h"
 #include "../actions/e-search.h"
 #include "../actions/file-op.h"
@@ -26,13 +27,17 @@
 using namespace actions;
 using namespace controllers;
 using namespace std;
-/*
+
 namespace {
 inline bool isWordChar(char c) {
     return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') ||
         ('0' <= c && '9') || (c == '_');
 }
-}*/
+
+inline bool isWSpace(char c) {
+    return c == ' ' || c == '\t' || c == '\n';
+}
+}
 
 namespace models {
 TextModel::TextModel(const string &fileName) : fileName{fileName}, text{fileName}, 
@@ -65,30 +70,44 @@ void TextModel::getCursor(int &y, int &x) {
 void TextModel::setMaxY(int y) { maxY = y; }
 void TextModel::setMaxX(int x) { maxX = x; }
 
+void TextModel::setStaticCmd(Incomplete *a) {
+    staticCmd = make_unique<Incomplete>(a);
+    updateStaticView(staticCmd->getFragment());
+}
+
+void TextModel::setExecCmd(Incomplete *a) {
+    execCmd = make_unique<Incomplete>(a);
+    updateExecView(execCmd->getFragment());
+}
+
 void TextModel::run() {
     displayViews();
-    
+
     while (runLoop) {
-        auto action = getAction(mode);
-        switch (action->getType()) {
-            case ActionType::E_MVT: break;
-            case ActionType::E_SEARCH: break;
-            case ActionType::FILE_OP: break;
-            case ActionType::GLOBAL: execAction(static_cast<Global *>(action.get())); break;
-            case ActionType::INCOMPLETE: execAction(static_cast<Incomplete *>(action.get())); break;
-            case ActionType::INS: break;
-            case ActionType::KEYBOARD: break;
-            case ActionType::MVT: execAction(static_cast<Movement *>(action.get())); break;
-            case ActionType::REPLACE: break;
-            case ActionType::SCROLL: break;
-            case ActionType::SEARCH: break;
-            case ActionType::TEXT_EDIT: break;
+        if (execCmd) {
+            try {
+                auto action = getAction(staticCmd.get());
+                action->execAction(*this);
+            } catch (BadEntry &e) {
+                clearExecView();
+            }
+        } else if (staticCmd) {
+            try {
+                auto action = getAction(staticCmd.get());
+                action->execAction(*this);
+            } catch (BadEntry &e) {
+                clearStaticView();
+            }
+        } else {
+            auto action = getAction(mode);
+            action->execAction(*this);
         }
     }
 }
 
 void TextModel::resizeText(int newMaxX) { text.resizeText(newMaxX); }
 
+/*
 void TextModel::execAction(Global *a) {
     switch (a->getValue()) {
         case GlobalType::NONE: break;
@@ -99,9 +118,9 @@ void TextModel::execAction(Global *a) {
 
 void TextModel::execAction(Incomplete *a) {
     if (a->getValue() == IncType::EXEC) {
-        
+        execCmd.reset(a);
     } else {
-        // clear, update
+        staticCmd.reset(a);
     }
 }
 
@@ -117,17 +136,21 @@ void TextModel::execAction(Movement *a) {
         case MvtType::BEG_CH: break;
         case MvtType::END_CH: break;
     }
+}*/
+
+void TextModel::moveAllCursor(int y, int x) {
+    moveCursor(y, x);
+    curY = y;
+    curX = x;
 }
 
 void TextModel::moveLeft(int n) {
-    moveCursor(curY, curX - n < 0 ? 0 : curX - n);
-    curX = curX - n < 0 ? 0 : curX - n;
+    moveAllCursor(curY, curX - n < 0 ? 0 : curX - n);
 }
 
 void TextModel::moveRight(int n) {
     int max = text.getText()[curY].size() - (mode == ModeType::CMD ? 2 : 1);
-    moveCursor(curY, curX + n > max ? max : curX + n);
-    curX = curX + n > max ? max : curX + n;
+    moveAllCursor(curY, curX + n > max ? max : curX + n);
 }
 
 void TextModel::moveUp(int n) {
@@ -138,8 +161,7 @@ void TextModel::moveUp(int n) {
             if (x < 0) x = 0;
             curX = x;
         }
-        moveCursor(curY - n, curX);
-        curY -= n;
+        moveAllCursor(curY - n, curX);
     }
 }
 
@@ -150,21 +172,137 @@ void TextModel::moveDown(int n) {
             if (x < 0) x = 0;
             curX = x;
         }
-        moveCursor(curY + n, curX);
-        curY += n;
+        moveAllCursor(curY + n, curX);
     }
 }
 
 void TextModel::searchWordLeft(int n) {
-    /*
     int found = 0;
     int y = curY;
     int x = curX;
+    char t = -1;
+    
+    /*
+    -1 is nothing yet, 0 is word, 1 is non-blank, 2 is empty line
+    */
     while (y >= 0) {
-        while (x >= 0) {
-            if ()
+        if (y != curY && x != curX) x = text.getText()[y].size();
+        
+        if (x == 0) {
+            ++found;
+            if (found == n) {
+                moveAllCursor(y, x);
+                break;
+            }
         }
-    }*/
+        
+        while (x >= 0) {
+            switch (t) {
+                case -1: {
+                    char c = text.getText()[y][x];
+                    if (isWordChar(c)) t = 0;
+                    if (!isWSpace(c)) t = 1;
+                    --x;
+                    break;
+                }
+                case 0: {
+                    char c = text.getText()[y][x];
+                    if (isWordChar(c)) --x;
+                    else ++n;
+                    break;
+                }
+                case 1: {
+                    char c = text.getText()[y][x];
+                    if (!isWSpace(c)) --x;
+                    else ++n;
+                    break;
+                }
+                default: break;
+            }
+            
+            if (found == n) {
+                moveAllCursor(y, x);
+                break;
+            }
+        }
+        
+        --y;
+    }
+}
+
+void TextModel::searchWordRight(int n) {
+    int found = 0;
+    int y = curY;
+    int x = curX;
+    char t = -1;
+    
+    /*
+    -1 is nothing yet, 0 is word, 1 is non-blank, 2 is empty line
+    */
+    while (y < text.getText().size()) {
+        if (y != curY && x != curX) x = 0;
+        
+        if (text.getText()[y].size() == 0) {
+            ++found;
+            if (found == n) {
+                moveAllCursor(y, x);
+                break;
+            }
+        }
+        
+        while (x < text.getText()[y].size()) {
+            switch (t) {
+                case -1: {
+                    char c = text.getText()[y][x];
+                    if (isWordChar(c)) t = 0;
+                    if (!isWSpace(c)) t = 1;
+                    ++x;
+                    break;
+                }
+                case 0: {
+                    char c = text.getText()[y][x];
+                    if (isWordChar(c)) ++x;
+                    else ++n;
+                    break;
+                }
+                case 1: {
+                    char c = text.getText()[y][x];
+                    if (!isWSpace(c)) ++x;
+                    else ++n;
+                    break;
+                }
+                default: break;
+            }
+            
+            if (found == n) {
+                moveAllCursor(y, x);
+                break;
+            }
+        }
+        
+        ++y;
+    }
+}
+
+void TextModel::getFirstChar() {
+    for (size_t i = 0; i < text.getText()[curY].size(); ++i) {
+        if (!isWSpace(text.getText()[curY][i])) {
+            moveAllCursor(curY, i);
+        }
+    }
+}
+
+void TextModel::getLastChar(int n) {
+    --n;
+    for (size_t i = text.getText()[curY - n].size() - 1; i != 0; --i) {
+        if (!isWSpace(text.getText()[curY - n][i])) {
+            moveAllCursor(curY - n, i);
+        }
+    }
+}
+
+void TextModel::displayName() {
+    writeMessage(fileName);
 }
 
 TextModel::~TextModel() { endwin(); }

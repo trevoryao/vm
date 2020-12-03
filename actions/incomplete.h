@@ -5,6 +5,10 @@
 
 #include "i-action.h"
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class IncType { UNKNOWN, EXEC, STATIC };
 
@@ -19,6 +23,8 @@ public:
     const std::string &getFragment();
     
     void addFragment(char c);
+    
+    void execAction(models::TextModel &t) override;
 };
 }
 

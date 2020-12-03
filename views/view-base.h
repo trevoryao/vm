@@ -17,6 +17,14 @@ public:
     virtual void update(char c, int y, int x) = 0;
     virtual void update(const std::string &s, int y, int x) = 0;
     
+    virtual void updateExec(const std::string &s);
+    virtual void clearExec();
+    
+    virtual void updateStatic(const std::string &s);
+    virtual void clearStatic();
+    
+    virtual void writeMessage(const std::string &s);
+    
     virtual void displayView() = 0;
     
     virtual void resizeView() = 0;

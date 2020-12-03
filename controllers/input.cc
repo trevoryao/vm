@@ -207,8 +207,12 @@ unique_ptr<Action> Input::action(Incomplete *a) {
         return make_unique<Global>(GlobalType::NONE);
     } else if (c == KEY_RESIZE) return make_unique<Global>(GlobalType::RESIZE);
     
+    // if esc, should exit (throw parse error
+    if (c == 27) throw BadEntry{};
+    
     switch (a->getValue()) {
         case IncType::UNKNOWN: {
+            if (c == KEY_BACKSPACE) throw BadEntry{};
             if ('0' <= c && c <= '9') {
                 a->addFragment(c);
                 break;
@@ -242,7 +246,7 @@ unique_ptr<Action> Input::action(Incomplete *a) {
             }
         }
         case IncType::STATIC: {
-            // c, d, y
+            if (c == KEY_BACKSPACE) throw BadEntry{};
             if (c == a->getFragment()[0]) {
                 switch (c) {
                     case 'c': return make_unique<Insert>(InsType::CH_LINE, a->getMult());

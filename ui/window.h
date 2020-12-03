@@ -30,9 +30,12 @@ public:
     void writeStr(const std::string &s);
     void writeStr(const std::string &s, int y, int x);
     
+    void writeInfoStr(const std::string &s, int y, int x);
+    
     void refresh();
     
     void clear();
+    void clear(int y, int x);
     
     void move(int y, int x);
     

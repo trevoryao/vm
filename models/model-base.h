@@ -2,6 +2,7 @@
 #define __MODEL_BASE_H__
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "mode-type.h"
@@ -32,7 +33,18 @@ public:
     virtual ~ModelBase() = default;
     void displayViews();
     void resizeViews();
+    
     void moveCursor(int y, int x);
+    
+    void updateExecView(const std::string &s);
+    void clearExecView();
+    
+    void updateStaticView(const std::string &s);
+    void clearStaticView();
+    
+    void writeMessage(const std::string &s);
+    
+    void updateView(std::string &s, int y, int x);
 };
 }
 

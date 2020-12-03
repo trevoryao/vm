@@ -25,13 +25,15 @@ class TextEdit;
 }
 
 namespace models {
-class TextModel final : ModelBase {
+class TextModel final : public ModelBase {
 private:
     std::string fileName;
     Text text;
     ModeType mode;
     int topLine, botLine, curY, curX, maxY, maxX;
     bool runLoop;
+    std::unique_ptr<Incomplete> staticCmd;
+    std::unique_ptr<Incomplete> execCmd;
 public:
     explicit TextModel(const std::string &fileName);
     
@@ -42,23 +44,29 @@ public:
     void setMaxY(int y);
     void setMaxX(int x);
     
+    void setStaticCmd(actions::Incomplete *a);
+    void setExecCmd(actions::Incomplete *a);
+    
     void run();
     
     void resizeText(int maxX);
-
-    ~TextModel();
-private:
-    void execAction(actions::Global *a);
-    void execAction(actions::Incomplete *a);
-    void execAction(actions::Movement *a);
 
     void moveLeft(int n);
     void moveRight(int n);
     void moveUp(int n);
     void moveDown(int n);
-    
+
     void searchWordLeft(int n);
     void searchWordRight(int n);
+    
+    void getFirstChar();
+    void getLastChar(int n);
+    
+    void displayName();
+    
+    ~TextModel();
+private:
+    void moveAllCursor(int y, int x);
 };
 }
 

@@ -3,6 +3,10 @@
 
 #include "i-action.h"
 
+namespace models {
+class TextModel;
+}
+
 namespace actions {
 enum class MvtType {
     // NONE, // null
@@ -20,6 +24,8 @@ enum class MvtType {
 class Movement final : public IAction<MvtType> {
 public:
     Movement(MvtType value, int n = 1);
+    
+    void execAction(models::TextModel &t) override;
 };
 }
 

@@ -54,4 +54,28 @@ void ModelBase::resizeViews() {
 void ModelBase::moveCursor(int y, int x) {
     for (auto &v : views) v->moveCursor(y, x);
 }
+
+void ModelBase::updateExecView(const std::string &s) {
+    for (auto &v : views) v->updateExec(s);
+}
+
+void ModelBase::clearExecView() { 
+    for (auto &v : views) v->clearExec();
+}
+
+void ModelBase::updateStaticView(const std::string &s) {
+    for (auto &v : views) v->updateStatic(s);
+}
+
+void ModelBase::clearStaticView() { 
+    for (auto &v : views) v->clearStatic();
+}
+
+void ModelBase::updateView(std::string &s, int y, int x) {
+    for (auto &v : views) v->update(s, y, x);
+}
+
+void ModelBase::writeMessage(const std::string &s) {
+    for (auto &v : views) v->writeMessage(s);
+}
 }
