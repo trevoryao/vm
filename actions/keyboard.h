@@ -13,22 +13,18 @@ enum class KeyType {
     BACKSPACE,
     RETURN,
     DEL,
-    TAB,
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN
+    TAB
 };
 
-class Keyboard final : IAction<KeyType> {
+class Keyboard final : public IAction<KeyType> {
 private:
     char key;
 public:
-    Keyboard(KeyType value, char key);
+    Keyboard(KeyType value, char key = -1);
     
     char getKey();
     
-    void execAction(models::TextModel &t) { }
+    void execAction(models::TextModel &t);
 };
 }
 

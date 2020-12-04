@@ -17,11 +17,6 @@ using std::unique_ptr;
 
 namespace controllers {
 class ControllerBase {
-protected:
-    virtual unique_ptr<Action> action() = 0;
-    virtual unique_ptr<Action> action(Incomplete *a) = 0;
-    virtual unique_ptr<Action> action(ESearch *a) = 0;
-    virtual unique_ptr<Action> action(Search *a) = 0;
 public:
     virtual ~ControllerBase() = default;
     
@@ -29,6 +24,11 @@ public:
     unique_ptr<Action> getAction(Incomplete *a);
     unique_ptr<Action> getAction(ESearch *a);
     unique_ptr<Action> getAction(Search *a);
+protected:
+    virtual unique_ptr<Action> action() = 0;
+    virtual unique_ptr<Action> action(Incomplete *a) = 0;
+    virtual unique_ptr<Action> action(ESearch *a) = 0;
+    virtual unique_ptr<Action> action(Search *a) = 0;
 };
 }
 
