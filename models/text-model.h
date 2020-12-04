@@ -71,6 +71,9 @@ public:
     
     void displayName();
     
+    void scrollUp(int lines);
+    void scrollDown(int lines);
+    
     ~TextModel();
 };
 }

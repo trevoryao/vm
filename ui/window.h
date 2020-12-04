@@ -27,8 +27,12 @@ public:
     // TODO: keywords (colour)
     void writeChar(char c);
     void writeChar(char c, int y, int x);
+    
     void writeStr(const std::string &s);
     void writeStr(const std::string &s, int y, int x);
+    
+    void writeFill(int y);
+    
     void writeWarning(const std::string &s, int y, int x);
     
     void refresh();

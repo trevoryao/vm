@@ -20,7 +20,10 @@ public:
     const std::vector<std::string> &getTextFile();
     
     int getTopLine();
+    void setTopLine(int n);
+    
     int getBotLine();
+    void setBotLine(int n);
     
     void resizeText(int maxX);
     
@@ -28,6 +31,11 @@ public:
     // true if files are different, false otherwise
     bool diff();
     bool insert(const std::string &filePath, int y, int maxX);
+    
+    void insert(char c, int y, int x); // insert before
+    void delChar(int y, int x); // at
+    void newLine(int y, int x);
+    void indent(int y, int x);
 };
 }
 

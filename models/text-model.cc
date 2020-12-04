@@ -23,11 +23,10 @@
 #include "../actions/text-edit.h"
 #include "../actions/update-cmd.h"
 #include "../controllers/input.h"
+#include "../controllers/key-input.h"
+#include "../ui/colours.h"
 #include "../views/status-view.h"
 #include "../views/text-view.h"
-
-#define DEFAULT 1
-#define WARNING 2
 
 using namespace actions;
 using namespace controllers;
@@ -55,12 +54,15 @@ TextModel::TextModel(const string &fileName) : text{fileName},
     mousemask(ALL_MOUSE_EVENTS, NULL);
     start_color();
     use_default_colors();
-    init_pair(DEFAULT, -1, -1); // default text;
-    init_pair(WARNING, COLOR_WHITE, COLOR_RED); // warnings
     init_color(COLOR_WHITE, 1000, 1000, 1000); // brighter white
+    init_pair(DEFAULT, DEFAULT_COLOUR, DEFAULT_COLOUR); // default text;
+    init_pair(WARNING, COLOR_WHITE, COLOR_RED); // warnings
+    init_color(FILL_COLOUR, 820, 576, 902);
+    init_pair(FILL, FILL_COLOUR, DEFAULT_COLOUR);
     
     addView(make_unique<views::StatusView>(*this));
     addInputController(make_unique<controllers::Input>());
+    addKeyController(make_unique<controllers::KeyInput>());
     
     // construct text based on view
     unique_ptr<views::TextView> textView = make_unique<views::TextView>(*this);
@@ -154,6 +156,12 @@ void TextModel::displayWarn(const std::string &m) {
 void TextModel::resizeText(int newMaxX) { text.resizeText(newMaxX); }
 
 void TextModel::moveAllCursor(int y, int x) {
+    // TODO: scroll
+    if (y < text.getTopLine()) {
+        
+    } else if (y > text.getBotLine()) {
+        
+    }
     moveCursor(y, x);
     curY = y;
     curX = x;
@@ -170,25 +178,24 @@ void TextModel::moveRight(int n) {
 
 void TextModel::moveUp(int n) {
     // no scroll first, scroll later
-     if (text.getTopLine() < curY) {
-        int x = text.getTextFile()[curY - n].size() - (mode == ModeType::CMD ? 2 : 1);
-        if (curX > x) {
-            if (x < 0) x = 0;
-            curX = x;
-        }
-        moveAllCursor(curY - n, curX);
+    int i = curY - n < 0 ? 0 : curY - n;
+    int x = text.getTextFile()[i].size() - (mode == ModeType::CMD ? 2 : 1);
+    if (curX > x) {
+        if (x < 0) x = 0;
+        curX = x;
     }
+    moveAllCursor(i, curX);
 }
 
 void TextModel::moveDown(int n) {
-    if (curY < text.getBotLine()) {
-        int x = text.getTextFile()[curY + 1].size() - (mode == ModeType::CMD ? 2 : 1);
-        if (curX > x) {
-            if (x < 0) x = 0;
-            curX = x;
-        }
-        moveAllCursor(curY + n, curX);
+    int i = static_cast<int>(curY + n) >= text.getTextFile().size() ? 
+        text.getTextFile().size() - 1 : curY + n;
+    int x = text.getTextFile()[i].size() - (mode == ModeType::CMD ? 2 : 1);
+    if (curX > x) {
+        if (x < 0) x = 0;
+        curX = x;
     }
+    moveAllCursor(i, curX);
 }
 
 void TextModel::searchWordLeft(int n) {
@@ -410,6 +417,36 @@ void TextModel::getLastChar(int n) {
 
 void TextModel::displayName() {
     writeMessage("\"" + text.getFileName() + "\"");
+}
+
+void TextModel::scrollUp(int lines) {
+    int newTop = text.getTopLine() - lines;
+    int newBottom = text.getBotLine() - lines;
+    if (newTop < 0) {
+        newBottom -= newTop;
+        newTop = 0;
+    }
+    
+    text.setTopLine(newTop);
+    text.setBotLine(newBottom);
+    
+    displayViews();
+}
+
+void TextModel::scrollDown(int lines) {
+    int newTop = text.getTopLine() + lines;
+    int newBottom = text.getBotLine() + lines;
+    
+    if (newBottom >= text.getTextFile().size()) {
+        int diff = text.getTextFile().size() - newBottom - 1;
+        newTop += diff;
+        newBottom += diff;
+    }
+    
+    text.setTopLine(newTop);
+    text.setBotLine(newBottom);
+    
+    displayViews();
 }
 
 TextModel::~TextModel() { endwin(); }

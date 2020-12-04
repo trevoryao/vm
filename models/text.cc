@@ -45,7 +45,11 @@ const vector<string> &Text::getTextFile() { return text; }
 
 int Text::getTopLine() { return topLine; }
 
+void Text::setTopLine(int n) { topLine = n; }
+
 int Text::getBotLine() { return botLine; }
+
+void Text::setBotLine(int n) { botLine = n; }
 
 void Text::resizeText(int maxX) {
     vector<string> newText;
@@ -109,5 +113,38 @@ bool Text::insert(const std::string &filePath, int y, int maxX) {
         return false;
     }
     return true;
+}
+
+void Text::insert(char c, int y, int x) {
+    text[y].insert(x, 1, c);
+}
+
+void Text::delChar(int y, int x) { // check beginning of line
+    if (x != 0) {
+        text[y].erase(x, 1);
+    } else {
+        text[y - 1].pop_back();
+        text[y - 1] = text[y - 1] + text[y];
+        auto it = text.begin() + y + 1;
+        text.erase(it);
+    }
+    
+}
+
+void Text::newLine(int y, int x) {
+    // char at pos goes
+    auto it = text.begin() + y + 1;
+    
+    if (text[y][x] == '\n') {
+        // end of line
+        text.insert(it, "\n");
+    } else {
+        text.insert(it, text[y].substr(text[y].size() - x));
+        text[y] = text[y].substr(0, x) + "\n";
+    }
+}
+
+void Text::indent(int y, int x) {
+    text[y] = "    " + text[y];
 }
 }

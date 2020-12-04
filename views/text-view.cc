@@ -15,7 +15,7 @@ TextView::TextView(TextModel &instance) : ViewBase{getmaxy(stdscr) - 1, getmaxx(
 
 void TextView::update(char c, int y, int x) { window.writeChar(c, y, x); }
 void TextView::update(const std::string &s, int y, int x) { window.writeStr(s, y, x); }
-
+/*
 void TextView::displayView() {
     int y = 0, x = 0;
     int max_y = getMaxHeight();
@@ -23,8 +23,23 @@ void TextView::displayView() {
         if (y > max_y) break;
         window.writeStr(s, y++, x);
     }
+    
     while (y <= max_y) window.writeChar('~', y++, x);
     window.move(0, 0);
+    window.refresh();
+}*/
+
+void TextView::displayView() {
+    int curY = 0, curX = 0, y = 0, maxY = getMaxHeight();
+    instance.getCursor(curY, curX);
+    
+    for (int i = instance.getText().getTopLine(); i <= instance.getText().getBotLine(); ++i, ++y) {
+        if (y > maxY || i >= instance.getText().getTextFile().size()) break;
+        window.writeStr(instance.getText().getTextFile()[i], y, 0);
+    }
+    for (; y <= maxY; ++y) window.writeFill(y);
+    
+    window.move(curY, curX);
     window.refresh();
 }
 

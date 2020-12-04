@@ -4,8 +4,7 @@
 #include <string>
 #include <utility>
 
-#define DEFAULT 1
-#define WARNING 2
+#include "colours.h"
 
 using namespace std;
 
@@ -44,6 +43,10 @@ void Window::writeStr(const std::string &s) {
 
 void Window::writeStr(const std::string &s, int y, int x) { 
     mvwaddstr(window, y, x, s.c_str());
+}
+
+void Window::writeFill(int y) {
+    mvwaddch(window, y, 0, '~' | COLOR_PAIR(FILL));
 }
 
 void Window::writeWarning(const std::string &s, int y, int x) { 
