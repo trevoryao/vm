@@ -224,17 +224,17 @@ unique_ptr<Action> Input::action(Incomplete *a) {
         case IncType::EXEC: {
             if (c == 10 || c == 13) {
                 if (a->getFragment().size() > 1) {
+                    if (a->getFragment() == ":$") {
+                        return make_unique<EMovement>(EMvtType::BOTTOM);
+                    }
                     try {
-                        int lineNum = stoi(a->getFragment());
+                        int lineNum = stoi(a->getFragment().substr(1, a->getFragment().size() - 1));
                         if (lineNum == 0) {
-                            return make_unique<EMovement>(EMvtType::TOP, a->getMult());
+                            return make_unique<EMovement>(EMvtType::TOP);
                         }
-                        return make_unique<EMovement>(EMvtType::LINE_NUM, a->getMult(), lineNum);
+                        return make_unique<EMovement>(EMvtType::LINE_NUM, lineNum);
                     } catch (invalid_argument &e) { }
-                } else if (a->getFragment() == ":$") {
-                    return make_unique<EMovement>(EMvtType::BOTTOM, a->getMult());
                 }
-                
                 try {
                     // can only be some file write thing
                     return make_unique<FileOp>(fileOpMap.at(a->getFragment()));

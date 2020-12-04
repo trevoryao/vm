@@ -17,11 +17,9 @@ class EMovement final : public IAction<EMvtType> {
 private:
     int lineNum;
 public:
-    EMovement(EMvtType value, int mult, int lineNum = 0);
+    EMovement(EMvtType value, int lineNum = 0);
     
-    int getLineNum();
-    
-    void execAction(models::TextModel &t) { }
+    void execAction(models::TextModel &t) override;
 };
 }
 

@@ -57,6 +57,7 @@ TextModel::TextModel(const string &fileName) : text{fileName},
     use_default_colors();
     init_pair(DEFAULT, -1, -1); // default text;
     init_pair(WARNING, COLOR_WHITE, COLOR_RED); // warnings
+    init_color(COLOR_WHITE, 1000, 1000, 1000); // brighter white
     
     addView(make_unique<views::StatusView>(*this));
     addInputController(make_unique<controllers::Input>());
@@ -309,8 +310,8 @@ void TextModel::searchWordLeft(int n) {
 
 void TextModel::searchWordRight(int n) {
     int found = 0;
-    int y = curY;
-    int x = curX;
+    size_t y = curY;
+    size_t x = curX;
 
     char t;
     char c = text.getTextFile()[y][x];
@@ -325,7 +326,7 @@ void TextModel::searchWordRight(int n) {
     /*
     -1 is nothing yet, 0 is word, 1 is non-blank, 2 is whitespace
     */
-    while (y < static_cast<int>(text.getTextFile().size())) {
+    while (y < text.getTextFile().size()) {
         if (text.getTextFile()[y].size() == 0) { // does nothing
             ++found;
             ++y;
@@ -335,7 +336,7 @@ void TextModel::searchWordRight(int n) {
             }
         }
         
-        while (x < static_cast<int>(text.getTextFile()[y].size())) {
+        while (x < text.getTextFile()[y].size()) {
             char c = text.getTextFile()[y][x];
             // skip over ws?
             switch (t) {

@@ -52,6 +52,8 @@ public:
     void run();
     void quit();
     
+    void moveAllCursor(int y, int x);
+    
     void displayWarn(const std::string &m);
     
     void resizeText(int maxX);
@@ -70,8 +72,6 @@ public:
     void displayName();
     
     ~TextModel();
-private:
-    void moveAllCursor(int y, int x);
 };
 }
 

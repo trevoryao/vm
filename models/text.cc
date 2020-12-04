@@ -36,7 +36,7 @@ Text::Text(const string &fileName, int maxX) : topLine{0}, file{fileName} {
             curWidth = 0;
         }
     }
-    botLine = maxX > static_cast<int>(text.size()) ? text.size() - 1 : maxX - 1;
+    botLine = static_cast<size_t>(maxX) > text.size() ? text.size() - 1 : maxX - 1;
 }
 
 const string &Text::getFileName() { return file.getName(); }
@@ -73,7 +73,7 @@ void Text::resizeText(int maxX) {
     }
     
     text = newText;
-    botLine = maxX > static_cast<int>(text.size()) ? text.size() - 1 : maxX - 1;
+    botLine = static_cast<size_t>(maxX) > text.size() ? text.size() - 1 : maxX - 1;
 }
 
 void Text::write() { file.write(text); }
