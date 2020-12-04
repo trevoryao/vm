@@ -25,6 +25,8 @@ public:
     void clearStatic() override;
     
     void writeMessage(const std::string &s) override;
+    void writeWarning(const std::string &s) override;
+    
     
     void displayView() override;
     

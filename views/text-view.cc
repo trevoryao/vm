@@ -19,7 +19,7 @@ void TextView::update(const std::string &s, int y, int x) { window.writeStr(s, y
 void TextView::displayView() {
     int y = 0, x = 0;
     int max_y = getMaxHeight();
-    for (auto &s : instance.getText()) { // change to reg loop starting at topLine to botLine
+    for (auto &s : instance.getText().getTextFile()) { // change to reg loop starting at topLine to botLine
         if (y > max_y) break;
         window.writeStr(s, y++, x);
     }

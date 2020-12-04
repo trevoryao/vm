@@ -23,6 +23,7 @@ public:
     const std::string &getFragment();
     
     void addFragment(char c);
+    void removeFragment();
     
     void execAction(models::TextModel &t) override;
 };

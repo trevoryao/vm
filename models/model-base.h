@@ -31,12 +31,14 @@ protected:
     unique_ptr<actions::Action> getAction(actions::Search *a);
 public:
     virtual ~ModelBase() = default;
+    
     void displayViews();
     void resizeViews();
     
     void moveCursor(int y, int x);
     
     void updateExecView(const std::string &s);
+    void updateWarning(const std::string &s);
     void clearExecView();
     
     void updateStaticView(const std::string &s);

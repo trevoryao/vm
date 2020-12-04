@@ -34,8 +34,8 @@ private:
         SEARCH
     };
     
-    map<char, ActionType> actionCharMap;
-    map<char, actions::MvtType> mvtMap;
+    map<int, ActionType> actionCharMap;
+    map<int, actions::MvtType> mvtMap;
     map<char, actions::InsType> insMap;
     map<char, actions::ReplaceType> replaceMap;
     map<string, actions::FileOpType> fileOpMap;

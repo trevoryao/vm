@@ -4,6 +4,9 @@
 #include <string>
 #include <utility>
 
+#define DEFAULT 1
+#define WARNING 2
+
 using namespace std;
 
 namespace ui {
@@ -14,6 +17,7 @@ Window::Window(int height, int width, int x, int y) noexcept {
     window = newwin(height, width, x, y);
     keypad(window, TRUE);
     scrollok(window, false);
+    wattron(window, COLOR_PAIR(DEFAULT));
 }
 
 Window::Window(Window &&other): window{other.window} { other.window = nullptr; }
@@ -42,12 +46,10 @@ void Window::writeStr(const std::string &s, int y, int x) {
     mvwaddstr(window, y, x, s.c_str());
 }
 
-void Window::writeInfoStr(const std::string &s, int y, int x) {
-    // original x & y coordinates
-    int oY = getcury(stdscr);
-    int oX = getcurx(stdscr);
-    writeStr(s, y, x);
-    move(oY, oX);
+void Window::writeWarning(const std::string &s, int y, int x) { 
+    wattron(window, COLOR_PAIR(WARNING));
+    mvwaddstr(window, y, x, s.c_str());
+    wattroff(window, COLOR_PAIR(WARNING));
 }
 
 void Window::refresh() { wrefresh(window); }

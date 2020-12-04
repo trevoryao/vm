@@ -27,10 +27,9 @@ class TextEdit;
 namespace models {
 class TextModel final : public ModelBase {
 private:
-    std::string fileName;
     Text text;
     ModeType mode;
-    int topLine, botLine, curY, curX, maxY, maxX;
+    int curY, curX, maxY, maxX;
     bool runLoop;
     std::unique_ptr<Incomplete> staticCmd;
     std::unique_ptr<Incomplete> execCmd;
@@ -38,16 +37,22 @@ public:
     explicit TextModel(const std::string &fileName);
     
     const std::string &getName();
-    const std::vector<std::string> &getText();
+    Text &getText();
     void getCursor(int &y, int &x);
     
     void setMaxY(int y);
     void setMaxX(int x);
     
     void setStaticCmd(actions::Incomplete *a);
+    void clearStaticCmd();
+    
     void setExecCmd(actions::Incomplete *a);
+    void clearExecCmd();
     
     void run();
+    void quit();
+    
+    void displayWarn(const std::string &m);
     
     void resizeText(int maxX);
 

@@ -22,5 +22,6 @@ void Movement::execAction(TextModel &t) {
         case MvtType::BEG_CH: t.getFirstChar(); break;
         case MvtType::END_CH: t.getLastChar(getMult()); break;
     }
+    t.clearStaticCmd();
 }
 }

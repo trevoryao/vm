@@ -24,6 +24,7 @@ public:
     virtual void clearStatic();
     
     virtual void writeMessage(const std::string &s);
+    virtual void writeWarning(const std::string &s);
     
     virtual void displayView() = 0;
     

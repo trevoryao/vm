@@ -1,20 +1,25 @@
 #ifndef __FILE_H__
 #define __FILE_H__
 
-#include <fstream>
 #include <string>
 #include <vector>
 
 namespace models {
-class File {
+class FileDNE { };
+
+class File final {
 private:
-    std::fstream &f;
+    std::string fileName;
 public:
-    explicit File(std::fstream &f);
+    explicit File(const std::string &fileName);
+
+    const std::string &getName();
 
     std::string read();
 
     void write(const std::vector<std::string> &tmpFile);
+    
+    bool diff(const std::vector<std::string> &tmpFile);
 };
 }
 

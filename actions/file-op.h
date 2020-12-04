@@ -20,7 +20,7 @@ class FileOp final : public IAction<FileOpType> {
 public:
     FileOp(FileOpType value);
     
-    void execAction(models::TextModel &t) { }
+    void execAction(models::TextModel &t) override;
 };
 }
 

@@ -9,23 +9,15 @@
 using namespace std;
 
 namespace models {
-Text::Text(const string &fileName) : topLine{0}, botLine{0} {
-    if (fileName != "") {
-        fstream fs{fileName};
-        File file{fs};
-        text.push_back(file.read());
-    }
+Text::Text(const string &fileName) : topLine{0}, botLine{0}, file{fileName} {
+    if (fileName.size()) text.push_back(file.read());
 }
 
-Text::Text(const string &fileName, int maxX) : topLine{0} {
+Text::Text(const string &fileName, int maxX) : topLine{0}, file{fileName} {
     string data;
 
-    if (fileName != "") {
-        fstream fs{fileName};
-        File file{fs};
-        data = file.read();
-    }
-
+    if (fileName.size()) data = file.read();
+    
     string line;
     line.reserve(maxX);
     int curWidth = 0;
@@ -47,7 +39,13 @@ Text::Text(const string &fileName, int maxX) : topLine{0} {
     botLine = maxX > static_cast<int>(text.size()) ? text.size() - 1 : maxX - 1;
 }
 
-const vector<string> &Text::getText() { return text; }
+const string &Text::getFileName() { return file.getName(); }
+
+const vector<string> &Text::getTextFile() { return text; }
+
+int Text::getTopLine() { return topLine; }
+
+int Text::getBotLine() { return botLine; }
 
 void Text::resizeText(int maxX) {
     vector<string> newText;
@@ -75,5 +73,41 @@ void Text::resizeText(int maxX) {
     }
     
     text = newText;
+    botLine = maxX > static_cast<int>(text.size()) ? text.size() - 1 : maxX - 1;
+}
+
+void Text::write() { file.write(text); }
+
+bool Text::diff() { return file.diff(text); }
+
+bool Text::insert(const std::string &filePath, int y, int maxX) {
+    try {
+        File newFile{filePath};
+        string data = newFile.read();
+        
+        string line;
+        int curWidth = 0;
+        auto it = text.begin();
+        it += y + 1;
+        
+        for (size_t i = 0; i < data.size(); ++i, ++curWidth) {
+            if (curWidth == maxX) {
+                text.insert(it, line);
+                line.clear();
+                curWidth = 0;
+            }
+            
+            line.push_back(data[i]);
+            
+            if (data[i] == '\n') {
+                text.insert(it, line);
+                line.clear();
+                curWidth = 0;
+            }
+        }
+    } catch (FileDNE &e) {
+        return false;
+    }
+    return true;
 }
 }

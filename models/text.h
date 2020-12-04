@@ -7,16 +7,27 @@
 #include "file.h"
 
 namespace models {
-class Text {
+class Text final {
 private:
     int topLine, botLine;
-    // File file;
+    File file;
     std::vector<std::string> text;
 public:
     explicit Text(const std::string &fileName);
     Text(const std::string &fileName, int maxX);
-    const std::vector<std::string> &getText();
+    
+    const std::string &getFileName();
+    const std::vector<std::string> &getTextFile();
+    
+    int getTopLine();
+    int getBotLine();
+    
     void resizeText(int maxX);
+    
+    void write();
+    // true if files are different, false otherwise
+    bool diff();
+    bool insert(const std::string &filePath, int y, int maxX);
 };
 }
 

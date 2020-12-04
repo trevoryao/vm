@@ -59,6 +59,10 @@ void ModelBase::updateExecView(const std::string &s) {
     for (auto &v : views) v->updateExec(s);
 }
 
+void ModelBase::updateWarning(const std::string &s) {
+    for (auto &v : views) v->writeWarning(s);
+}
+
 void ModelBase::clearExecView() { 
     for (auto &v : views) v->clearExec();
 }

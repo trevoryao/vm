@@ -29,8 +29,7 @@ public:
     void writeChar(char c, int y, int x);
     void writeStr(const std::string &s);
     void writeStr(const std::string &s, int y, int x);
-    
-    void writeInfoStr(const std::string &s, int y, int x);
+    void writeWarning(const std::string &s, int y, int x);
     
     void refresh();
     

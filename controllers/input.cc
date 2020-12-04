@@ -7,6 +7,7 @@
 
 #include "../actions/action.h"
 #include "../actions/bad-entry.h"
+#include "../actions/clear-cmd.h"
 #include "../actions/e-movement.h"
 #include "../actions/e-search.h"
 #include "../actions/file-op.h"
@@ -17,9 +18,16 @@
 #include "../actions/scroll.h"
 #include "../actions/search.h"
 #include "../actions/text-edit.h"
+#include "../actions/update-cmd.h"
 
 using namespace actions;
 using namespace std;
+
+namespace {
+inline bool isDisplayChar(int c) {
+    return 32 <= c && c <= 126;
+}
+}
 
 namespace controllers {
 Input::Input() :
@@ -33,6 +41,10 @@ Input::Input() :
         {'0', ActionType::MVT},
         {'^', ActionType::MVT},
         {'$', ActionType::MVT},
+        {KEY_LEFT, ActionType::MVT},
+        {KEY_RIGHT, ActionType::MVT},
+        {KEY_DOWN, ActionType::MVT},
+        {KEY_UP, ActionType::MVT},
         {'i', ActionType::INS},
         {'a', ActionType::INS},
         {'O', ActionType::INS},
@@ -65,6 +77,10 @@ Input::Input() :
         {'l', MvtType::RIGHT},
         {'k', MvtType::UP},
         {'j', MvtType::DOWN},
+        {KEY_LEFT, MvtType::LEFT},
+        {KEY_RIGHT, MvtType::RIGHT},
+        {KEY_UP, MvtType::UP},
+        {KEY_DOWN, MvtType::DOWN},
         {'b', MvtType::WORD_LEFT},
         {'w', MvtType::WORD_RIGHT},
         {'0', MvtType::BEG_LINE},
@@ -134,12 +150,11 @@ unique_ptr<Action> Input::action() {
     int c = getch();
 
     switch (c) {
-        case ERR: return make_unique<Global>(GlobalType::NONE);
+        case ERR: return unique_ptr<Action>{};
         case KEY_RESIZE: return make_unique<Global>(GlobalType::RESIZE);
-        case ':': return make_unique<Incomplete>(IncType::EXEC);
+        case ':': return make_unique<Incomplete>(IncType::EXEC, c);
         case '/': return make_unique<ESearch>(ESearchType::NEW_FWD_SEARCH);
         case '?': return make_unique<ESearch>(ESearchType::NEW_PREV_SEARCH);
-        case '0':
         case '1':
         case '2':
         case '3':
@@ -149,11 +164,11 @@ unique_ptr<Action> Input::action() {
         case '7':
         case '8':
         case '9':
-            return make_unique<Incomplete>(IncType::UNKNOWN, c - '0');
+            return make_unique<Incomplete>(IncType::UNKNOWN, static_cast<char>(c));
         case 'c':
         case 'd':
         case 'y':
-            return make_unique<Incomplete>(IncType::STATIC, c);
+            return make_unique<Incomplete>(IncType::STATIC, static_cast<char>(c));
         default: return parseAction(c, 1);
     }
 }
@@ -173,57 +188,41 @@ unique_ptr<Action> Input::parseAction(int c, int n) { // TODO: multiplier
         }
     } catch (out_of_range &e) {
         string ctrl = unctrl(c);
-        if (ctrl.size() != 2) return make_unique<Global>(GlobalType::NONE);
+        if (ctrl.size() != 2) return unique_ptr<Action>{};
         try {
             if (ctrl[1] == 'g') return make_unique<Global>(GlobalType::DISPLAY_FILE);
             return make_unique<Scroll>(scrollMap.at(ctrl[1]));
         } catch (out_of_range &e) {
-            return make_unique<Global>(GlobalType::NONE);
+            return unique_ptr<Action>{};
         }
     }
 }
-// throw parse error
-// take an incomplete
-/*
-case 1: exec
-push back until enter is pressed, then notify action() that can be executed, notify model
-case 2: global
-if char, then give back to action so action can make new one
-case 3: static
-internal count to 5, of no presses, execute whats there
-if key is pressed and matches current, then tell action to execute double press
-if fails to match, then no execution
 
-globally, return bool:
-true => can be executed
-false => cannot be executed
-*/
-
-// add one for searches
 unique_ptr<Action> Input::action(Incomplete *a) {
     int c = getch();
     
     if (c == ERR) {
-        return make_unique<Global>(GlobalType::NONE);
+        return unique_ptr<Action>{};
     } else if (c == KEY_RESIZE) return make_unique<Global>(GlobalType::RESIZE);
     
     // if esc, should exit (throw parse error
-    if (c == 27) throw BadEntry{};
+    if (c == 27) throw ClearCmd{};
     
     switch (a->getValue()) {
         case IncType::UNKNOWN: {
-            if (c == KEY_BACKSPACE) throw BadEntry{};
+            if (c == KEY_BACKSPACE) throw ClearCmd{};
             if ('0' <= c && c <= '9') {
-                a->addFragment(c);
-                break;
+                a->addFragment(static_cast<char>(c));
+                throw UpdateCmd{};
             } else if (c == 'c' || c == 'd' || c == 'y') {
-                return make_unique<Incomplete>(IncType::STATIC, c, stoi(a->getFragment()));
+                return make_unique<Incomplete>(IncType::STATIC, 
+                    static_cast<char>(c), stoi(a->getFragment()));
             } else {
                 return parseAction(c, stoi(a->getFragment()));
             }
         }
         case IncType::EXEC: {
-            if (c == KEY_ENTER) {
+            if (c == 10 || c == 13) {
                 if (a->getFragment().size() > 1) {
                     try {
                         int lineNum = stoi(a->getFragment());
@@ -231,7 +230,7 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                             return make_unique<EMovement>(EMvtType::TOP, a->getMult());
                         }
                         return make_unique<EMovement>(EMvtType::LINE_NUM, a->getMult(), lineNum);
-                    } catch (out_of_range &e) { }
+                    } catch (invalid_argument &e) { }
                 } else if (a->getFragment() == ":$") {
                     return make_unique<EMovement>(EMvtType::BOTTOM, a->getMult());
                 }
@@ -241,12 +240,20 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                     return make_unique<FileOp>(fileOpMap.at(a->getFragment()));
                 }
                 catch (out_of_range &e) {
-                    throw BadEntry{};
+                    throw BadEntry{a->getFragment()};
                 }
+            } else if (c == KEY_BACKSPACE) {
+                if (a->getFragment().size() == 1) throw ClearCmd{};
+                a->removeFragment();
+                throw UpdateCmd{};
+            } else if (isDisplayChar(c)) {
+                a->addFragment(static_cast<char>(c));
+                throw UpdateCmd{};
             }
+            break;
         }
         case IncType::STATIC: {
-            if (c == KEY_BACKSPACE) throw BadEntry{};
+            if (c == KEY_BACKSPACE) throw ClearCmd{};
             if (c == a->getFragment()[0]) {
                 switch (c) {
                     case 'c': return make_unique<Insert>(InsType::CH_LINE, a->getMult());
@@ -269,11 +276,11 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                     default: break;
                 }
             } catch (out_of_range &e) {
-                throw BadEntry{};
+                throw BadEntry{a->getFragment()};
             }
         }
     }
-    return make_unique<Global>(GlobalType::NONE);
+    return unique_ptr<Action>{};
 }
 /*
 unique_ptr<Action> Input::action(ESearch *a) {

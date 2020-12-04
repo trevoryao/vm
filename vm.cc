@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Usage: vm [file]" << std::endl;
         return 2;
     }
-    
+
     models::TextModel textModel{argc == 2 ? argv[1] : ""};
     textModel.run();
     
