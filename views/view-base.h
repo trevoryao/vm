@@ -25,6 +25,7 @@ public:
     
     virtual void writeMessage(const std::string &s);
     virtual void writeWarning(const std::string &s);
+    virtual void writeMode(const std::string &s);
     
     virtual void displayView() = 0;
     

@@ -19,6 +19,7 @@ KeyInput::KeyInput() :
         {13, ActionType::KEY},
         {127, ActionType::KEY},
         {'\t', ActionType::KEY},
+        {27, ActionType::KEY},
         {KEY_LEFT, ActionType::MVT},
         {KEY_RIGHT, ActionType::MVT},
         {KEY_UP, ActionType::MVT},
@@ -29,14 +30,15 @@ KeyInput::KeyInput() :
         {'\n', KeyType::RETURN},
         {13, KeyType::RETURN},
         {127, KeyType::DEL},
-        {'\t', KeyType::TAB}
+        {'\t', KeyType::TAB},
+        {27, KeyType::ESC}
     },
     mvtMap{
         {KEY_LEFT, MvtType::LEFT},
         {KEY_RIGHT, MvtType::RIGHT},
         {KEY_UP, MvtType::UP},
         {KEY_DOWN, MvtType::DOWN}
-    }{ }
+    } { }
 
 unique_ptr<Action> KeyInput::action(Incomplete *a) { return unique_ptr<Action>{}; }
 unique_ptr<Action> KeyInput::action(ESearch *a) { return unique_ptr<Action>{}; }

@@ -25,6 +25,7 @@ public:
     
     void writeMessage(const std::string &s) override;
     void writeWarning(const std::string &s) override;
+    void writeMode(const std::string &s) override;
     
     void displayView() override;
     

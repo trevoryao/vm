@@ -44,12 +44,7 @@ const string &Text::getFileName() { return file.getName(); }
 const vector<string> &Text::getTextFile() { return text; }
 
 int Text::getTopLine() { return topLine; }
-
-void Text::setTopLine(int n) { topLine = n; }
-
 int Text::getBotLine() { return botLine; }
-
-void Text::setBotLine(int n) { botLine = n; }
 
 void Text::resizeText(int maxY, int maxX) {
     vector<string> newText;
@@ -128,7 +123,14 @@ void Text::delChar(int y, int x) { // check beginning of line
         auto it = text.begin() + y + 1;
         text.erase(it);
     }
-    
+}
+
+void Text::changeLine(int y) {
+    text[y] = "\n";
+}
+
+void Text::delLine(int y) {
+    text.erase(text.begin() + y);
 }
 
 void Text::newLine(int y, int x) {
@@ -144,7 +146,37 @@ void Text::newLine(int y, int x) {
     }
 }
 
+void Text::newLine(int y) {
+    text.insert(text.begin() + y + 1, "\n");
+}
+
 void Text::indent(int y, int x) {
     text[y] = "    " + text[y];
+}
+
+void Text::scrollUp(int lines) {
+    int newTop = topLine - lines;
+    int newBottom = botLine - lines;
+    if (newTop < 0) {
+        newBottom -= newTop;
+        newTop = 0;
+    }
+    
+    topLine = newTop;
+    botLine = newBottom;
+}
+
+void Text::scrollDown(int lines) {
+    int newTop = topLine + lines;
+    int newBottom = botLine + lines;
+    
+    if (static_cast<size_t>(newBottom) >= text.size()) {
+        int diff = text.size() - newBottom - 1;
+        newTop += diff;
+        newBottom += diff;
+    }
+    
+    topLine = newTop;
+    botLine = newBottom;
 }
 }

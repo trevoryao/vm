@@ -82,4 +82,8 @@ void ModelBase::updateView(std::string &s, int y, int x) {
 void ModelBase::writeMessage(const std::string &s) {
     for (auto &v : views) v->writeMessage(s);
 }
+
+void ModelBase::writeMode(const std::string &s) {
+    for (auto &v : views) v->writeMode(s);
+}
 }

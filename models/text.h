@@ -20,10 +20,7 @@ public:
     const std::vector<std::string> &getTextFile();
     
     int getTopLine();
-    void setTopLine(int n);
-    
     int getBotLine();
-    void setBotLine(int n);
     
     void resizeText(int maxY, int maxX);
     
@@ -34,8 +31,15 @@ public:
     
     void insert(char c, int y, int x); // insert before
     void delChar(int y, int x); // at
+    void delLine(int y);
+    void changeLine(int y);
     void newLine(int y, int x);
+    void newLine(int y);
+    
     void indent(int y, int x);
+    
+    void scrollUp(int n);
+    void scrollDown(int n);
 };
 }
 

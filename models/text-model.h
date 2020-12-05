@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "model-base.h"
+#include "move.h"
 #include "text.h"
 
 enum class ModeType;
@@ -28,6 +29,7 @@ namespace models {
 class TextModel final : public ModelBase {
 private:
     Text text;
+    Move move;
     ModeType mode;
     int curY, curX;
     bool runLoop;
@@ -36,9 +38,11 @@ private:
 public:
     explicit TextModel(const std::string &fileName);
     
-    const std::string &getName();
     Text &getText();
+    Move &getMove();
+    
     void getCursor(int &y, int &x);
+    void moveAllCursor(int y, int x);
     
     void setStaticCmd(actions::Incomplete *a);
     void clearStaticCmd();
@@ -46,30 +50,18 @@ public:
     void setExecCmd(actions::Incomplete *a);
     void clearExecCmd();
     
+    ModeType getMode();
+    void setCmdMode();
+    void setInsertMode();
+    void setReplaceMode();
+    
     void run();
     void quit();
     
-    void moveAllCursor(int y, int x);
+    void resizeText(int maxY, int maxX);
     
     void displayWarn(const std::string &m);
-    
-    void resizeText(int maxY, int maxX);
-
-    void moveLeft(int n);
-    void moveRight(int n);
-    void moveUp(int n);
-    void moveDown(int n);
-
-    void searchWordLeft(int n);
-    void searchWordRight(int n);
-    
-    void getFirstChar();
-    void getLastChar(int n);
-    
     void displayName();
-    
-    void scrollUp(int lines);
-    void scrollDown(int lines);
     
     ~TextModel();
 };

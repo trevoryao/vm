@@ -52,16 +52,22 @@ void StatusView::writeWarning(const std::string &s) {
     window.refresh();
 }
 
+void StatusView::writeMode(const std::string &s) {
+    clearExec();
+    window.writeMode(s, 0, 0);
+    window.refresh();
+}
+
 void StatusView::displayView() {
     int y, x;
     instance.getCursor(y, x);
 
-    if (instance.getName().size()) {
+    if (instance.getText().getFileName().size()) {
         size_t size = 0;
         size_t lines = instance.getText().getTextFile().size();
         for (auto &s : instance.getText().getTextFile()) size += s.size();
-        window.writeStr("\"" + instance.getName() + "\" " + std::to_string(lines) + 
-            "L, " + std::to_string(size) + "C", 0, 0);
+        writeMessage("\"" + instance.getText().getFileName() + "\" " + 
+            std::to_string(lines) + "L, " + std::to_string(size) + "C");
     }
 
     moveCursor(y, x);

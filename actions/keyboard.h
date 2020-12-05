@@ -13,7 +13,8 @@ enum class KeyType {
     BACKSPACE,
     RETURN,
     DEL,
-    TAB
+    TAB,
+    ESC
 };
 
 class Keyboard final : public IAction<KeyType> {

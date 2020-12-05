@@ -44,7 +44,8 @@ bool File::diff(const vector<string> &tmpFile) {
     for (auto &line : tmpFile) f << line;
     f.close();
     
-    bool isDiff = WEXITSTATUS(system(("diff " + fileName + " " + tempDir + " > /dev/null").c_str())) == 1;
+    int cmdStatus = system(("diff " + fileName + " " + tempDir + " > /dev/null").c_str());
+    bool isDiff = WEXITSTATUS(cmdStatus) == 1;
     system(("rm " + tempDir + " > /dev/null").c_str());
     return isDiff;
 }

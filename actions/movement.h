@@ -25,6 +25,7 @@ class Movement final : public IAction<MvtType> {
 public:
     Movement(MvtType value, int n = 1);
     
+    void move(models::TextModel &t, int &y, int &x);
     void execAction(models::TextModel &t) override;
 };
 }

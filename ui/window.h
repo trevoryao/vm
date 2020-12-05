@@ -32,8 +32,8 @@ public:
     void writeStr(const std::string &s, int y, int x);
     
     void writeFill(int y);
-    
     void writeWarning(const std::string &s, int y, int x);
+    void writeMode(const std::string &s, int y, int x);
     
     void refresh();
     

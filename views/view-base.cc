@@ -13,4 +13,5 @@ void ViewBase::updateStatic(const std::string &) { }
 void ViewBase::clearStatic() { }
 void ViewBase::writeMessage(const std::string &) { }
 void ViewBase::writeWarning(const std::string &) { }
+void ViewBase::writeMode(const std::string &) { }
 }

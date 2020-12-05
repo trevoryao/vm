@@ -31,8 +31,6 @@ private:
 public:
     Insert(InsType value, int n = 1, unique_ptr<Movement> mvt = unique_ptr<Movement>{});
     
-    Movement *getMvt();
-    
     void execAction(models::TextModel &t) override;
 };
 }

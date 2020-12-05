@@ -51,8 +51,14 @@ void Window::writeFill(int y) {
 
 void Window::writeWarning(const std::string &s, int y, int x) { 
     wattron(window, COLOR_PAIR(WARNING));
-    mvwaddstr(window, y, x, s.c_str());
+    writeStr(s, y, x);
     wattroff(window, COLOR_PAIR(WARNING));
+}
+
+void Window::writeMode(const std::string &s, int y, int x) {
+    wattron(window, A_BOLD);
+    writeStr(s, y, x);
+    wattroff(window, A_BOLD);
 }
 
 void Window::refresh() { wrefresh(window); }
