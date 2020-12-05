@@ -29,7 +29,7 @@ class TextModel final : public ModelBase {
 private:
     Text text;
     ModeType mode;
-    int curY, curX, maxY, maxX;
+    int curY, curX;
     bool runLoop;
     std::unique_ptr<Incomplete> staticCmd;
     std::unique_ptr<Incomplete> execCmd;
@@ -39,9 +39,6 @@ public:
     const std::string &getName();
     Text &getText();
     void getCursor(int &y, int &x);
-    
-    void setMaxY(int y);
-    void setMaxX(int x);
     
     void setStaticCmd(actions::Incomplete *a);
     void clearStaticCmd();
@@ -56,7 +53,7 @@ public:
     
     void displayWarn(const std::string &m);
     
-    void resizeText(int maxX);
+    void resizeText(int maxY, int maxX);
 
     void moveLeft(int n);
     void moveRight(int n);

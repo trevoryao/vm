@@ -9,7 +9,6 @@
 namespace views {
 class StatusView final : public ViewBase {
 private:
-    bool hasName;
     models::TextModel &instance;
     int div1, div2;
 public:
@@ -26,7 +25,6 @@ public:
     
     void writeMessage(const std::string &s) override;
     void writeWarning(const std::string &s) override;
-    
     
     void displayView() override;
     

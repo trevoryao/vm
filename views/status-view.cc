@@ -9,10 +9,10 @@
 
 using namespace models;
 
-// attach cursor coordinates to corner!
+// TODO: on resize, view should display mode
 namespace views {
 StatusView::StatusView(TextModel &instance) : ViewBase{1, getmaxx(stdscr),
-    getmaxy(stdscr) - 1, 0}, hasName{false}, instance{instance}, 
+    getmaxy(stdscr) - 1, 0}, instance{instance}, 
     div1{getmaxx(stdscr) / 2}, div2{div1 + (div1 / 2)} { }
 
 void StatusView::update(char c, int y, int x) { }
@@ -56,19 +56,25 @@ void StatusView::displayView() {
     int y, x;
     instance.getCursor(y, x);
 
-    if (!hasName && instance.getName().size()) {
-        window.writeStr("\"" + instance.getName() + "\"", 0, 0);
-        hasName = true;
+    if (instance.getName().size()) {
+        size_t size = 0;
+        size_t lines = instance.getText().getTextFile().size();
+        for (auto &s : instance.getText().getTextFile()) size += s.size();
+        window.writeStr("\"" + instance.getName() + "\" " + std::to_string(lines) + 
+            "L, " + std::to_string(size) + "C", 0, 0);
     }
 
     moveCursor(y, x);
 }
 
 void StatusView::resizeView() {
-    window.resize(1, getmaxx(stdscr) - 1, getmaxy(stdscr) - 1, 0);
-    div1 = getmaxx(stdscr);
+    window.resize(1, getmaxx(stdscr), getmaxy(stdscr) - 1, 0);
+    div1 = getmaxx(stdscr) / 2;
     div2 = div1 + (div1 / 2);
-    displayView();
+    
+    int y, x;
+    instance.getCursor(y, x);
+    moveCursor(y, x);
 }
 
 int StatusView::getMaxHeight() { return getmaxy(window.get()); }

@@ -13,7 +13,7 @@ Text::Text(const string &fileName) : topLine{0}, botLine{0}, file{fileName} {
     if (fileName.size()) text.push_back(file.read());
 }
 
-Text::Text(const string &fileName, int maxX) : topLine{0}, file{fileName} {
+Text::Text(const string &fileName, int maxY, int maxX) : topLine{0}, file{fileName} {
     string data;
 
     if (fileName.size()) data = file.read();
@@ -36,7 +36,7 @@ Text::Text(const string &fileName, int maxX) : topLine{0}, file{fileName} {
             curWidth = 0;
         }
     }
-    botLine = static_cast<size_t>(maxX) > text.size() ? text.size() - 1 : maxX - 1;
+    botLine = static_cast<size_t>(maxY) > text.size() ? text.size() - 1 : maxY - 1;
 }
 
 const string &Text::getFileName() { return file.getName(); }
@@ -51,7 +51,7 @@ int Text::getBotLine() { return botLine; }
 
 void Text::setBotLine(int n) { botLine = n; }
 
-void Text::resizeText(int maxX) {
+void Text::resizeText(int maxY, int maxX) {
     vector<string> newText;
     
     int curX = 0;
@@ -77,7 +77,7 @@ void Text::resizeText(int maxX) {
     }
     
     text = newText;
-    botLine = static_cast<size_t>(maxX) > text.size() ? text.size() - 1 : maxX - 1;
+    botLine = static_cast<size_t>(maxY) > text.size() ? text.size() - 1 : maxY - 1;
 }
 
 void Text::write() { file.write(text); }

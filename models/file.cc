@@ -41,7 +41,7 @@ bool File::diff(const vector<string> &tmpFile) {
     pclose(temp);
     
     fstream f{tempDir};
-    for (auto &line : tmpFile) f << line << endl;
+    for (auto &line : tmpFile) f << line;
     f.close();
     
     bool isDiff = WEXITSTATUS(system(("diff " + fileName + " " + tempDir + " > /dev/null").c_str())) == 1;

@@ -14,7 +14,7 @@ private:
     std::vector<std::string> text;
 public:
     explicit Text(const std::string &fileName);
-    Text(const std::string &fileName, int maxX);
+    Text(const std::string &fileName, int maxY, int maxX);
     
     const std::string &getFileName();
     const std::vector<std::string> &getTextFile();
@@ -25,7 +25,7 @@ public:
     int getBotLine();
     void setBotLine(int n);
     
-    void resizeText(int maxX);
+    void resizeText(int maxY, int maxX);
     
     void write();
     // true if files are different, false otherwise

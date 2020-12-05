@@ -34,30 +34,27 @@ void TextView::displayView() {
     instance.getCursor(curY, curX);
     
     for (int i = instance.getText().getTopLine(); i <= instance.getText().getBotLine(); ++i, ++y) {
-        if (y > maxY || i >= instance.getText().getTextFile().size()) break;
+        if (y > maxY || static_cast<size_t>(i) >= instance.getText().getTextFile().size()) break;
         window.writeStr(instance.getText().getTextFile()[i], y, 0);
     }
     for (; y <= maxY; ++y) window.writeFill(y);
     
-    window.move(curY, curX);
-    window.refresh();
+    moveCursor(curY, curX);
 }
 
 void TextView::resizeView() {
     int y, x;
     getmaxyx(stdscr, y, x);
     window.resize(y - 1, x, 0, 0);
-    instance.resizeText(x);
+    instance.resizeText(y, x);
     displayView();
-    instance.setMaxY(y - 1);
-    instance.setMaxX(x);
 }
 
 int TextView::getMaxHeight() { return getmaxy(window.get()); }
 int TextView::getMaxWidth() { return getmaxx(window.get()); }
 
 void TextView::moveCursor(int y, int x) { 
-    window.move(y, x); 
+    window.move(y - instance.getText().getTopLine(), x); 
     window.refresh(); 
 }
 }
