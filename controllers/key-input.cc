@@ -62,5 +62,6 @@ unique_ptr<Action> KeyInput::action() {
     } catch (out_of_range &e) {
         return unique_ptr<Keyboard>{};
     }
+    return unique_ptr<Keyboard>{};
 }
 }

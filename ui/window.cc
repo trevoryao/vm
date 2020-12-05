@@ -70,7 +70,7 @@ pair<int, int> Window::getCursor() {
 }
 
 // may have to rewrite to delete and make new
-void Window::resize(int rows, int cols, int y, int x) { 
+void Window::resize(int rows, int cols, int x, int y) { 
     // wresize(window, y, x);
     // wclear(window);
     if (window) {

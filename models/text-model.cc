@@ -47,8 +47,8 @@ namespace models {
 TextModel::TextModel(const string &fileName) : text{fileName}, 
     mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true} {
     initscr();
-	raw();
-	noecho();
+    raw();
+    noecho();
     keypad(stdscr, TRUE);
     nodelay(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
@@ -66,7 +66,7 @@ TextModel::TextModel(const string &fileName) : text{fileName},
     
     // construct text based on view
     unique_ptr<views::TextView> textView = make_unique<views::TextView>(*this);
-    text.resizeText(textView->getMaxWidth());
+    text.resizeText(textView->getMaxHeight(), textView->getMaxWidth());
     addView(std::move(textView));
 }
 
@@ -78,9 +78,6 @@ void TextModel::getCursor(int &y, int &x) {
     y = curY;
     x = curX;
 }
-
-void TextModel::setMaxY(int y) { maxY = y; }
-void TextModel::setMaxX(int x) { maxX = x; }
 
 void TextModel::setStaticCmd(Incomplete *a) {
     staticCmd = make_unique<Incomplete>(*a);
@@ -153,15 +150,16 @@ void TextModel::displayWarn(const std::string &m) {
     moveCursor(curY, curX);
 }
 
-void TextModel::resizeText(int newMaxX) { text.resizeText(newMaxX); }
+void TextModel::resizeText(int MaxY, int MaxX) { text.resizeText(MaxY, MaxX); }
 
 void TextModel::moveAllCursor(int y, int x) {
     // TODO: scroll
     if (y < text.getTopLine()) {
-        
+        scrollUp(text.getTopLine() - y);
     } else if (y > text.getBotLine()) {
-        
+        scrollDown(y - text.getBotLine());
     }
+    
     moveCursor(y, x);
     curY = y;
     curX = x;
@@ -188,7 +186,7 @@ void TextModel::moveUp(int n) {
 }
 
 void TextModel::moveDown(int n) {
-    int i = static_cast<int>(curY + n) >= text.getTextFile().size() ? 
+    int i = static_cast<size_t>(curY + n) >= text.getTextFile().size() ? 
         text.getTextFile().size() - 1 : curY + n;
     int x = text.getTextFile()[i].size() - (mode == ModeType::CMD ? 2 : 1);
     if (curX > x) {
@@ -437,7 +435,7 @@ void TextModel::scrollDown(int lines) {
     int newTop = text.getTopLine() + lines;
     int newBottom = text.getBotLine() + lines;
     
-    if (newBottom >= text.getTextFile().size()) {
+    if (static_cast<size_t>(newBottom) >= text.getTextFile().size()) {
         int diff = text.getTextFile().size() - newBottom - 1;
         newTop += diff;
         newBottom += diff;
@@ -445,6 +443,7 @@ void TextModel::scrollDown(int lines) {
     
     text.setTopLine(newTop);
     text.setBotLine(newBottom);
+    
     
     displayViews();
 }
