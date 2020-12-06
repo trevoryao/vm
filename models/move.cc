@@ -21,13 +21,11 @@ Move::Move(Text &text) : text{text} { }
 
 void Move::left(int &y, int &x, int n) {
     x = x - n < 0 ? 0 : x - n;
-    // text.getWindowCursor(y, x);
 }
 
 void Move::right(int &y, int &x, int n, ModeType mode) {
     int max = text.getTextFile()[y].size() - (mode == ModeType::CMD ? 2 : 1);
     if (max >= 0) x = x + n > max ? max : x + n;
-    // text.getWindowCursor(y, x);
 }
 
 void Move::up(int &y, int &x, int n, ModeType mode) {
@@ -38,7 +36,6 @@ void Move::up(int &y, int &x, int n, ModeType mode) {
         if (max < 0) max = 0;
         x = max;
     }
-    // text.getWindowCursor(y, x);
 }
 
 void Move::down(int &y, int &x, int n, ModeType mode) {
@@ -49,7 +46,6 @@ void Move::down(int &y, int &x, int n, ModeType mode) {
         if (max < 0) max = 0;
         x = max;
     }
-    // text.getWindowCursor(y, x);
 }
 
 void Move::wordBwd(int &y, int &x, int n) {
@@ -94,7 +90,6 @@ void Move::wordBwd(int &y, int &x, int n) {
             if (found + 1 == n) {
                 ++y;
                 x = 0;
-                // text.getWindowCursor(y, x);
                 return;
             } else {
                 --y;
@@ -156,7 +151,6 @@ void Move::wordBwd(int &y, int &x, int n) {
                     x = 0;
                 }
                 while (isWSpace(text.getTextFile()[y][x])) --x;
-                // text.getWindowCursor(y, x);
                 return;
             }
         }
@@ -190,10 +184,7 @@ void Move::wordFwd(int &y, int &x, int n) {
         if (text.getTextFile()[y].size() == 0) { // does nothing
             ++found;
             ++y;
-            if (found == n) {
-                // text.getWindowCursor(y, x);
-                return;
-            }
+            if (found == n) return;
         }
         
         while (static_cast<size_t>(x) < text.getTextFile()[y].size()) {
@@ -237,10 +228,7 @@ void Move::wordFwd(int &y, int &x, int n) {
                 default: break;
             }
             
-            if (found == n) {
-                // text.getWindowCursor(y, x);
-                return;
-            }
+            if (found == n) return;
         }
         
         ++y;
@@ -254,7 +242,6 @@ void Move::firstChar(int &y, int &x, int n) {
         if (!isWSpace(text.getTextFile()[y][i])) {
             size_t size = text.getTextFile()[y].size();
             x = (i + n - 1 >= size) ? size - 1 : i + n - 1;
-            // text.getWindowCursor(y, x);
             return;
         }
     }
@@ -266,14 +253,10 @@ void Move::lastChar(int &y, int &x, int lines, int n) {
     for (size_t i = text.getTextFile()[y].size() - 2; i != 0; --i) {
         if (!(isWSpace(text.getTextFile()[y][i]))) {
             x = (i - n < 0) ? 0 : i - n;
-            // text.getWindowCursor(y, x);
             return;
         }
     }
 }
 
-void Move::begLine(int &y, int &x) { 
-    x = 0; 
-    // text.getWindowCursor(y, x); 
-}
+void Move::begLine(int &y, int &x) { x = 0; }
 }
