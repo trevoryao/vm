@@ -35,14 +35,18 @@ void TextView::displayInfo() {
     instance.getCursor(y, x);
     
     std::vector<std::string> aboutText{
-        "vi - Lightweight vim",
+        "vi: Vi IMproved - Mass",
+        "a lightweight vim-like text editor",
         "",
         "version 1.0",
+        "",
         "Trevor J. Yao",
+        "University of Waterloo",
+        "",
         "github.com/trevoryao/vm"
     };
         
-    int l = (getMaxHeight() - 5) / 2;
+    int l = (getMaxHeight() - aboutText.size()) / 2;
     for (auto &s : aboutText) {
         int c = (getMaxWidth() - s.size()) / 2;
         window.writeStr(s, l++, c);

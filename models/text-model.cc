@@ -105,10 +105,9 @@ void TextModel::run() {
     if (text.hasFile()) {
         writeMessage("\"" + text.getFileName() + "\" " + 
             std::to_string(text.getLines()) + "L, " + std::to_string(text.getChars()) + "C");
-    } else {
-        displayInfo();
     }
     displayViews();
+    if (!text.hasFile()) displayInfo();
     moveAllCursor(curY, curX);
     
     while (runLoop) {
