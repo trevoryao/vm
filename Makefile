@@ -8,8 +8,8 @@ OBJECTS = actions/action.o actions/e-movement.o \
 	actions/search.o actions/text-edit.o controllers/controller-base.o \
 	controllers/input.o controllers/key-input.o exceptions/bad-entry.o \
 	exceptions/display-warning.o models/file.o models/model-base.o \
-	models/move.o models/text-model.o models/text.o ui/window.o \
-	ui/graphics.o views/status-view.o views/text-view.o \
+	models/move.o models/row.o models/text-model.o models/text.o \
+	ui/window.o ui/graphics.o views/status-view.o views/text-view.o \
 	views/view-base.o vm.o
 DEPENDS = ${OBJECTS:.o=.d}
 

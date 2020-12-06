@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
+#include "row.h"
+
 namespace models {
 class FileDNE final { };
-
+// todo: change to rows
 class File final {
 private:
     std::string fileName;
@@ -15,11 +17,11 @@ public:
 
     const std::string &getName();
 
-    std::string read();
+    std::vector<std::string> read();
 
-    void write(const std::vector<std::string> &tmpFile);
+    void write(const std::vector<Row> &tmpFile);
     
-    bool diff(const std::vector<std::string> &tmpFile);
+    bool diff(const std::vector<Row> &tmpFile);
 };
 }
 

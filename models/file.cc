@@ -8,30 +8,40 @@
 #include <vector>
 #include <sys/wait.h>
 
+#include "row.h"
+
 using namespace std;
 
 namespace models {
-File::File(const string &fileName): fileName{fileName} { }
+File::File(const string &fileName) : fileName{fileName} { }
 
 const std::string &File::getName() { return fileName; }
 
-string File::read() {
+vector<string> File::read() {
     fstream f{fileName};
     if (f.fail()) throw FileDNE{};
+    /*
     string file;
     f.seekg(0, ios::end);   
     file.resize(f.tellg());
     f.seekg(0, ios::beg);
     f.read(&file[0], file.size());
+    return file;*/
+    vector<string> file;
+    string line;
+    while (getline(f, line)) {
+        line.push_back('\n');
+        file.push_back(line);
+    }
     return file;
 }
 
-void File::write(const vector<string> &tmpFile) {
+void File::write(const vector<Row> &tmpFile) {
     fstream f{fileName};
     for (auto &line : tmpFile) f << line;
 }
 
-bool File::diff(const vector<string> &tmpFile) {
+bool File::diff(const vector<Row> &tmpFile) {
     string tempDir;
     
     FILE *temp = popen("mktemp", "r");

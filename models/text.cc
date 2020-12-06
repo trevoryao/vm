@@ -10,39 +10,23 @@ using namespace std;
 
 namespace models {
 Text::Text(const string &fileName, int maxY, int maxX) : topLine{0}, width{maxX}, file{fileName} {
-    string data;
     try {
-        data = file.read();
+        vector<string> data = file.read();
+        
+        for (auto &line : data) {
+            text.push_back(Row{line, maxX});
+        }
+
+        botLine = static_cast<size_t>(maxY) > text.size() ? text.size() - 1 : maxY - 1;
     } catch (FileDNE &e) {
-        text.push_back("\n");
+        text.push_back(Row{maxX});
         botLine = 0;
-        return;
     }
-    
-    string line;
-    line.reserve(maxX);
-    int curWidth = 0;
-    for (size_t i = 0; i < data.size(); ++i, ++curWidth) {
-        if (curWidth == maxX) {
-            text.push_back(line);
-            line.clear();
-            curWidth = 0;
-        }
-        
-        line.push_back(data[i]);
-        
-        if (data[i] == '\n') {
-            text.push_back(line);
-            line.clear();
-            curWidth = 0;
-        }
-    }
-    botLine = static_cast<size_t>(maxY) > text.size() ? text.size() - 1 : maxY - 1;
 }
 
 const string &Text::getFileName() { return file.getName(); }
 
-const vector<string> &Text::getTextFile() { return text; }
+const vector<Row> &Text::getTextFile() { return text; }
 
 bool Text::hasFile() { return getFileName().size() != 0; }
 
@@ -53,37 +37,26 @@ void Text::setBotLine(int n) { botLine = n; }
 int Text::getLines() { return text.size(); }
 int Text::getChars() {
     size_t size = 0;
-    for (auto &s : text) size += s.size();
+    for (auto &row : text) size += row.size();
     return size;
 }
 
-void Text::resizeText(int maxY, int maxX) {
-    vector<string> newText;
-    
-    int curX = 0;
-    string line;
-    line.reserve(maxX);
-    for (auto &v : text) {
-        for (auto c : v) {
-            if (curX == maxX) {
-                newText.push_back(line);
-                line.clear();
-                curX = 0;
-            }
-            
-            line.push_back(c);
-            ++curX;
-            if (c == '\n') {
-                newText.push_back(line);
-                line.clear();
-                curX = 0;
-            }
-            
-        }
+void Text::getWindowCursor(int &y, int &x) {
+    int height = 0;
+    for (int i = 0; i < y; ++i) {
+        height += text[i].getHeight();
     }
-    
-    text = newText;
-    botLine = static_cast<size_t>(maxY) > text.size() ? text.size() - 1 : maxY - 1;
+    int height2 = 0, width2 = x;
+    text[y].getPos(height2, width2);
+    y = height + height2;
+    x = width2;
+}
+
+void Text::resizeText(int maxY, int maxX) {
+    for (auto &row : text) {
+        row.resize(maxX);
+    }
+    botLine = static_cast<size_t>(maxY) > height() ? height() - 1 : maxY - 1;
     width = maxX;
 }
 
@@ -93,31 +66,13 @@ bool Text::diff() { return file.diff(text); }
 
 bool Text::insert(const std::string &filePath, int y, int &height) {
     try {
-        File newFile{filePath};
-        string data = newFile.read();
+        vector<string> data = file.read();
         
-        string line;
-        line.reserve(width);
-        
-        int curWidth = 0;
         int j = 1;
-        
-        for (size_t i = 0; i < data.size(); ++i, ++curWidth) {
-            if (curWidth == width) {
-                text.insert(text.begin() + y + j++, line);
-                line.clear();
-                curWidth = 0;
-            }
-            
-            line.push_back(data[i]);
-            
-            if (data[i] == '\n') {
-                text.insert(text.begin() + y + j++, line);
-                line.clear();
-                curWidth = 0;
-            }
+        for (auto &line : data) {
+            text.insert(text.begin() + y + j++, Row{line, width});
         }
-        
+
         height = j - 1;
     } catch (FileDNE &e) {
         return false;
@@ -126,21 +81,21 @@ bool Text::insert(const std::string &filePath, int y, int &height) {
 }
 
 void Text::insert(char c, int y, int x) {
-    text[y].insert(x, 1, c);
+    text[y].insert(x, c);
 }
 
 // only removes, thats it
 void Text::delChar(int y, int x) { // check beginning of line
-    text[y].erase(x, 1);
+    text[y].erase(x);
 }
 
 void Text::backSpace(int y, int x) {
     if (y == 0 && x == 0) return;
     
     if (x != 0) {
-        text[y].erase(x - 1, 1);
+        text[y].erase(x - 1);
     } else {
-        text[y - 1].pop_back();
+        text[y - 1].popBack();
         text[y - 1] = text[y - 1] + text[y];
         text.erase(text.begin() + y);
     }
@@ -151,16 +106,16 @@ void Text::del(int y, int x) {
         static_cast<size_t>(x) == text[y].size() - 1) return;
     
     if (static_cast<size_t>(x) != text[y].size() - 1) {
-        text[y].erase(x, 1);
+        text[y].erase(x);
     } else {
-        text[y].pop_back();
+        text[y].popBack();
         text[y] = text[y] + text[y + 1];
         text.erase(text.begin() + y + 1);
     }
 }
 
 void Text::changeLine(int y) {
-    text[y] = "\n";
+    text[y].clear();
 }
 
 void Text::delLine(int y) {
@@ -168,16 +123,18 @@ void Text::delLine(int y) {
 }
 
 void Text::newLine(int y, int x) {
-    text.insert(text.begin() + y + 1, text[y].substr(x));
-    text[y] = text[y].substr(0, x) + "\n";
+    text.insert(text.begin() + y + 1, text[y].subRow(x));
+    auto row = text[y].subRow(0, x);
+    row.append('\n');
+    text[y] = row;
 }
 
 void Text::newLine(int y) {
-    text.insert(text.begin() + y + 1, "\n");
+    text.insert(text.begin() + y + 1, Row{width});
 }
 
 void Text::indent(int y, int x) {
-    text[y] = "    " + text[y];
+    text[y].indent();
 }
 
 void Text::scrollUp(int lines) {
@@ -204,5 +161,11 @@ void Text::scrollDown(int lines) {
     
     topLine = newTop;
     botLine = newBottom;
+}
+
+size_t Text::height() {
+    size_t size = 0;
+    for (auto &row : text) size += row.getHeight();
+    return size;
 }
 }

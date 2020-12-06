@@ -5,18 +5,19 @@
 #include <string>
 
 #include "file.h"
+#include "row.h"
 
 namespace models {
 class Text final {
 private:
     int topLine, botLine, width;
     File file;
-    std::vector<std::string> text;
+    std::vector<Row> text;
 public:
     Text(const std::string &fileName, int maxY, int maxX);
     
     const std::string &getFileName();
-    const std::vector<std::string> &getTextFile();
+    const std::vector<Row> &getTextFile();
     
     bool hasFile();
     
@@ -26,6 +27,10 @@ public:
     
     int getLines();
     int getChars();
+
+    void getWindowCursor(int &y, int &x);
+    
+    size_t height();
     
     void resizeText(int maxY, int maxX);
     

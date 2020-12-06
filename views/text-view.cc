@@ -20,10 +20,16 @@ void TextView::displayView() {
     window.clear();
     int curY = 0, curX = 0, y = 0, maxY = getMaxHeight();
     instance.getCursor(curY, curX);
-    
+    /*
     for (int i = instance.getText().getTopLine(); i <= instance.getText().getBotLine(); ++i, ++y) {
         if (y > maxY || static_cast<size_t>(i) >= instance.getText().getTextFile().size()) break;
         window.writeStr(instance.getText().getTextFile()[i], y, 0);
+    }*/
+    for (int i = instance.getText().getTopLine(); i <= instance.getText().getBotLine(); ++i) {
+        for (auto &line : instance.getText().getTextFile()[i].getRows()) {
+            if (y > maxY || static_cast<size_t>(i) >= instance.getText().height()) break;
+            window.writeStr(line, y++, 0);
+        }
     }
     for (; y <= maxY; ++y) window.writeFill(y);
     
@@ -67,6 +73,7 @@ int TextView::getMaxHeight() { return getmaxy(window.get()); }
 int TextView::getMaxWidth() { return getmaxx(window.get()); }
 
 void TextView::moveCursor(int y, int x) { 
+    instance.getText().getWindowCursor(y, x);
     window.move(y - instance.getText().getTopLine(), x); 
     window.refresh(); 
 }
