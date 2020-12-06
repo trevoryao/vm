@@ -39,5 +39,4 @@
 *.pdf
 
 # binaries
-bin
-objs
+vm
