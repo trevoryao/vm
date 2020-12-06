@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace models {
-class FileDNE { };
+class FileDNE final { };
 
 class File final {
 private:

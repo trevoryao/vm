@@ -6,11 +6,15 @@
 #include <string>
 
 namespace actions {
-Incomplete::Incomplete(IncType value, const std::string &s, int n) : 
-    IAction{value, n}, fragment{s} { }
+Incomplete::Incomplete(IncType value, char c) : 
+    IAction{value, 1}, printFrag{false}, fragment(1, c) { }
 
 Incomplete::Incomplete(IncType value, char c, int n) : 
-    IAction{value, n}, fragment(1, c) { }
+    IAction{value, n}, printFrag{true}, fragment(1, c) { }
+
+std::string Incomplete::getStaticFragment() {
+    return (printFrag ? std::to_string(getMult()) : "") + fragment;
+}
 
 const std::string &Incomplete::getFragment() { return fragment; }
 

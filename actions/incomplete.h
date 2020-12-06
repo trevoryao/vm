@@ -15,11 +15,13 @@ enum class IncType { UNKNOWN, EXEC, STATIC };
 // usually either full of integers, or so exec command
 class Incomplete final : public IAction<IncType> {
 private:
+    bool printFrag;
     std::string fragment;
 public:
-    Incomplete(IncType value, const std::string &s = "", int n = 1);
-    Incomplete(IncType value, char c, int n = 1);
+    Incomplete(IncType value, char c);
+    Incomplete(IncType value, char c, int n);
     
+    std::string getStaticFragment();
     const std::string &getFragment();
     
     void addFragment(char c);

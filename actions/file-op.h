@@ -1,6 +1,8 @@
 #ifndef __FILE_OP_H__
 #define __FILE_OP_H__
 
+#include <string>
+
 #include "i-action.h"
 
 namespace models {
@@ -17,8 +19,10 @@ enum class FileOpType {
 };
 
 class FileOp final : public IAction<FileOpType> {
+private:
+    std::string filePath;
 public:
-    FileOp(FileOpType value);
+    FileOp(FileOpType value, const std::string &filePath = "");
     
     void execAction(models::TextModel &t) override;
 };

@@ -28,6 +28,7 @@ public:
     virtual void writeMode(const std::string &s);
     
     virtual void displayView() = 0;
+    virtual void displayInfo() = 0;
     
     virtual void resizeView() = 0;
     

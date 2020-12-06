@@ -47,8 +47,18 @@ void ModelBase::displayViews() {
     for (auto &v : views) v->displayView();
 }
 
+void ModelBase::displayInfo() {
+    for (auto &v : views) v->displayInfo();
+}
+
 void ModelBase::resizeViews() {
     for (auto &v : views) v->resizeView();
+}
+
+int ModelBase::getHeight() {
+    int height = 0;
+    for (auto &v : views) height += v->getMaxHeight();
+    return height;
 }
 
 void ModelBase::moveCursor(int y, int x) {

@@ -5,15 +5,6 @@
 #include "movement.h"
 #include "../models/text-model.h"
 
-namespace {
-// retval > 0 if vec1 > vec2, 0 if equal, -1 if vec1 < vec2
-int coordCmp(int y1, int x1, int y2, int x2) {
-    if (y1 != y2) return y1 - y2;
-    // y1 == y2
-    return x1 - x2;
-}
-}
-
 namespace actions {
 Insert::Insert(InsType value, int n, std::unique_ptr<Movement> mvt) : 
     IAction{value, n}, mvt{std::move(mvt)} { }
@@ -31,6 +22,7 @@ void Insert::execAction(models::TextModel &t) {
         }
         case InsType::NEW_LINE_BELOW: {
             for (int i = 0; i < getMult(); ++i) t.getText().newLine(y);
+            t.moveAllCursor(y + getMult(), x);
             break;
         }
         case InsType::BEG_LINE: {
@@ -41,34 +33,68 @@ void Insert::execAction(models::TextModel &t) {
         }
         case InsType::END_LINE: {
             int newY = y, newX = x;
-            t.getMove().lastChar(y, x, 1, getMult());
-            t.moveAllCursor(newY, newX);
+            t.getMove().lastChar(newY, newX, 1, getMult());
+            t.moveAllCursor(newY, newX + 1);
             break;
         }
         case InsType::CH_MVT: {
             int newY = y, newX = x;
-            mvt->move(t, y, x);
-            if (coordCmp(y, x, newY, newX) > 0) {
-                std::swap(y, newY);
-                std::swap(x, newX);
-            }
-            // (y, x) <= (newY, newX)
-            if (y != newY) {
-                for (int i = 0; i < mvt->getMult() - 1; ++i) t.getText().delLine(y);
-                t.getText().changeLine(y);
-            } else {
-                for (int i = 0; i <= newX - x; ++i) t.getText().delChar(y, x);
+            mvt->move(t, newY, newX);
+            
+            switch (mvt->getValue()) {
+                case MvtType::LEFT: {
+                    for (int i = 0; i < x - newX; ++i) t.getText().delChar(y, newX);
+                    t.moveAllCursor(y, newX);
+                    break;
+                }
+                case MvtType::RIGHT: {
+                    for (int i = 0; i < newX - x; ++i) t.getText().delChar(y, x);
+                    break;
+                }
+                case MvtType::UP: {
+                    int j = getMult() == 1 ? 1 : 0;
+                    for (int i = 0; i < y - newY + j; ++i) t.getText().delLine(y - 1);
+                    t.getText().changeLine(newY);
+                    t.moveAllCursor(newY, 0);
+                    break;
+                }
+                case MvtType::DOWN: {
+                    int j = getMult() == 1 ? 0 : 1;
+                    t.getText().changeLine(y);
+                    for (int i = 0; i < newY - y + j; ++i) t.getText().delLine(y + 1);
+                    break;
+                }
+                case MvtType::WORD_LEFT: {
+                    for (int i = 0; i < x - newX; ++i) t.getText().delChar(y, newX);
+                    t.moveAllCursor(y, newX);
+                    break;
+                }
+                case MvtType::WORD_RIGHT: {
+                    for (int i = 0; i < newX - x; ++i) t.getText().delChar(y, x);
+                    break;
+                }
+                case MvtType::BEG_LINE:
+                case MvtType::BEG_CH: {
+                    for (int i = 0; i < x - newX; ++i) t.getText().delChar(y, newX);
+                    t.moveAllCursor(y, newX);
+                    break;
+                }
+                case MvtType::END_CH: {
+                    for (int i = 0; i <= newX - x; ++i) t.getText().delChar(y, x);
+                    for (int i = 0; i < newY - y; ++i) t.getText().delLine(y + 1);
+                    break;
+                }
             }
             break;
-        } // delete from current to movement result
+        }
         case InsType::CH_LINE: {
             for (int i = 0; i < getMult() - 1; ++i) t.getText().delLine(y);
             t.getText().changeLine(y);
         } // delete line, insert empty line
         case InsType::CH: t.getText().delChar(y, x); break; // clear under char
     }
-    
-    t.displayViews();
+    t.clearStaticCmd();
     t.setInsertMode();
+    t.displayAllViews();
 }
 }

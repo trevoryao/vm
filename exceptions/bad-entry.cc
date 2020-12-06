@@ -1,14 +1,12 @@
 #include "bad-entry.h"
 
-namespace actions{
+#include <utility>
+
+namespace exceptions {
 BadEntry::BadEntry() { }
 
 BadEntry::BadEntry(const std::string &entry) : entry{entry} { }
+BadEntry::BadEntry(std::string &&entry) : entry{std::move(entry)} { }
 
 const std::string &BadEntry::getEntry() { return entry; }
-}
-
-std::ostream &operator<<(std::ostream &out, actions::BadEntry &b) {
-    std::cout << b.getEntry();
-    return out;
 }

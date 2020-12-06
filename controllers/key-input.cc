@@ -17,7 +17,7 @@ KeyInput::KeyInput() :
         {KEY_BACKSPACE, ActionType::KEY},
         {'\n', ActionType::KEY},
         {13, ActionType::KEY},
-        {127, ActionType::KEY},
+        {KEY_DC, ActionType::KEY},
         {'\t', ActionType::KEY},
         {27, ActionType::KEY},
         {KEY_LEFT, ActionType::MVT},
@@ -29,7 +29,7 @@ KeyInput::KeyInput() :
         {KEY_BACKSPACE, KeyType::BACKSPACE},
         {'\n', KeyType::RETURN},
         {13, KeyType::RETURN},
-        {127, KeyType::DEL},
+        {KEY_DC, KeyType::DEL},
         {'\t', KeyType::TAB},
         {27, KeyType::ESC}
     },

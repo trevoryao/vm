@@ -1,15 +1,16 @@
 CXX = g++-5
 CXXFLAGS = -std=c++14 -Wall -MMD -g
 EXEC = vm
-OBJECTS = actions/action.o actions/bad-entry.o actions/e-movement.o \
+OBJECTS = actions/action.o actions/e-movement.o \
 	actions/e-search.o actions/file-op.o actions/global.o \
 	actions/incomplete.o actions/insert.o actions/keyboard.o \
 	actions/movement.o actions/replace.o actions/scroll.o \
 	actions/search.o actions/text-edit.o controllers/controller-base.o \
-	controllers/input.o controllers/key-input.o models/file.o models/model-base.o \
-	models/move.o models/text-model.o models/text.o ui/window.o views/status-view.o \
-	views/text-view.o views/view-base.o \
-	vm.o
+	controllers/input.o controllers/key-input.o exceptions/bad-entry.o \
+	exceptions/display-warning.o models/file.o models/model-base.o \
+	models/move.o models/text-model.o models/text.o ui/window.o \
+	ui/graphics.o views/status-view.o views/text-view.o \
+	views/view-base.o vm.o
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}

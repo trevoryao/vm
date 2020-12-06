@@ -13,7 +13,7 @@ using namespace models;
 namespace views {
 StatusView::StatusView(TextModel &instance) : ViewBase{1, getmaxx(stdscr),
     getmaxy(stdscr) - 1, 0}, instance{instance}, 
-    div1{getmaxx(stdscr) / 2}, div2{div1 + (div1 / 2)} { }
+    div1{(getmaxx(stdscr) * 2) / 3}, div2{div1 + (getmaxx(stdscr) / 6)} { }
 
 void StatusView::update(char c, int y, int x) { }
 void StatusView::update(const std::string &s, int y, int x) { }
@@ -31,7 +31,7 @@ void StatusView::clearExec() {
 
 void StatusView::updateStatic(const std::string &s) {
     clearStatic();
-    window.writeStr(s, 0, div1 + (div2 - div1 - s.size()));
+    window.writeStr(s, 0, div1 + (div2 - div1 - s.size()) / 2);
     window.refresh();
 }
 
@@ -61,22 +61,17 @@ void StatusView::writeMode(const std::string &s) {
 void StatusView::displayView() {
     int y, x;
     instance.getCursor(y, x);
-
-    if (instance.getText().getFileName().size()) {
-        size_t size = 0;
-        size_t lines = instance.getText().getTextFile().size();
-        for (auto &s : instance.getText().getTextFile()) size += s.size();
-        writeMessage("\"" + instance.getText().getFileName() + "\" " + 
-            std::to_string(lines) + "L, " + std::to_string(size) + "C");
-    }
-
     moveCursor(y, x);
+}
+
+void StatusView::displayInfo() {
+    displayView();
 }
 
 void StatusView::resizeView() {
     window.resize(1, getmaxx(stdscr), getmaxy(stdscr) - 1, 0);
-    div1 = getmaxx(stdscr) / 2;
-    div2 = div1 + (div1 / 2);
+    div1 = (getmaxx(stdscr) * 2) / 3;
+    div2 = div1 + (getmaxx(stdscr) / 6);
     
     int y, x;
     instance.getCursor(y, x);

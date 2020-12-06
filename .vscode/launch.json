@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${cwd}/vm",
-            "args":["models/text-model.cc"],
+            "args":["vm.cc"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

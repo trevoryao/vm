@@ -20,7 +20,7 @@ public:
     
     const std::string &getSearch();
     
-    void execAction(models::TextModel &t) { }
+    void execAction(models::TextModel &t) override { }
 };
 }
 

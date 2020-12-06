@@ -1,6 +1,5 @@
 #include "text-model.h"
 
-#include <fstream>
 #include <memory>
 #include <string>
 #include <vector>
@@ -8,8 +7,6 @@
 
 #include "mode-type.h"
 #include "../actions/action.h"
-#include "../actions/bad-entry.h"
-#include "../actions/clear-cmd.h"
 #include "../actions/e-movement.h"
 #include "../actions/e-search.h"
 #include "../actions/file-op.h"
@@ -21,34 +18,25 @@
 #include "../actions/scroll.h"
 #include "../actions/search.h"
 #include "../actions/text-edit.h"
-#include "../actions/update-cmd.h"
 #include "../controllers/input.h"
 #include "../controllers/key-input.h"
+#include "../exceptions/bad-entry.h"
+#include "../exceptions/clear-cmd.h"
+#include "../exceptions/display-warning.h"
+#include "../exceptions/update-cmd.h"
 #include "../ui/colours.h"
 #include "../views/status-view.h"
 #include "../views/text-view.h"
 
 using namespace actions;
 using namespace controllers;
+using namespace exceptions;
 using namespace std;
 
 namespace models {
-TextModel::TextModel(const string &fileName) : text{fileName}, move{text},
+TextModel::TextModel(const string &fileName) : 
+    text{fileName, getmaxy(stdscr), getmaxx(stdscr)}, move{text},
     mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true} {
-    initscr();
-    raw();
-    noecho();
-    keypad(stdscr, TRUE);
-    nodelay(stdscr, TRUE);
-    mousemask(ALL_MOUSE_EVENTS, NULL);
-    start_color();
-    use_default_colors();
-    init_color(COLOR_WHITE, 1000, 1000, 1000); // brighter white
-    init_pair(DEFAULT, DEFAULT_COLOUR, DEFAULT_COLOUR); // default text;
-    init_pair(WARNING, COLOR_WHITE, COLOR_RED); // warnings
-    init_color(FILL_COLOUR, 820, 576, 902);
-    init_pair(FILL, FILL_COLOUR, DEFAULT_COLOUR);
-    
     addView(make_unique<views::StatusView>(*this));
     addInputController(make_unique<controllers::Input>());
     addKeyController(make_unique<controllers::KeyInput>());
@@ -69,7 +57,7 @@ void TextModel::getCursor(int &y, int &x) {
 
 void TextModel::setStaticCmd(Incomplete *a) {
     staticCmd = make_unique<Incomplete>(*a);
-    updateStaticView(staticCmd->getFragment());
+    updateStaticView(staticCmd->getStaticFragment());
     moveCursor(curY, curX);
 }
 
@@ -112,8 +100,17 @@ void TextModel::setReplaceMode() {
 }
 
 void TextModel::run() {
-    displayViews(); // TODO: display columns and lines
-
+     // based off current mode
+    
+    if (text.hasFile()) {
+        writeMessage("\"" + text.getFileName() + "\" " + 
+            std::to_string(text.getLines()) + "L, " + std::to_string(text.getChars()) + "C");
+    } else {
+        displayInfo();
+    }
+    displayViews();
+    moveAllCursor(curY, curX);
+    
     while (runLoop) {
         if (execCmd) {
             try {
@@ -129,13 +126,16 @@ void TextModel::run() {
                 displayWarn("Invalid Command: " + e.getEntry());
             } catch (UpdateCmd &e) {
                 execCmd->execAction(*this);
+            } catch (DisplayWarning &e) {
+                clearExecCmd();
+                displayWarn(e.getWarning());
             }
         } else if (staticCmd) {
             try {
                 auto action = getAction(staticCmd.get());
-                if (action) {
+                if (action) { // gets removed
                     action->execAction(*this);
-                    clearStaticCmd();
+                    // clearStaticCmd(); static commands have to delete themselves
                 }
             } catch (ClearCmd &e) {
                 clearStaticCmd();
@@ -159,6 +159,23 @@ void TextModel::displayWarn(const std::string &m) {
     moveCursor(curY, curX);
 }
 
+void TextModel::displayAllViews() {
+    displayViews();
+
+    switch (mode) {
+        case ModeType::CMD: {
+            clearExecCmd();
+            if (execCmd) updateExecView(execCmd->getFragment());
+            if (staticCmd) updateStaticView(staticCmd->getFragment());
+            break;
+        }
+        case ModeType::INSERT: writeMode("-- INSERT --"); break;
+        case ModeType::REPLACE: writeMode("-- REPLACE --"); break;
+    }
+
+    moveAllCursor(curY, curX);
+}
+
 void TextModel::resizeText(int maxY, int maxX) { 
     text.resizeText(maxY, maxX);
     
@@ -171,16 +188,23 @@ void TextModel::resizeText(int maxY, int maxX) {
         case ModeType::INSERT: writeMode("-- INSERT --"); break;
         case ModeType::REPLACE: writeMode("-- REPLACE --"); break;
     }
+
+    moveAllCursor(curY, curX);
 }
 
 void TextModel::moveAllCursor(int y, int x) {
     // TODO: scroll
     if (y < text.getTopLine()) {
         text.scrollUp(text.getTopLine() - y);
-        displayViews();
+        displayAllViews();
     } else if (y > text.getBotLine()) {
+        if (text.getTopLine() == 0) {
+            int height = getHeight();
+            text.setBotLine(y > height ? height : y);
+        }
+        
         text.scrollDown(y - text.getBotLine());
-        displayViews();
+        displayAllViews();
     }
     
     moveCursor(y, x);
@@ -192,6 +216,4 @@ void TextModel::displayName() {
     writeMessage("\"" + text.getFileName() + "\" " + 
         to_string(text.getTextFile().size()) + " lines");
 }
-
-TextModel::~TextModel() { endwin(); }
 }

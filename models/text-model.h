@@ -58,12 +58,11 @@ public:
     void run();
     void quit();
     
+    void displayAllViews();
     void resizeText(int maxY, int maxX);
     
     void displayWarn(const std::string &m);
     void displayName();
-    
-    ~TextModel();
 };
 }
 

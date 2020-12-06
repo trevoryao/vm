@@ -33,9 +33,13 @@ public:
     virtual ~ModelBase() = default;
     
     void displayViews();
+    void displayInfo();
+    
     void resizeViews();
     
     void moveCursor(int y, int x);
+    
+    int getHeight();
     
     void updateExecView(const std::string &s);
     void updateWarning(const std::string &s);

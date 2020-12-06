@@ -17,6 +17,7 @@ public:
     void update(const std::string &s, int y, int x) override;
     
     void displayView() override;
+    void displayInfo() override;
     
     void resizeView() override;
     

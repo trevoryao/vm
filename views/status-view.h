@@ -28,6 +28,7 @@ public:
     void writeMode(const std::string &s) override;
     
     void displayView() override;
+    void displayInfo() override;
     
     void resizeView() override;
     

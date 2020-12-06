@@ -6,8 +6,6 @@
 #include <string>
 
 #include "../actions/action.h"
-#include "../actions/bad-entry.h"
-#include "../actions/clear-cmd.h"
 #include "../actions/e-movement.h"
 #include "../actions/e-search.h"
 #include "../actions/file-op.h"
@@ -18,9 +16,12 @@
 #include "../actions/scroll.h"
 #include "../actions/search.h"
 #include "../actions/text-edit.h"
-#include "../actions/update-cmd.h"
+#include "../exceptions/bad-entry.h"
+#include "../exceptions/clear-cmd.h"
+#include "../exceptions/update-cmd.h"
 
 using namespace actions;
+using namespace exceptions;
 using namespace std;
 
 namespace {
@@ -53,7 +54,7 @@ Input::Input() :
         {'A', ActionType::INS},
         // {'c', ActionType::INS},
         {'S', ActionType::INS},
-        {'C', ActionType::INS},
+        {'s', ActionType::INS},
         {'r', ActionType::REPLACE},
         {'R', ActionType::REPLACE},
         {'r', ActionType::REPLACE},
@@ -97,7 +98,7 @@ Input::Input() :
         // {"c", InsType::CH_MVT},
         // {"cc", InsType::CH_LINE},
         {'S', InsType::CH_LINE},
-        {'C', InsType::CH}
+        {'s', InsType::CH}
     },
     replaceMap{
         {'r', ReplaceType::RPL_UNDER},
@@ -226,6 +227,9 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                 if (a->getFragment().size() > 1) {
                     if (a->getFragment() == ":$") {
                         return make_unique<EMovement>(EMvtType::BOTTOM);
+                    } else if (a->getFragment()[1] == 'r') {
+                        if (a->getFragment()[2] != ' ') throw BadEntry{a->getFragment()};
+                        return make_unique<FileOp>(FileOpType::INSERT, a->getFragment().substr(3));
                     }
                     try {
                         int lineNum = stoi(a->getFragment().substr(1, a->getFragment().size() - 1));

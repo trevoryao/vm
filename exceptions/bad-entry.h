@@ -4,18 +4,17 @@
 #include <iostream>
 #include <string>
 
-namespace actions {
-class BadEntry {
+namespace exceptions {
+class BadEntry final {
 private:
     std::string entry;
 public:
     BadEntry();
-    BadEntry(const std::string &entry);
+    explicit BadEntry(const std::string &entry);
+    explicit BadEntry(std::string &&entry);
 
     const std::string &getEntry();
 };
 }
-
-std::ostream &operator<<(std::ostream &out, actions::BadEntry &b);
 
 #endif
