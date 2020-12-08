@@ -36,19 +36,23 @@ using namespace std;
 namespace models {
 TextModel::TextModel(const string &fileName) : 
     text{fileName, getmaxy(stdscr), getmaxx(stdscr)}, move{text},
-    mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true} {
+    mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true}, 
+    cpp{(fileName.size() > 2 && fileName.back() == 'h') || 
+    (fileName.size() > 3 && fileName.substr(fileName.size() - 2) == "cc")} {
+    
     addView(make_unique<views::StatusView>(*this));
     addInputController(make_unique<controllers::Input>());
     addKeyController(make_unique<controllers::KeyInput>());
 
     unique_ptr<views::TextView> textView = make_unique<views::TextView>(*this);
-    // text.resizeText(textView->getMaxHeight(), textView->getMaxWidth());
     addView(std::move(textView));
 }
 
 Text &TextModel::getText() { return text; }
 Move &TextModel::getMove() { return move; }
 Undo &TextModel::getUndo() { return undo; }
+
+bool TextModel::isCpp() { return cpp; }
 
 void TextModel::getCursor(int &y, int &x) {
     y = curY;
@@ -192,7 +196,6 @@ void TextModel::resizeText(int maxY, int maxX) {
 }
 
 void TextModel::moveAllCursor(int y, int x) {
-    // TODO: scroll
     if (y < text.getTopLine()) {
         text.scrollUp(text.getTopLine() - y);
         displayAllViews();

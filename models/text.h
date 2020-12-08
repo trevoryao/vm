@@ -25,6 +25,8 @@ public:
     int getBotLine();
     void setBotLine(int n);
     
+    int getWidth();
+    
     int getLines();
     int getChars();
 
@@ -38,17 +40,21 @@ public:
     // true if files are different, false otherwise
     bool diff();
     
-    bool insert(const std::string &filePath, int y, int &height);
+    bool insertFile(const std::string &filePath, int y, int &height);
     
     void insert(char c, int y, int x); // insert before
-    void insertAt(const std::string &s, int y, int x);
+    void insert(const Row &row, int y, int x);
+    void insert(Row &row, int y);
     
     char backSpace(int y, int x);
     char del(int y, int x);
     
-    void delChar(int y, int x); // at
-    void delLine(int y);
-    void changeLine(int y);
+    char delChar(int y, int x); // at
+    Row delLine(int y);
+    
+    Row changeLine(int y);
+    void replaceLine(const Row &row, int y);
+    
     void newLine(int y, int x);
     void newLine(int y);
     

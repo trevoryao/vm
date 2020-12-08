@@ -32,6 +32,7 @@ public:
     
     void insert(int x, char c);
     void insert(int x, const std::string &s);
+    void insert(int x, const Row &row);
     
     void append(char c);
     void indent();

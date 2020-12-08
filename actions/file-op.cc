@@ -32,7 +32,7 @@ void FileOp::execAction(models::TextModel &t) {
         case FileOpType::INSERT: {
             int y, x, h;
             t.getCursor(y, x);
-            if (t.getText().insert(filePath, y, h)) {
+            if (t.getText().insertFile(filePath, y, h)) {
                 t.moveAllCursor(y + h, x);
                 t.displayAllViews();
                 t.moveAllCursor(y, x);

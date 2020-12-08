@@ -67,7 +67,11 @@ void Row::insert(int x, char c) {
 }
 
 void Row::insert(int x, const std::string &s) {
-    rows[(x + 1) / width].insert((x + 1) % width, s);
+    rows[x / width].insert(x % width, s);
+}
+
+void Row::insert(int x, const Row &row) {
+    return insert(x, row.toString());
 }
 
 void Row::append(char c) {

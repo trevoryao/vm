@@ -19,6 +19,7 @@ bool Add::canAdd(KeyType value) { return value == KeyType::ALPHA_NUM; }
 void Add::execAction(models::TextModel &t) { }
 
 void Add::undoAction(models::TextModel &t, int, int) {
+    if (x1 == x2) return;
     for (int i = 0; i <= x2 - x1; ++i) {
         t.getText().delChar(y, x1);
     }

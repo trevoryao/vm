@@ -24,6 +24,15 @@ void Keyboard::execAction(models::TextModel &t) {
         case KeyType::ALPHA_NUM: {
             t.getText().insert(key, y, x);
             t.moveAllCursor(y, x + 1);
+            if (t.isCpp()) {
+                switch (key) {
+                    case '{': t.getText().insert('}', y, x + 1); break;
+                    case '[': t.getText().insert(']', y, x + 1); break;
+                    case '(': t.getText().insert(')', y, x + 1); break;
+                    case '\'': t.getText().insert('\'', y, x + 1); break;
+                    case '\"': t.getText().insert('\"', y, x + 1); break;
+                }
+            }
             if (!t.getUndo().hasBuffer() || !t.getUndo().getBuffer()->canAdd(getValue()))
                 t.getUndo().setBuffer(make_unique<Add>(y, x));
             else t.getUndo().getBuffer()->addEvent(-1, x);
@@ -42,6 +51,7 @@ void Keyboard::execAction(models::TextModel &t) {
             t.moveAllCursor(newY, newX);
             if (c == -1) break;
             if (c == '\n') {
+                t.getText().setBotLine(t.getText().getBotLine() - 1);
                 t.getUndo().addRegister(Register{newY, newX, make_unique<Keyboard>(*this)});
                 t.getUndo().setBuffer(make_unique<Add>(newY, newX));
             }
@@ -54,7 +64,8 @@ void Keyboard::execAction(models::TextModel &t) {
             break;
         }
         case KeyType::RETURN: {
-            t.getText().newLine(y, x); 
+            t.getText().newLine(y, x);
+            t.getText().setBotLine(t.getText().getBotLine() + 1);
             t.moveAllCursor(y + 1, 0);
             t.getUndo().addRegister(Register{y + 1, 0, make_unique<Keyboard>(*this)});
             t.getUndo().setBuffer(make_unique<Add>(y + 1, 0));
@@ -103,7 +114,7 @@ void Keyboard::undoAction(TextModel &t, int y, int x) {
             break;
         }
         case KeyType::BACKSPACE: t.getText().newLine(y, x); t.moveAllCursor(y + 1, 0); break;
-        case KeyType::DEL: t.getText().newLine(y, x + 1); break;
+        /* case KeyType::DEL: t.getText().newLine(y, x + 1); break; */
         default: break;
     }
     t.displayAllViews();

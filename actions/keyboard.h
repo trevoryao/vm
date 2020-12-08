@@ -12,7 +12,7 @@ enum class KeyType {
     ALPHA_NUM,
     BACKSPACE,
     RETURN,
-    DEL,
+    // DEL,
     TAB,
     ESC
 };

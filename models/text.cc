@@ -34,6 +34,8 @@ int Text::getTopLine() { return topLine; }
 int Text::getBotLine() { return botLine; }
 void Text::setBotLine(int n) { botLine = n; }
 
+int Text::getWidth() { return width; }
+
 int Text::getLines() { return text.size(); }
 int Text::getChars() {
     size_t size = 0;
@@ -64,7 +66,7 @@ void Text::write() { file.write(text); }
 
 bool Text::diff() { return file.diff(text); }
 
-bool Text::insert(const std::string &filePath, int y, int &height) {
+bool Text::insertFile(const std::string &filePath, int y, int &height) {
     try {
         vector<string> data = file.read();
         
@@ -84,13 +86,19 @@ void Text::insert(char c, int y, int x) {
     text[y].insert(x, c);
 }
 
-void Text::insertAt(const std::string &s, int y, int x) {
-    text[y].insert(x, s);
+void Text::insert(const Row &row, int y, int x) {
+    text[y].insert(x, row);
+}
+
+void Text::insert(Row &row, int y) {
+    text.insert(text.begin() + y + 1, row);
 }
 
 // only removes, thats it
-void Text::delChar(int y, int x) { // check beginning of line
+char Text::delChar(int y, int x) { // check beginning of line
+    char c = text[y][x];
     text[y].erase(x);
+    return c;
 }
 
 char Text::backSpace(int y, int x) {
@@ -120,12 +128,20 @@ char Text::del(int y, int x) {
     }
 }
 
-void Text::changeLine(int y) {
+Row Text::changeLine(int y) {
+    Row r = text[y];
     text[y].clear();
+    return r;
 }
 
-void Text::delLine(int y) {
+void Text::replaceLine(const Row &row, int y) {
+    text[y] = row;
+}
+
+Row Text::delLine(int y) {
+    Row r = *(text.begin() + y);
     text.erase(text.begin() + y);
+    return r;
 }
 
 void Text::newLine(int y, int x) {

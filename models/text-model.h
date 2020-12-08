@@ -34,7 +34,7 @@ private:
     Undo undo;
     ModeType mode;
     int curY, curX;
-    bool runLoop;
+    bool runLoop, cpp;
     std::unique_ptr<Incomplete> staticCmd;
     std::unique_ptr<Incomplete> execCmd;
 public:
@@ -43,6 +43,8 @@ public:
     Text &getText();
     Move &getMove();
     Undo &getUndo();
+    
+    bool isCpp();
     
     void getCursor(int &y, int &x);
     void moveAllCursor(int y, int x);
