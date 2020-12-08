@@ -84,33 +84,39 @@ void Text::insert(char c, int y, int x) {
     text[y].insert(x, c);
 }
 
+void Text::insertAt(const std::string &s, int y, int x) {
+    text[y].insert(x, s);
+}
+
 // only removes, thats it
 void Text::delChar(int y, int x) { // check beginning of line
     text[y].erase(x);
 }
 
-void Text::backSpace(int y, int x) {
-    if (y == 0 && x == 0) return;
+char Text::backSpace(int y, int x) {
+    if (y == 0 && x == 0) return -1;
     
     if (x != 0) {
-        text[y].erase(x - 1);
+        return text[y].erase(x - 1);
     } else {
         text[y - 1].popBack();
         text[y - 1] = text[y - 1] + text[y];
         text.erase(text.begin() + y);
+        return '\n';
     }
 }
 
-void Text::del(int y, int x) {
+char Text::del(int y, int x) {
     if (static_cast<size_t>(y) == text.size() - 1 && 
-        static_cast<size_t>(x) == text[y].size() - 1) return;
+        static_cast<size_t>(x) == text[y].size() - 1) return -1;
     
     if (static_cast<size_t>(x) != text[y].size() - 1) {
-        text[y].erase(x);
+        return text[y].erase(x);
     } else {
         text[y].popBack();
         text[y] = text[y] + text[y + 1];
         text.erase(text.begin() + y + 1);
+        return '\n';
     }
 }
 

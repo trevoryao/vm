@@ -28,7 +28,7 @@ void TextView::displayView() {
     for (int i = instance.getText().getTopLine(); i <= instance.getText().getBotLine(); ++i) {
         for (auto &line : instance.getText().getTextFile()[i].getRows()) {
             if (y > maxY || static_cast<size_t>(i) >= instance.getText().height()) break;
-            window.writeStr(line.substr(0, line.size() - 1), y++, 0);
+            window.writeStr(line, y++, 0);
         }
     }
     for (; y <= maxY; ++y) window.writeFill(y);

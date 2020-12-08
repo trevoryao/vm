@@ -25,7 +25,9 @@ public:
     
     char getKey();
     
-    void execAction(models::TextModel &t);
+    void execAction(models::TextModel &t) override;
+    
+    void undoAction(models::TextModel &t, int y, int x) override;
 };
 }
 

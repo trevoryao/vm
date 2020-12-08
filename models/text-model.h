@@ -7,6 +7,7 @@
 #include "model-base.h"
 #include "move.h"
 #include "text.h"
+#include "undo.h"
 
 enum class ModeType;
 
@@ -30,6 +31,7 @@ class TextModel final : public ModelBase {
 private:
     Text text;
     Move move;
+    Undo undo;
     ModeType mode;
     int curY, curX;
     bool runLoop;
@@ -40,6 +42,7 @@ public:
     
     Text &getText();
     Move &getMove();
+    Undo &getUndo();
     
     void getCursor(int &y, int &x);
     void moveAllCursor(int y, int x);

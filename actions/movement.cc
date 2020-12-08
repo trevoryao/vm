@@ -26,6 +26,7 @@ void Movement::execAction(TextModel &t) {
     t.getCursor(y, x);
     move(t, y, x);
     t.moveAllCursor(y, x);
+    t.getUndo().addBuffer();
     t.clearStaticCmd();
 }
 }

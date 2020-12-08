@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${cwd}/vm",
-            "args":["vm.cc"],
+            "args":["tests/vm.cc"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

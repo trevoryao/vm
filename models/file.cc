@@ -20,13 +20,6 @@ const std::string &File::getName() { return fileName; }
 vector<string> File::read() {
     fstream f{fileName};
     if (f.fail()) throw FileDNE{};
-    /*
-    string file;
-    f.seekg(0, ios::end);   
-    file.resize(f.tellg());
-    f.seekg(0, ios::beg);
-    f.read(&file[0], file.size());
-    return file;*/
     vector<string> file;
     string line;
     while (getline(f, line)) {
@@ -37,8 +30,9 @@ vector<string> File::read() {
 }
 
 void File::write(const vector<Row> &tmpFile) {
-    fstream f{fileName};
+    fstream f{fileName, ios::trunc | ios::out};
     for (auto &line : tmpFile) f << line;
+    f.close();
 }
 
 bool File::diff(const vector<Row> &tmpFile) {

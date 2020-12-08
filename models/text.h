@@ -41,8 +41,10 @@ public:
     bool insert(const std::string &filePath, int y, int &height);
     
     void insert(char c, int y, int x); // insert before
-    void backSpace(int y, int x);
-    void del(int y, int x);
+    void insertAt(const std::string &s, int y, int x);
+    
+    char backSpace(int y, int x);
+    char del(int y, int x);
     
     void delChar(int y, int x); // at
     void delLine(int y);

@@ -25,10 +25,13 @@ public:
     
     size_t getHeight() const;
     size_t size() const;
+
+    bool isBlank() const;
     
     void getPos(int &y, int &x);
     
     void insert(int x, char c);
+    void insert(int x, const std::string &s);
     
     void append(char c);
     void indent();
@@ -38,7 +41,7 @@ public:
     Row subRow(size_t pos);
     Row subRow(size_t pos, size_t len);
 
-    void erase(size_t pos);
+    char erase(size_t pos);
     
     void clear(); // "\n"
     

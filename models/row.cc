@@ -25,11 +25,6 @@ const std::vector<std::string> &Row::getRows() const { return rows; }
 
 const char &Row::operator[](size_t i) const {
     return rows[i / width][i % width];
-    /*
-    for (auto &row : rows) {
-        if (i < row.size()) return row[i];
-        else i -= row.size();
-    }*/
 }
 
 Row &Row::operator+(const Row &other) {
@@ -58,6 +53,10 @@ size_t Row::size() const {
     return size;
 }
 
+bool Row::isBlank() const {
+    return rows.size() == 1 && rows[0] == "\n";
+}
+
 void Row::getPos(int &y, int &x) {
     y = x / width;
     x = x % width;
@@ -67,11 +66,16 @@ void Row::insert(int x, char c) {
     rows[x / width].insert(x % width, 1, c);
 }
 
+void Row::insert(int x, const std::string &s) {
+    rows[(x + 1) / width].insert((x + 1) % width, s);
+}
+
 void Row::append(char c) {
-    if (rows[rows.size() - 1].size() == static_cast<size_t>(width)) {
+    if (rows.size() == 0) rows.push_back(std::string(1, c));
+    else if (rows.back().size() == static_cast<size_t>(width)) {
         rows.push_back(std::string(1, c));
     } else {
-        rows[rows.size() - 1].push_back(c);
+        rows.back().push_back(c);
     }
 }
 
@@ -80,7 +84,7 @@ void Row::indent() {
     std::string overflow;
     for (auto &row : rows) {
         row = overflow + row;
-        overflow = row.substr(width);
+        overflow = (static_cast<size_t>(width) < row.size()) ? row.substr(width) : "";
         row = row.substr(0, width);
     }
 }
@@ -95,13 +99,19 @@ Row Row::subRow(size_t pos, size_t len) {
     return Row{toString().substr(pos, len), width};
 }
 
-void Row::erase(size_t pos) {
+char Row::erase(size_t pos) {
     size_t i = pos / width;
+    char erased = rows[i][pos % width];
     rows[i].erase(pos % width, 1);
     for (; i + 1 < rows.size(); ++i) {
+        if (rows[i + 1].size() == 1) {
+            rows.pop_back();
+            return erased;
+        }
         rows[i].push_back(rows[i + 1][0]);
         rows[i + 1] = rows[i + 1].substr(1);
     }
+    return erased;
 }
 
 void Row::clear() {

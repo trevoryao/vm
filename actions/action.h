@@ -17,6 +17,7 @@ public:
     int getMult();
     
     virtual void execAction(models::TextModel &t) = 0;
+    virtual void undoAction(models::TextModel &t, int y, int x);
 };
 }
 

@@ -40,15 +40,15 @@ TextModel::TextModel(const string &fileName) :
     addView(make_unique<views::StatusView>(*this));
     addInputController(make_unique<controllers::Input>());
     addKeyController(make_unique<controllers::KeyInput>());
-    
-    // construct text based on view
+
     unique_ptr<views::TextView> textView = make_unique<views::TextView>(*this);
-    text.resizeText(textView->getMaxHeight(), textView->getMaxWidth());
+    // text.resizeText(textView->getMaxHeight(), textView->getMaxWidth());
     addView(std::move(textView));
 }
 
 Text &TextModel::getText() { return text; }
 Move &TextModel::getMove() { return move; }
+Undo &TextModel::getUndo() { return undo; }
 
 void TextModel::getCursor(int &y, int &x) {
     y = curY;
