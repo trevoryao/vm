@@ -13,9 +13,13 @@ int main(int argc, char *argv[]) {
         return 2;
     }
     
-    ui::Graphics graphics;
-    models::TextModel textModel{argc == 2 ? argv[1] : ""};
-    textModel.run();
+    try {
+        ui::Graphics graphics;
+        models::TextModel textModel{argc == 2 ? argv[1] : ""};
+        textModel.run();
+    } catch (...) {
+        throw;
+    }
     
     return 0;
 }

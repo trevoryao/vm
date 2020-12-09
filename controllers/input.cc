@@ -141,10 +141,10 @@ Input::Input() :
         {'?', ESearchType::NEW_PREV_SEARCH}
     },
     scrollMap{
-        {'f', ScrollType::PG_FWD},
-        {'b', ScrollType::PG_BACK},
-        {'d', ScrollType::LINE_FWD},
-        {'u', ScrollType::LINE_BACK}
+        {'F', ScrollType::PG_FWD},
+        {'B', ScrollType::PG_BACK},
+        {'D', ScrollType::LINE_FWD},
+        {'U', ScrollType::LINE_BACK}
     } { }
 
 unique_ptr<Action> Input::action() {
@@ -191,7 +191,7 @@ unique_ptr<Action> Input::parseAction(int c, int n) { // TODO: multiplier
         string ctrl = unctrl(c);
         if (ctrl.size() != 2) return unique_ptr<Action>{};
         try {
-            if (ctrl[1] == 'g') return make_unique<Global>(GlobalType::DISPLAY_FILE);
+            if (ctrl[1] == 'G') return make_unique<Global>(GlobalType::DISPLAY_FILE);
             return make_unique<Scroll>(scrollMap.at(ctrl[1]));
         } catch (out_of_range &e) {
             return unique_ptr<Action>{};

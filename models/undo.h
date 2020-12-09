@@ -5,20 +5,16 @@
 #include <vector>
 
 #include "register.h"
-// #include "text.h"
+#include "row.h"
 #include "../actions/buffer.h"
-
-
 
 namespace models {
 class TextModel;
 
 class Undo final {
 private:
-    // Text &text;
     std::vector<Register> registers;
     std::unique_ptr<actions::Buffer> textBuffer;
-    std::unique_ptr<Register> last;
 public:
     Undo() = default;
     

@@ -8,6 +8,7 @@
 #include "../exceptions/display-message.h"
 
 using namespace actions;
+using namespace std;
 
 namespace models {
 void Undo::addRegister(Register r) {
