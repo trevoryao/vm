@@ -52,6 +52,7 @@ TextModel::TextModel(const string &fileName) :
 Text &TextModel::getText() { return text; }
 Move &TextModel::getMove() { return move; }
 Undo &TextModel::getUndo() { return undo; }
+Clipboard &TextModel::getClipboard() { return clipboard; }
 
 bool TextModel::isCpp() { return cpp; }
 
@@ -134,7 +135,8 @@ void TextModel::run() {
                 if (action) action->execAction(*this);
             }
         } catch (ClearCmd &e) {
-            clearExecCmd();
+            if (execCmd) clearExecCmd();
+            if (staticCmd) clearStaticCmd();
         } catch (BadEntry &e) {
             clearExecCmd();
             displayWarn("Invalid Command: " + e.getEntry());
@@ -150,8 +152,9 @@ void TextModel::run() {
         size_t newHeight = text.height();
         size_t winHeight = getHeight() - 1;
         if (height != newHeight && text.getBotLine() < static_cast<int>(winHeight)) {
-            text.setBotLine(text.getBotLine() + newHeight - height > winHeight ?
-                winHeight : text.getBotLine() + newHeight - height);
+            text.setBotLine(text.getBotLine() + newHeight - height > winHeight - 1 ?
+                winHeight - 1 : text.getBotLine() + newHeight - height);
+            displayAllViews();
         }
     }
 }
@@ -202,10 +205,11 @@ void TextModel::moveAllCursor(int y, int x) {
         displayAllViews();
     }
     else if (y > text.getBotLine()) {
-        if (text.getTopLine() == 0) {
-            int height = getHeight();
-            text.setBotLine(y > height ? height : y);
-        }
+    /*
+    if (text.getTopLine() == 0) {
+        int height = getHeight();
+        text.setBotLine(y > height ? height : y);
+    }*/
 
         text.scrollDown(y - text.getBotLine());
         displayAllViews();
@@ -217,8 +221,10 @@ void TextModel::moveAllCursor(int y, int x) {
 }
 
 void TextModel::displayName() {
+    clearExecView();
     writeMessage("\"" + text.getFileName() + "\" " +
         to_string(text.getTextFile().size()) + " lines");
+    moveCursor(curY, curX);
 }
 
 void TextModel::displayPlainMsg(const std::string &m) {

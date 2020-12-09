@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "clipboard.h"
 #include "model-base.h"
 #include "move.h"
 #include "text.h"
@@ -32,6 +33,7 @@ private:
     Text text;
     Move move;
     Undo undo;
+    Clipboard clipboard;
     ModeType mode;
     int curY, curX;
     bool runLoop, cpp;
@@ -43,6 +45,7 @@ public:
     Text &getText();
     Move &getMove();
     Undo &getUndo();
+    Clipboard &getClipboard();
     
     bool isCpp();
     
