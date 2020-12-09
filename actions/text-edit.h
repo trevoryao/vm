@@ -2,6 +2,7 @@
 #define __TEXT_EDIT_H__
 
 #include <memory>
+#include <vector>
 
 #include "movement.h"
 
@@ -29,10 +30,12 @@ enum class TextEditType {
 class TextEdit final : public IAction<TextEditType> {
 private:
     unique_ptr<Movement> mvt;
+    std::vector<int> posns;
 public:
     TextEdit(TextEditType value, int n = 1, unique_ptr<Movement> mvt = unique_ptr<Movement>{});
     
     void execAction(models::TextModel &t) override;
+    void undoAction(models::TextModel &t, int y, int x) override;
 };
 }
 

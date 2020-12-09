@@ -1,6 +1,8 @@
 #ifndef __ROW_H__
 #define __ROW_H__
 
+#define INDENT_SIZE 4
+
 #include <iostream>
 #include <string>
 #include <vector>

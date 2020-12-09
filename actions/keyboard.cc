@@ -5,8 +5,8 @@
 
 #include "add.h"
 #include "backspace.h"
-#include "delete.h"
 #include "../models/text-model.h"
+#include "../models/row.h"
 
 using namespace std;
 using namespace models;
@@ -34,8 +34,8 @@ void Keyboard::execAction(models::TextModel &t) {
                 }
             }
             if (!t.getUndo().hasBuffer() || !t.getUndo().getBuffer()->canAdd(getValue()))
-                t.getUndo().setBuffer(make_unique<Add>(y, x));
-            else t.getUndo().getBuffer()->addEvent(-1, x);
+                t.getUndo().setBuffer(make_unique<Add>(key, y, x));
+            else t.getUndo().getBuffer()->addEvent(key, x);
             break;
         }
         case KeyType::BACKSPACE: {
@@ -51,24 +51,24 @@ void Keyboard::execAction(models::TextModel &t) {
             t.moveAllCursor(newY, newX);
             if (c == -1) break;
             if (c == '\n') {
-                t.getText().setBotLine(t.getText().getBotLine() - 1);
+                // t.getText().setBotLine(t.getText().getBotLine() - 1);
                 t.getUndo().addRegister(Register{newY, newX, make_unique<Keyboard>(*this)});
-                t.getUndo().setBuffer(make_unique<Add>(newY, newX));
+                t.getUndo().setBuffer(make_unique<Add>("", newY, newX));
             }
             // deal with new lines 
             else if (t.getUndo().hasBuffer() && t.getUndo().getBuffer()->canAdd(getValue())) {
                 t.getUndo().getBuffer()->addEvent(c, newX);
             } else {
-                t.getUndo().setBuffer(make_unique<Backspace>(c, y)); // add in ctor
+                t.getUndo().setBuffer(make_unique<Backspace>(c, y, x)); // add in ctor
             }
             break;
         }
         case KeyType::RETURN: {
             t.getText().newLine(y, x);
-            t.getText().setBotLine(t.getText().getBotLine() + 1);
+            // t.getText().setBotLine(t.getText().getBotLine() + 1);
             t.moveAllCursor(y + 1, 0);
             t.getUndo().addRegister(Register{y + 1, 0, make_unique<Keyboard>(*this)});
-            t.getUndo().setBuffer(make_unique<Add>(y + 1, 0));
+            t.getUndo().setBuffer(make_unique<Add>("", y + 1, 0));
             break;
         }
         /*
@@ -90,7 +90,10 @@ void Keyboard::execAction(models::TextModel &t) {
             t.getText().indent(y, x);
             t.moveAllCursor(y, x + 4);
             if (!t.getUndo().hasBuffer() || !t.getUndo().getBuffer()->canAdd(getValue()))
-                t.getUndo().setBuffer(make_unique<Add>(y, x));
+                t.getUndo().setBuffer(make_unique<Add>(string(INDENT_SIZE, ' '), y, x));
+            else {
+                for (int i = 0; i < INDENT_SIZE; ++i) t.getUndo().getBuffer()->addEvent(' ', x + i);
+            }
             break;
         }
         case KeyType::ESC: {

@@ -4,7 +4,7 @@
 #include <string>
 
 namespace exceptions {
-class DisplayWarning {
+class DisplayWarning final {
 private:
     std::string warning;
 public:

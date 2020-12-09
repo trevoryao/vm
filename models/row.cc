@@ -1,7 +1,5 @@
 #include "row.h"
 
-#define INDENT_SIZE 4
-
 #include <iostream>
 #include <sstream>
 #include <string>

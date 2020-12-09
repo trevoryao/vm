@@ -1,7 +1,7 @@
 #ifndef __ADD_H__
 #define __ADD_H__
 
-#include <vector>
+#include <string>
 #include <utility>
 
 #include "buffer.h"
@@ -17,10 +17,12 @@ enum class KeyType;
 class Add final : public Buffer {
 private:
     int y, x1, x2;
+    std::string buffer;
 public:
-    Add(int y, int x);
+    Add(char c, int y, int x);
+    Add(const std::string &s, int y, int x);
     
-    void addEvent(char, int x) override;
+    void addEvent(char c, int x) override;
     
     bool canAdd(KeyType value) override;
     

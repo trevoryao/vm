@@ -68,6 +68,7 @@ public:
     
     void displayWarn(const std::string &m);
     void displayName();
+    void displayPlainMsg(const std::string &m);
 };
 }
 

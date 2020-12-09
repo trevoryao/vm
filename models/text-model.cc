@@ -22,6 +22,7 @@
 #include "../controllers/key-input.h"
 #include "../exceptions/bad-entry.h"
 #include "../exceptions/clear-cmd.h"
+#include "../exceptions/display-message.h"
 #include "../exceptions/display-warning.h"
 #include "../exceptions/update-cmd.h"
 #include "../ui/colours.h"
@@ -34,12 +35,12 @@ using namespace exceptions;
 using namespace std;
 
 namespace models {
-TextModel::TextModel(const string &fileName) : 
+TextModel::TextModel(const string &fileName) :
     text{fileName, getmaxy(stdscr), getmaxx(stdscr)}, move{text},
-    mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true}, 
-    cpp{(fileName.size() > 2 && fileName.back() == 'h') || 
+    mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true},
+    cpp{(fileName.size() > 2 && fileName.back() == 'h') ||
     (fileName.size() > 3 && fileName.substr(fileName.size() - 2) == "cc")} {
-    
+
     addView(make_unique<views::StatusView>(*this));
     addInputController(make_unique<controllers::Input>());
     addKeyController(make_unique<controllers::KeyInput>());
@@ -104,53 +105,53 @@ void TextModel::setReplaceMode() {
 }
 
 void TextModel::run() {
-     // based off current mode
-    
     if (text.hasFile()) {
-        writeMessage("\"" + text.getFileName() + "\" " + 
+        writeMessage("\"" + text.getFileName() + "\" " +
             std::to_string(text.getLines()) + "L, " + std::to_string(text.getChars()) + "C");
     }
     displayViews();
     if (!text.hasFile()) displayInfo();
     moveAllCursor(curY, curX);
-    
+
     while (runLoop) {
-        if (execCmd) {
-            try {
+        size_t height = text.height();
+        try {
+            if (execCmd) {
                 auto action = getAction(execCmd.get());
                 if (action) {
                     action->execAction(*this);
                     clearExecCmd();
                 }
-            } catch (ClearCmd &e) { // TODO: not clearing fully
-                clearExecCmd();
-            } catch (BadEntry &e) {
-                clearExecCmd();
-                displayWarn("Invalid Command: " + e.getEntry());
-            } catch (UpdateCmd &e) {
-                execCmd->execAction(*this);
-            } catch (DisplayWarning &e) {
-                clearExecCmd();
-                displayWarn(e.getWarning());
             }
-        } else if (staticCmd) {
-            try {
+            else if (staticCmd) {
                 auto action = getAction(staticCmd.get());
-                if (action) { // gets removed
+                if (action) {
                     action->execAction(*this);
-                    // clearStaticCmd(); static commands have to delete themselves
                 }
-            } catch (ClearCmd &e) {
-                clearStaticCmd();
-            } catch (BadEntry &e) {
-                clearStaticCmd();
-                displayWarn("Invalid Command: " + e.getEntry());
-            } catch (UpdateCmd &e) {
-                staticCmd->execAction(*this);
             }
-        } else {
-            auto action = getAction(mode);
-            if (action) action->execAction(*this);
+            else {
+                auto action = getAction(mode);
+                if (action) action->execAction(*this);
+            }
+        } catch (ClearCmd &e) {
+            clearExecCmd();
+        } catch (BadEntry &e) {
+            clearExecCmd();
+            displayWarn("Invalid Command: " + e.getEntry());
+        } catch (UpdateCmd &e) {
+            execCmd->execAction(*this);
+        } catch (DisplayWarning &e) {
+            clearExecCmd();
+            displayWarn(e.getWarning());
+        } catch (DisplayMessage &e) {
+            displayPlainMsg(e.getMessage());
+        }
+
+        size_t newHeight = text.height();
+        size_t winHeight = getHeight() - 1;
+        if (height != newHeight && text.getBotLine() < static_cast<int>(winHeight)) {
+            text.setBotLine(text.getBotLine() + newHeight - height > winHeight ?
+                winHeight : text.getBotLine() + newHeight - height);
         }
     }
 }
@@ -179,9 +180,9 @@ void TextModel::displayAllViews() {
     moveAllCursor(curY, curX);
 }
 
-void TextModel::resizeText(int maxY, int maxX) { 
+void TextModel::resizeText(int maxY, int maxX) {
     text.resizeText(maxY, maxX);
-    
+
     switch (mode) {
         case ModeType::CMD: {
             if (execCmd) updateExecView(execCmd->getFragment());
@@ -199,23 +200,30 @@ void TextModel::moveAllCursor(int y, int x) {
     if (y < text.getTopLine()) {
         text.scrollUp(text.getTopLine() - y);
         displayAllViews();
-    } else if (y > text.getBotLine()) {
+    }
+    else if (y > text.getBotLine()) {
         if (text.getTopLine() == 0) {
             int height = getHeight();
             text.setBotLine(y > height ? height : y);
         }
-        
+
         text.scrollDown(y - text.getBotLine());
         displayAllViews();
     }
-    
+
     moveCursor(y, x);
     curY = y;
     curX = x;
 }
 
 void TextModel::displayName() {
-    writeMessage("\"" + text.getFileName() + "\" " + 
+    writeMessage("\"" + text.getFileName() + "\" " +
         to_string(text.getTextFile().size()) + " lines");
+}
+
+void TextModel::displayPlainMsg(const std::string &m) {
+    clearExecView();
+    updateExecView(m);
+    moveCursor(curY, curX);
 }
 }

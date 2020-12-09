@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "text-model.h"
+#include "../exceptions/display-message.h"
 
 using namespace actions;
 
@@ -15,12 +16,13 @@ void Undo::addRegister(Register r) {
 }
 
 void Undo::undo(TextModel &t) {
-    if (registers.empty()) return;
+    if (registers.empty()) throw exceptions::DisplayMessage{"Already at oldest change"};
     registers.back().undoAction(t);
     registers.pop_back(); 
 }
 
 void Undo::execLastRegister(TextModel &t) { 
+    if (registers.empty()) return;
     registers.back().execAction(t); 
 }
 

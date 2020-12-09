@@ -16,11 +16,11 @@ enum class KeyType;
 
 class Backspace final : public Buffer {
 private:
-    int y, x2;
+    int y, x1, x2;
     std::list<char> buffer;
 public:
-    Backspace(char c, int y);
-    Backspace(const std::string &s, int y);
+    Backspace(char c, int y, int x1);
+    Backspace(const std::string &s, int y, int x1);
     
     void addEvent(char c, int x) override;
     
