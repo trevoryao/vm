@@ -2,7 +2,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++: Build & Debug",
+            "name": "Debug New",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${cwd}/vm",
+            "args":[],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Make Program",
+            // "postDebugTask": "Delete Files",
+        },
+        {
+            "name": "Debug Small",
             "type": "cppdbg",
             "request": "launch",
             "program": "${cwd}/vm",
@@ -10,7 +31,28 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "externalTerminal"
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Make Program",
+            // "postDebugTask": "Delete Files",
+        },
+        {
+            "name": "Debug Large",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${cwd}/vm",
+            "args":["tests/regex.cc"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
                 {
