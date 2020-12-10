@@ -1,7 +1,5 @@
 #include <iostream>
 
-#include <ncurses.h>
-
 #include "models/text-model.h"
 #include "ui/graphics.h"
 
