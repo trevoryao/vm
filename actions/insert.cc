@@ -86,31 +86,13 @@ void Insert::execAction(TextModel &t) {
                 }
                 case MvtType::END_CH: {
                     std::string s;
-                    if (mvt->getMult() == 1) {
-                        for (int i = 0; i <= newX - x; ++i) {
-                            s.push_back(t.getText().delChar(y, x));
-                            t.displayAllViews();
-                        }
-                        rows.emplace_back(s, t.getText().getWidth());
-                        t.getUndo().addRegister(Register{y, x, move(make_unique<Insert>(move(*this)))});
-                        break;
-                    }
-                    size_t size = t.getText().getTextFile()[y].size();
-                    for (size_t i = x; i < size; ++i) {
+                    for (int i = 0; i <= newX - x; ++i) {
                         s.push_back(t.getText().delChar(y, x));
-                        t.displayAllViews();
                     }
                     rows.emplace_back(s, t.getText().getWidth());
-                    s.clear();
-                    for (int i = 0; i <= newX; ++i) {
-                        s.push_back(t.getText().delChar(newY, 0));
-                        t.displayAllViews();
-                    }
-                    for (int i = 0; i < newY - y - 1; ++i) {
+                    for (int i = 0; i < newY - y; ++i) {
                         rows.emplace_back(t.getText().delLine(y + 1));
-                        t.displayAllViews();
                     }
-                    rows.emplace_back(s, t.getText().getWidth());
                     t.getUndo().addRegister(Register{y, x, move(make_unique<Insert>(move(*this)))});
                     break;
                 }
@@ -178,9 +160,8 @@ void Insert::undoAction(TextModel &t, int y, int x) {
                 case MvtType::END_CH: {
                     t.getText().insert(rows.front(), y, x);
                     if (rows.size() == 1) break;
-                    for (size_t i = 1; i < rows.size() - 1; ++i) 
+                    for (size_t i = 1; i < rows.size(); ++i) 
                         t.getText().insert(rows[i], y);
-                    t.getText().insert(rows.back(), y + rows.size() - 1, 0);
                     break;
                 }
             }
