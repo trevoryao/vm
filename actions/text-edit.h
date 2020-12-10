@@ -42,8 +42,20 @@ public:
 private:
     unique_ptr<TextEdit> clone();
     
+    void delMvt(models::TextModel &t, int y, int x);
+    void undoDelMvt(models::TextModel &t, int y, int x);
+    
+    void yankMvt(models::TextModel &t, int y, int x);
+    
     void putBefore(models::TextModel &t, int y, int x);
+    void putLinesBefore(models::TextModel &t, int y, int x);
+    void putLineBefore(models::TextModel &t, int y, int x);
+    
     void putAfter(models::TextModel &t, int y, int x);
+    void putLinesAfter(models::TextModel &t, int y, int x);
+    void putLineAfter(models::TextModel &t, int y, int x);
+    
+    void putLinesMiddle(models::TextModel &t, int y, int x);
     
     void undoPut(models::TextModel &t, int y, int x);
 };

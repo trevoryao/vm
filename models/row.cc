@@ -93,11 +93,11 @@ void Row::indent() {
 
 void Row::popBack() { rows[rows.size() - 1].pop_back(); }
 
-Row Row::subRow(size_t pos) {
+Row Row::subRow(size_t pos) const {
     return Row{toString().substr(pos), width};
 }
 
-Row Row::subRow(size_t pos, size_t len) {
+Row Row::subRow(size_t pos, size_t len) const {
     return Row{toString().substr(pos, len), width};
 }
 

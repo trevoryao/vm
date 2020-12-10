@@ -41,8 +41,8 @@ public:
     
     void popBack();
     
-    Row subRow(size_t pos);
-    Row subRow(size_t pos, size_t len);
+    Row subRow(size_t pos) const;
+    Row subRow(size_t pos, size_t len) const;
 
     char erase(size_t pos);
     
