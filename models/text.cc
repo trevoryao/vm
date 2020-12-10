@@ -5,7 +5,9 @@
 #include <string>
 
 #include "file.h"
+#include "../exceptions/file-dne.h"
 
+using namespace exceptions;
 using namespace std;
 
 namespace models {
@@ -25,6 +27,7 @@ Text::Text(const string &fileName, int maxY, int maxX) : topLine{0}, width{maxX}
 }
 
 const string &Text::getFileName() { return file.getName(); }
+void Text::setFileName(const string &fileName) { file.setName(fileName); }
 
 const vector<Row> &Text::getTextFile() { return text; }
 

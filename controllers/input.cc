@@ -1,8 +1,9 @@
 #include "input.h"
 
 #include <exception>
-#include <memory>
 #include <ncurses.h>
+#include <memory>
+#include <sstream>
 #include <string>
 
 #include "../actions/action.h"
@@ -228,7 +229,7 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                     if (a->getFragment() == ":$") {
                         return make_unique<EMovement>(EMvtType::BOTTOM);
                     } else if (a->getFragment()[1] == 'r') {
-                        if (a->getFragment()[2] != ' ') throw BadEntry{a->getFragment()};
+                        if (a->getFragment().size() > 2 && a->getFragment()[2] != ' ') throw BadEntry{a->getFragment()};
                         return make_unique<FileOp>(FileOpType::INSERT, a->getFragment().substr(3));
                     }
                     try {
@@ -241,7 +242,13 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                 }
                 try {
                     // can only be some file write thing
-                    return make_unique<FileOp>(fileOpMap.at(a->getFragment()));
+                    vector<string> inputs;
+                    string input;
+                    istringstream ss{a->getFragment()};
+                    while (getline(ss, input, ' ')) inputs.push_back(input);
+                    if (inputs.size() == 1) return make_unique<FileOp>(fileOpMap.at(inputs.front()));
+                    else if (inputs.size() == 2) return make_unique<FileOp>(fileOpMap.at(inputs.front()), inputs.back());
+                    throw BadEntry{a->getFragment()};
                 }
                 catch (out_of_range &e) {
                     throw BadEntry{a->getFragment()};
@@ -286,19 +293,6 @@ unique_ptr<Action> Input::action(Incomplete *a) {
     }
     return unique_ptr<Action>{};
 }
-/*
-unique_ptr<Action> Input::action(ESearch *a) {
-    int c = getch();
-    
-    if (c == ERR) return make_unique<Global>(GlobalType::NONE);
-    if (c == ESC)
-    // usual text editing stuffs
-    // if esc, clear
-    // if empty, clear
-    if (32 <= c && c <= 126) {
-        
-    }
-}*/
 
 unique_ptr<Action> Input::action(ESearch *a) {
     return unique_ptr<ESearch>();

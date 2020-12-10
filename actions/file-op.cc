@@ -3,7 +3,9 @@
 #include <string>
 #include <utility>
 
+#include "../exceptions/display-message.h"
 #include "../exceptions/display-warning.h"
+#include "../exceptions/file-dne.h"
 #include "../models/text-model.h"
 
 using namespace exceptions;
@@ -13,15 +15,23 @@ FileOp::FileOp(FileOpType value, const std::string &filePath) :
     IAction{value}, filePath{filePath} { }
 
 void FileOp::execAction(models::TextModel &t) {
+    bool newFile = false;
+    
     switch (getValue()) {
-        case FileOpType::WRITE: {
-            if (t.getText().hasFile()) t.getText().write();
-            else throw DisplayWarning{"No file name"};
-            break;
-        }
+        case FileOpType::WRITE:
         case FileOpType::WRITE_QUIT: {
+            if (filePath.size() != 0) {
+                try {
+                    t.getText().setFileName(filePath);
+                    t.getText().write();
+                    newFile = true;
+                } catch (FileDNE &e) {
+                    throw DisplayWarning{"No such file: " + filePath};
+                }
+            }
             if (t.getText().hasFile()) t.getText().write();
             else throw DisplayWarning{"No file name"};
+            if (getValue() == FileOpType::WRITE) break;
         }
         case FileOpType::FORCE_QUIT: t.quit(); break;
         case FileOpType::QUIT: {
@@ -39,6 +49,12 @@ void FileOp::execAction(models::TextModel &t) {
             }
             break;
         }
+    }
+    
+    if (newFile) {
+        throw DisplayMessage{"\"" + filePath + "\" [new] " +
+            std::to_string(t.getText().getLines()) + "L, " +
+            std::to_string(t.getText().getChars()) + "C written"};
     }
 }
 }

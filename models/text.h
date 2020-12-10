@@ -17,6 +17,8 @@ public:
     Text(const std::string &fileName, int maxY, int maxX);
     
     const std::string &getFileName();
+    void setFileName(const std::string &fileName);
+    
     const std::vector<Row> &getTextFile();
     
     bool hasFile();

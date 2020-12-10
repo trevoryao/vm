@@ -9,17 +9,31 @@
 #include <sys/wait.h>
 
 #include "row.h"
+#include "../exceptions/file-dne.h"
 
+using namespace exceptions;
 using namespace std;
 
 namespace models {
 File::File(const string &fileName) : fileName{fileName} { }
 
-const std::string &File::getName() { return fileName; }
+const string &File::getName() { return fileName; }
+
+void File::setName(const string &newName) {
+    fstream f{fileName};
+    if (f.fail()) {
+        f.close();
+        throw FileDNE{};
+    }
+    fileName = newName;
+}
 
 vector<string> File::read() {
     fstream f{fileName};
-    if (f.fail()) throw FileDNE{};
+    if (f.fail()) {
+        f.close();
+        throw FileDNE{};
+    }
     vector<string> file;
     string line;
     while (getline(f, line)) {

@@ -154,7 +154,8 @@ void TextModel::run() {
         if (height != newHeight && text.getBotLine() < static_cast<int>(winHeight)) {
             text.setBotLine(text.getBotLine() + newHeight - height > winHeight - 1 ?
                 winHeight - 1 : text.getBotLine() + newHeight - height);
-            displayAllViews();
+            displayViews();
+            moveAllCursor(curY, curX);
         }
     }
 }

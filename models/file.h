@@ -7,8 +7,6 @@
 #include "row.h"
 
 namespace models {
-class FileDNE final { };
-// todo: change to rows
 class File final {
 private:
     std::string fileName;
@@ -16,6 +14,7 @@ public:
     explicit File(const std::string &fileName);
 
     const std::string &getName();
+    void setName(const std::string &newName);
 
     std::vector<std::string> read();
 
