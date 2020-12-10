@@ -88,11 +88,11 @@ void TextEdit::execAction(models::TextModel &t) {
     switch (getValue()) {
         case TextEditType::YANK_LINE:
         case TextEditType::YANK_MVT:
-            throw exceptions::DisplayMessage{rows.size() + " lines yanked"};
+            throw exceptions::DisplayMessage{to_string(rows.size()) + " lines yanked"};
             break;
         case TextEditType::DEL_LINE:
         case TextEditType::DEL_MVT:
-            throw exceptions::DisplayMessage{rows.size() + " fewer lines"};
+            throw exceptions::DisplayMessage{to_string(rows.size()) + " fewer lines"};
             break;
         default: break;
     }
