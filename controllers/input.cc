@@ -315,6 +315,7 @@ unique_ptr<Action> Input::parseExec(Incomplete *a) {
         if (a->getFragment() == ":$") {
             return make_unique<EMovement>(EMvtType::BOTTOM);
         } else if (a->getFragment()[1] == 'r') {
+            if (a->getFragment().size() == 2) return make_unique<FileOp>(FileOpType::INSERT);
             if (a->getFragment().size() > 2 && a->getFragment()[2] != ' ') throw BadEntry{a->getFragment()};
             return make_unique<FileOp>(FileOpType::INSERT, a->getFragment().substr(3));
         }

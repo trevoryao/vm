@@ -42,6 +42,7 @@ void FileOp::execAction(models::TextModel &t) {
         case FileOpType::INSERT: {
             int y, x, h;
             t.getCursor(y, x);
+            if (filePath.size() == 0) filePath = t.getText().getFileName();
             if (t.getText().insertFile(filePath, y, h)) {
                 t.moveAllCursor(y + h, x);
                 t.displayAllViews();
