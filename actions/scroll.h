@@ -14,13 +14,13 @@ enum class ScrollType {
     LINE_FWD,
     LINE_BACK
 };
-// -1 = 1/2
+
 class Scroll final : public IAction<ScrollType> {
 public:
     Scroll(ScrollType value);
     Scroll(ScrollType value, int n);
     
-    void execAction(models::TextModel &t) { }
+    void execAction(models::TextModel &t) override;
 };
 }
 

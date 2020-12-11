@@ -177,11 +177,11 @@ unique_ptr<Action> Input::action() {
         case 'F':
         case 'r':
             return make_unique<Incomplete>(IncType::STATIC, static_cast<char>(c));
-        default: return parseAction(c, 1);
+        default: return parseAction(c, 1, false);
     }
 }
 
-unique_ptr<Action> Input::parseAction(int c, int n) { // TODO: multiplier
+unique_ptr<Action> Input::parseAction(int c, int n, bool hasMult) { // TODO: multiplier
     try {
         ActionType type = actionCharMap.at(c);
         
@@ -201,6 +201,7 @@ unique_ptr<Action> Input::parseAction(int c, int n) { // TODO: multiplier
         if (ctrl.size() != 2) return unique_ptr<Action>{};
         try {
             if (ctrl[1] == 'G') return make_unique<Global>(GlobalType::DISPLAY_FILE);
+            if (hasMult) return make_unique<Scroll>(scrollMap.at(ctrl[1]), n);
             return make_unique<Scroll>(scrollMap.at(ctrl[1]));
         } catch (out_of_range &e) {
             return unique_ptr<Action>{};
@@ -245,7 +246,7 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                 case 'r':
                     return make_unique<Incomplete>(IncType::STATIC, 
                         static_cast<char>(c), stoi(a->getFragment()));
-                default: return parseAction(c, stoi(a->getFragment()));
+                default: return parseAction(c, stoi(a->getFragment()), true);
             }
         }
         case IncType::EXEC: {

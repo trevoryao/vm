@@ -209,12 +209,6 @@ void TextModel::moveAllCursor(int y, int x) {
         displayAllViews();
     }
     else if (y > text.getBotLine()) {
-    /*
-    if (text.getTopLine() == 0) {
-        int height = getHeight();
-        text.setBotLine(y > height ? height : y);
-    }*/
-
         text.scrollDown(y - text.getBotLine());
         displayAllViews();
     }

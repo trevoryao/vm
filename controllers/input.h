@@ -51,7 +51,7 @@ protected:
     std::unique_ptr<Action> action() override;
     std::unique_ptr<Action> action(Incomplete *a) override;
 private:
-    std::unique_ptr<Action> parseAction(int c, int n);
+    std::unique_ptr<Action> parseAction(int c, int n, bool hasMult);
     std::unique_ptr<Action> parseExec(Incomplete *a);
     std::unique_ptr<Action> parseSearch(Incomplete *a);
 };
