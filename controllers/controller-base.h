@@ -10,10 +10,12 @@
 #include "../actions/search.h"
 
 using actions::Action;
-using actions::ESearch;
 using actions::Incomplete;
-using actions::Search;
 using std::unique_ptr;
+
+namespace models {
+class TextModel;
+}
 
 namespace controllers {
 class ControllerBase {
@@ -22,13 +24,9 @@ public:
     
     unique_ptr<Action> getAction();
     unique_ptr<Action> getAction(Incomplete *a);
-    unique_ptr<Action> getAction(ESearch *a);
-    unique_ptr<Action> getAction(Search *a);
 protected:
     virtual unique_ptr<Action> action() = 0;
     virtual unique_ptr<Action> action(Incomplete *a) = 0;
-    virtual unique_ptr<Action> action(ESearch *a) = 0;
-    virtual unique_ptr<Action> action(Search *a) = 0;
 };
 }
 

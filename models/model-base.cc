@@ -35,14 +35,6 @@ unique_ptr<Action> ModelBase::getAction(Incomplete *a) {
     return inputController->getAction(a);
 }
 
-unique_ptr<Action> ModelBase::getAction(ESearch *a) {
-    return inputController->getAction(a);
-}
-
-unique_ptr<Action> ModelBase::getAction(Search *a) {
-    return inputController->getAction(a);
-}
-
 void ModelBase::displayViews() {
     for (auto &v : views) v->displayView();
 }

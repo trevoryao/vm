@@ -121,6 +121,14 @@ void Row::clear() {
     rows.push_back("\n");
 }
 
+size_t Row::find(const std::string &s, size_t pos) const {
+    return toString().find(s, pos);
+}
+
+size_t Row::rfind(const std::string &s, size_t pos) const {
+    return toString().rfind(s, pos);
+}
+
 std::iostream &Row::out(std::iostream &out) const {
     for (auto &row : rows) out << row;
     return out;

@@ -40,9 +40,7 @@ KeyInput::KeyInput() :
         {KEY_DOWN, MvtType::DOWN}
     } { }
 
-unique_ptr<Action> KeyInput::action(Incomplete *a) { return unique_ptr<Action>{}; }
-unique_ptr<Action> KeyInput::action(ESearch *a) { return unique_ptr<Action>{}; }
-unique_ptr<Action> KeyInput::action(Search *a) { return unique_ptr<Action>{}; }
+unique_ptr<Action> KeyInput::action(Incomplete *) { return unique_ptr<Action>{}; }
 
 unique_ptr<Action> KeyInput::action() {
     int c = getch();

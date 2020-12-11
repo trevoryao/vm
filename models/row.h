@@ -13,7 +13,6 @@ private:
     int width;
     std::vector<std::string> rows;
 public:
-    // "\n"
     explicit Row(int maxX);
     Row(const std::string &s, int maxX);
     
@@ -47,6 +46,9 @@ public:
     char erase(size_t pos);
     
     void clear(); // "\n"
+    
+    size_t find(const std::string &s, size_t pos) const;
+    size_t rfind(const std::string &s, size_t pos) const;
     
     std::iostream &out(std::iostream &out) const;
 private:

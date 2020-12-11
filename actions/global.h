@@ -10,7 +10,7 @@ class TextModel;
 }
 
 namespace actions {
-enum class GlobalType { NONE, RESIZE, DISPLAY_FILE };
+enum class GlobalType { RESIZE, DISPLAY_FILE };
 
 class Global final : public IAction<GlobalType> {
 public:

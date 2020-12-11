@@ -7,6 +7,7 @@
 #include "clipboard.h"
 #include "model-base.h"
 #include "move.h"
+#include "text-search.h"
 #include "text.h"
 #include "undo.h"
 
@@ -31,6 +32,7 @@ namespace models {
 class TextModel final : public ModelBase {
 private:
     Text text;
+    TextSearch search;
     Move move;
     Undo undo;
     Clipboard clipboard;
@@ -43,6 +45,7 @@ public:
     explicit TextModel(const std::string &fileName);
     
     Text &getText();
+    TextSearch &getSearch();
     Move &getMove();
     Undo &getUndo();
     Clipboard &getClipboard();
@@ -53,6 +56,7 @@ public:
     void moveAllCursor(int y, int x);
     
     void setStaticCmd(actions::Incomplete *a);
+    actions::Incomplete *getStaticCmd();
     void clearStaticCmd();
     
     void setExecCmd(actions::Incomplete *a);

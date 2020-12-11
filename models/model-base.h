@@ -27,8 +27,6 @@ protected:
     void addKeyController(unique_ptr<controllers::ControllerBase> c);
     unique_ptr<actions::Action> getAction(ModeType m);
     unique_ptr<actions::Action> getAction(actions::Incomplete *a);
-    unique_ptr<actions::Action> getAction(actions::ESearch *a);
-    unique_ptr<actions::Action> getAction(actions::Search *a);
 public:
     virtual ~ModelBase() = default;
     

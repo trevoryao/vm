@@ -28,9 +28,7 @@ public:
     KeyInput();
 protected:
     std::unique_ptr<Action> action() override;
-    std::unique_ptr<Action> action(actions::Incomplete *a) override;
-    std::unique_ptr<Action> action(actions::ESearch *a) override;
-    std::unique_ptr<Action> action(actions::Search *a) override;
+    std::unique_ptr<Action> action(actions::Incomplete *) override;
 };
 }
 

@@ -36,7 +36,7 @@ using namespace std;
 
 namespace models {
 TextModel::TextModel(const string &fileName) :
-    text{fileName, getmaxy(stdscr), getmaxx(stdscr)}, move{text},
+    text{fileName, getmaxy(stdscr), getmaxx(stdscr)}, search{text}, move{text},
     mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true},
     cpp{(fileName.size() > 2 && fileName.back() == 'h') ||
     (fileName.size() > 3 && fileName.substr(fileName.size() - 2) == "cc")} {
@@ -50,6 +50,7 @@ TextModel::TextModel(const string &fileName) :
 }
 
 Text &TextModel::getText() { return text; }
+TextSearch &TextModel::getSearch() { return search; }
 Move &TextModel::getMove() { return move; }
 Undo &TextModel::getUndo() { return undo; }
 Clipboard &TextModel::getClipboard() { return clipboard; }
@@ -66,6 +67,8 @@ void TextModel::setStaticCmd(Incomplete *a) {
     updateStaticView(staticCmd->getStaticFragment());
     moveCursor(curY, curX);
 }
+
+Incomplete *TextModel::getStaticCmd() { return staticCmd.get(); }
 
 void TextModel::clearStaticCmd() {
     staticCmd.reset();

@@ -11,9 +11,7 @@ namespace actions {
 enum class SearchType {
     NEXT_CHAR,
     PREV_CHAR,
-    REPEAT_CHAR,
-    FWD_SEARCH,
-    PREV_SEARCH,
+    REPEAT_CHAR
 };
 
 class Search final : public IAction<SearchType> {
@@ -22,9 +20,7 @@ private:
 public:
     Search(SearchType value, int n = 1, char search = -1);
     
-    char getSearch();
-    
-    void execAction(models::TextModel &t) { }
+    void execAction(models::TextModel &t) override;
 };
 }
 

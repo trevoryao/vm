@@ -20,6 +20,7 @@
 #include "../exceptions/bad-entry.h"
 #include "../exceptions/clear-cmd.h"
 #include "../exceptions/update-cmd.h"
+#include "../models/text-model.h"
 
 using namespace actions;
 using namespace exceptions;
@@ -71,8 +72,8 @@ Input::Input() :
         {'f', ActionType::SEARCH},
         {'F', ActionType::SEARCH},
         {';', ActionType::SEARCH},
-        {'n', ActionType::SEARCH},
-        {'N', ActionType::SEARCH}
+        {'n', ActionType::E_SEARCH},
+        {'N', ActionType::E_SEARCH}
     },
     mvtMap{
         {'h', MvtType::LEFT},
@@ -134,12 +135,13 @@ Input::Input() :
         {'f', SearchType::NEXT_CHAR},
         {'F', SearchType::PREV_CHAR},
         {';', SearchType::REPEAT_CHAR},
-        {'n', SearchType::FWD_SEARCH},
-        {'N', SearchType::PREV_SEARCH}
+        
     },
     eSearchMap{
         {'/', ESearchType::NEW_FWD_SEARCH},
-        {'?', ESearchType::NEW_PREV_SEARCH}
+        {'?', ESearchType::NEW_PREV_SEARCH},
+        {'n', ESearchType::REPEAT},
+        {'N', ESearchType::REPEAT_OPP}
     },
     scrollMap{
         {'F', ScrollType::PG_FWD},
@@ -154,9 +156,10 @@ unique_ptr<Action> Input::action() {
     switch (c) {
         case ERR: return unique_ptr<Action>{};
         case KEY_RESIZE: return make_unique<Global>(GlobalType::RESIZE);
-        case ':': return make_unique<Incomplete>(IncType::EXEC, c);
-        case '/': return make_unique<ESearch>(ESearchType::NEW_FWD_SEARCH);
-        case '?': return make_unique<ESearch>(ESearchType::NEW_PREV_SEARCH);
+        case ':': 
+        case '/':
+        case '?':
+            return make_unique<Incomplete>(IncType::EXEC, c);
         case '1':
         case '2':
         case '3':
@@ -170,6 +173,8 @@ unique_ptr<Action> Input::action() {
         case 'c':
         case 'd':
         case 'y':
+        case 'f':
+        case 'F':
             return make_unique<Incomplete>(IncType::STATIC, static_cast<char>(c));
         default: return parseAction(c, 1);
     }
@@ -186,6 +191,9 @@ unique_ptr<Action> Input::parseAction(int c, int n) { // TODO: multiplier
             case ActionType::TEXT_EDIT: return make_unique<TextEdit>(textEditMap.at(c), n);
             // get search later
             case ActionType::SEARCH: return make_unique<Search>(searchMap.at(c), n);
+            case ActionType::E_SEARCH: 
+                return make_unique<ESearch>(c == 'n' ? ESearchType::REPEAT 
+                    : ESearchType::REPEAT_OPP, n);
             default: return unique_ptr<Action>{};
         }
     } catch (out_of_range &e) {
@@ -212,46 +220,39 @@ unique_ptr<Action> Input::action(Incomplete *a) {
     
     switch (a->getValue()) {
         case IncType::UNKNOWN: {
-            if (c == KEY_BACKSPACE) throw ClearCmd{};
-            if ('0' <= c && c <= '9') {
-                a->addFragment(static_cast<char>(c));
-                throw UpdateCmd{};
-            } else if (c == 'c' || c == 'd' || c == 'y') {
-                return make_unique<Incomplete>(IncType::STATIC, 
-                    static_cast<char>(c), stoi(a->getFragment()));
-            } else {
-                return parseAction(c, stoi(a->getFragment()));
+            switch (c) {
+                case KEY_BACKSPACE: throw ClearCmd{};
+                case '/':
+                case '?':
+                    return make_unique<Incomplete>(IncType::EXEC,
+                        static_cast<char>(c), stoi(a->getFragment()));
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    a->addFragment(static_cast<char>(c));
+                    throw UpdateCmd{};
+                case 'c':
+                case 'd':
+                case 'y':
+                case 'f':
+                case 'F':
+                    return make_unique<Incomplete>(IncType::STATIC, 
+                        static_cast<char>(c), stoi(a->getFragment()));
+                default: return parseAction(c, stoi(a->getFragment()));
             }
         }
         case IncType::EXEC: {
-            if (c == 10 || c == 13) {
-                if (a->getFragment().size() > 1) {
-                    if (a->getFragment() == ":$") {
-                        return make_unique<EMovement>(EMvtType::BOTTOM);
-                    } else if (a->getFragment()[1] == 'r') {
-                        if (a->getFragment().size() > 2 && a->getFragment()[2] != ' ') throw BadEntry{a->getFragment()};
-                        return make_unique<FileOp>(FileOpType::INSERT, a->getFragment().substr(3));
-                    }
-                    try {
-                        int lineNum = stoi(a->getFragment().substr(1, a->getFragment().size() - 1));
-                        if (lineNum == 0) {
-                            return make_unique<EMovement>(EMvtType::TOP);
-                        }
-                        return make_unique<EMovement>(EMvtType::LINE_NUM, lineNum);
-                    } catch (invalid_argument &e) { }
-                }
-                try {
-                    // can only be some file write thing
-                    vector<string> inputs;
-                    string input;
-                    istringstream ss{a->getFragment()};
-                    while (getline(ss, input, ' ')) inputs.push_back(input);
-                    if (inputs.size() == 1) return make_unique<FileOp>(fileOpMap.at(inputs.front()));
-                    else if (inputs.size() == 2) return make_unique<FileOp>(fileOpMap.at(inputs.front()), inputs.back());
-                    throw BadEntry{a->getFragment()};
-                }
-                catch (out_of_range &e) {
-                    throw BadEntry{a->getFragment()};
+        if (c == 10 || c == 13) {
+                if (a->getFragment()[0] == ':') {
+                    return parseExec(a);
+                } else {
+                    return parseSearch(a);
                 }
             } else if (c == KEY_BACKSPACE) {
                 if (a->getFragment().size() == 1) throw ClearCmd{};
@@ -265,6 +266,14 @@ unique_ptr<Action> Input::action(Incomplete *a) {
         }
         case IncType::STATIC: {
             if (c == KEY_BACKSPACE) throw ClearCmd{};
+            if (a->getFragment()[0] == 'f' || a->getFragment()[0] == 'F') {
+                if (32 <= c && c < 127) {
+                    return make_unique<Search>(
+                        a->getFragment()[0] == 'f' ? SearchType::NEXT_CHAR : SearchType::PREV_CHAR,
+                        a->getMult(), c
+                    );
+                }
+            }
             if (c == a->getFragment()[0]) {
                 switch (c) {
                     case 'c': return make_unique<Insert>(InsType::CH_LINE, a->getMult());
@@ -294,11 +303,42 @@ unique_ptr<Action> Input::action(Incomplete *a) {
     return unique_ptr<Action>{};
 }
 
-unique_ptr<Action> Input::action(ESearch *a) {
-    return unique_ptr<ESearch>();
+unique_ptr<Action> Input::parseExec(Incomplete *a) {
+    if (a->getFragment().size() > 1) {
+        if (a->getFragment() == ":$") {
+            return make_unique<EMovement>(EMvtType::BOTTOM);
+        } else if (a->getFragment()[1] == 'r') {
+            if (a->getFragment().size() > 2 && a->getFragment()[2] != ' ') throw BadEntry{a->getFragment()};
+            return make_unique<FileOp>(FileOpType::INSERT, a->getFragment().substr(3));
+        }
+        try {
+            int lineNum = stoi(a->getFragment().substr(1, a->getFragment().size() - 1));
+            if (lineNum == 0) {
+                return make_unique<EMovement>(EMvtType::TOP);
+            }
+            return make_unique<EMovement>(EMvtType::LINE_NUM, lineNum);
+        } catch (invalid_argument &e) { }
+    }
+    try {
+        // can only be some file write thing
+        vector<string> inputs;
+        string input;
+        istringstream ss{a->getFragment()};
+        while (getline(ss, input, ' ')) inputs.push_back(input);
+        if (inputs.size() == 1) return make_unique<FileOp>(fileOpMap.at(inputs.front()));
+        else if (inputs.size() == 2) return make_unique<FileOp>(fileOpMap.at(inputs.front()), inputs.back());
+        throw BadEntry{a->getFragment()};
+    }
+    catch (out_of_range &e) {
+        throw BadEntry{a->getFragment()};
+    }
 }
 
-unique_ptr<Action> Input::action(Search *a) {
-    return unique_ptr<Search>();
+unique_ptr<Action> Input::parseSearch(Incomplete *a) {
+    if (a->getFragment().size() == 1) return unique_ptr<Action>{};
+
+    return make_unique<ESearch>(a->getFragment()[0] == '/' ?
+        ESearchType::NEW_FWD_SEARCH : ESearchType::NEW_PREV_SEARCH,
+        a->getMult(), a->getFragment().substr(1));
 }
 }

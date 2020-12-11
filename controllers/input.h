@@ -31,7 +31,8 @@ private:
         INS,
         REPLACE,
         TEXT_EDIT,
-        SEARCH
+        SEARCH,
+        E_SEARCH
     };
     
     map<int, ActionType> actionCharMap;
@@ -49,10 +50,10 @@ public:
 protected:
     std::unique_ptr<Action> action() override;
     std::unique_ptr<Action> action(Incomplete *a) override;
-    std::unique_ptr<Action> action(ESearch *a) override;
-    std::unique_ptr<Action> action(Search *a) override;
 private:
     std::unique_ptr<Action> parseAction(int c, int n);
+    std::unique_ptr<Action> parseExec(Incomplete *a);
+    std::unique_ptr<Action> parseSearch(Incomplete *a);
 };
 }
 
