@@ -57,6 +57,8 @@ public:
     Row changeLine(int y);
     void replaceLine(const Row &row, int y);
     
+    char replaceChar(char c, int y, int x);
+    
     void newLine(int y, int x);
     void newLine(int y);
     

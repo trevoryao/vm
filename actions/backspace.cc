@@ -14,7 +14,7 @@ Backspace::Backspace(const std::string &s, int y, int x1) : y{y}, x1{x1} {
     for (auto &c : s) buffer.push_back(c);
 }
 
-void Backspace::addEvent(char c, int x) { 
+void Backspace::addEvent(char c, char, int x) { 
     buffer.push_front(c);
     x2 = x; 
 }

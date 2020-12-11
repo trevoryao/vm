@@ -4,7 +4,8 @@ EXEC = vm
 OBJECTS = actions/action.o actions/add.o actions/backspace.o actions/buffer.o \
 	actions/e-movement.o actions/e-search.o actions/file-op.o \
 	actions/global.o actions/incomplete.o actions/insert.o \
-	actions/keyboard.o actions/movement.o actions/replace.o actions/scroll.o \
+	actions/keyboard.o actions/movement.o actions/replace-buf.o \
+	actions/replace.o actions/scroll.o \
 	actions/search.o actions/text-edit.o controllers/controller-base.o \
 	controllers/input.o controllers/key-input.o exceptions/bad-entry.o \
 	exceptions/display-message.o exceptions/display-warning.o \

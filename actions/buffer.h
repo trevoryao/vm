@@ -11,7 +11,7 @@ public:
     Buffer();
     
     virtual bool canAdd(KeyType value) = 0;
-    virtual void addEvent(char c, int x) = 0;
+    virtual void addEvent(char c, char r, int x) = 0;
 };
 }
 

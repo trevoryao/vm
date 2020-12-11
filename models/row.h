@@ -21,6 +21,7 @@ public:
     void resize(int maxX);
     
     const char &operator[](size_t i) const;
+    char &operator[](size_t i);
     
     Row &operator+(const Row &other);
     

@@ -1,7 +1,6 @@
 #include "add.h"
 
 #include <string>
-#include <utility>
 
 #include "buffer.h"
 #include "keyboard.h"
@@ -15,7 +14,7 @@ Add::Add(char c, int y, int x) : y{y}, x1{x}, buffer(1, c) { }
 
 Add::Add(const std::string &s, int y, int x) : y{y}, x1{x}, buffer{s} { }
 
-void Add::addEvent(char c, int x) { 
+void Add::addEvent(char c, char, int x) { 
     buffer.push_back(c);
     x2 = x; 
 }

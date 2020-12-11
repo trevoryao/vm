@@ -22,7 +22,7 @@ public:
     Add(char c, int y, int x);
     Add(const std::string &s, int y, int x);
     
-    void addEvent(char c, int x) override;
+    void addEvent(char c, char, int x) override;
     
     bool canAdd(KeyType value) override;
     

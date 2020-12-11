@@ -48,20 +48,14 @@ unique_ptr<Action> KeyInput::action() {
     if (' ' <= c && c <= '~') {
         return make_unique<Keyboard>(KeyType::ALPHA_NUM, c);
     }
-    /*
-    try {
-        return make_unique<Keyboard>(keyMap.at(c));
-    } catch (out_of_range &e) {
-        return unique_ptr<Keyboard>{};
-    }*/
     try {
         switch (actionMap.at(c)) {
             case ActionType::KEY: return make_unique<Keyboard>(keyMap.at(c));
             case ActionType::MVT: return make_unique<Movement>(mvtMap.at(c));
         }
     } catch (out_of_range &e) {
-        return unique_ptr<Keyboard>{};
+        return unique_ptr<Action>{};
     }
-    return unique_ptr<Keyboard>{};
+    return unique_ptr<Action>{};
 }
 }

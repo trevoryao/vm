@@ -25,6 +25,10 @@ const char &Row::operator[](size_t i) const {
     return rows[i / width][i % width];
 }
 
+char &Row::operator[](size_t i) {
+    return rows[i / width][i % width];
+}
+
 Row &Row::operator+(const Row &other) {
     // always go off own width
     std::string s = other.toString();

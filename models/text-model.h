@@ -11,8 +11,6 @@
 #include "text.h"
 #include "undo.h"
 
-enum class ModeType;
-
 namespace actions {
 class EMovement;
 class ESearch;
@@ -29,6 +27,8 @@ class TextEdit;
 }
 
 namespace models {
+enum class ModeType;
+
 class TextModel final : public ModelBase {
 private:
     Text text;

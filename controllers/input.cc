@@ -57,7 +57,7 @@ Input::Input() :
         // {'c', ActionType::INS},
         {'S', ActionType::INS},
         {'s', ActionType::INS},
-        {'r', ActionType::REPLACE},
+        // {'r', ActionType::REPLACE},
         {'R', ActionType::REPLACE},
         {'r', ActionType::REPLACE},
         // {'d', ActionType::TEXT_EDIT},
@@ -69,8 +69,8 @@ Input::Input() :
         {'.', ActionType::TEXT_EDIT},
         // {'y', ActionType::TEXT_EDIT},
         {'J', ActionType::TEXT_EDIT},
-        {'f', ActionType::SEARCH},
-        {'F', ActionType::SEARCH},
+        // {'f', ActionType::SEARCH},
+        // {'F', ActionType::SEARCH},
         {';', ActionType::SEARCH},
         {'n', ActionType::E_SEARCH},
         {'N', ActionType::E_SEARCH}
@@ -103,7 +103,7 @@ Input::Input() :
         {'s', InsType::CH}
     },
     replaceMap{
-        {'r', ReplaceType::RPL_UNDER},
+        // {'r', ReplaceType::RPL_UNDER},
         {'R', ReplaceType::RPL}
     },
     fileOpMap{
@@ -132,14 +132,14 @@ Input::Input() :
         {'J', TextEditType::JOIN}
     },
     searchMap{
-        {'f', SearchType::NEXT_CHAR},
-        {'F', SearchType::PREV_CHAR},
+        // {'f', SearchType::NEXT_CHAR},
+        // {'F', SearchType::PREV_CHAR},
         {';', SearchType::REPEAT_CHAR},
         
     },
     eSearchMap{
-        {'/', ESearchType::NEW_FWD_SEARCH},
-        {'?', ESearchType::NEW_PREV_SEARCH},
+        // {'/', ESearchType::NEW_FWD_SEARCH},
+        // {'?', ESearchType::NEW_PREV_SEARCH},
         {'n', ESearchType::REPEAT},
         {'N', ESearchType::REPEAT_OPP}
     },
@@ -175,6 +175,7 @@ unique_ptr<Action> Input::action() {
         case 'y':
         case 'f':
         case 'F':
+        case 'r':
             return make_unique<Incomplete>(IncType::STATIC, static_cast<char>(c));
         default: return parseAction(c, 1);
     }
@@ -189,7 +190,6 @@ unique_ptr<Action> Input::parseAction(int c, int n) { // TODO: multiplier
             case ActionType::INS: return make_unique<Insert>(insMap.at(c), n);
             case ActionType::REPLACE: return make_unique<Replace>(replaceMap.at(c), n);
             case ActionType::TEXT_EDIT: return make_unique<TextEdit>(textEditMap.at(c), n);
-            // get search later
             case ActionType::SEARCH: return make_unique<Search>(searchMap.at(c), n);
             case ActionType::E_SEARCH: 
                 return make_unique<ESearch>(c == 'n' ? ESearchType::REPEAT 
@@ -242,6 +242,7 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                 case 'y':
                 case 'f':
                 case 'F':
+                case 'r':
                     return make_unique<Incomplete>(IncType::STATIC, 
                         static_cast<char>(c), stoi(a->getFragment()));
                 default: return parseAction(c, stoi(a->getFragment()));
@@ -272,6 +273,11 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                         a->getFragment()[0] == 'f' ? SearchType::NEXT_CHAR : SearchType::PREV_CHAR,
                         a->getMult(), c
                     );
+                }
+            }
+            else if (a->getFragment()[0] == 'r') {
+                if (32 <= c && c < 127) {
+                    return make_unique<Replace>(ReplaceType::RPL_UNDER, c, a->getMult());
                 }
             }
             if (c == a->getFragment()[0]) {

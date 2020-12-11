@@ -1,7 +1,6 @@
-#ifndef __BACKSPACE_H__
-#define __BACKSPACE_H__
+#ifndef __REPLACE_BUF_H__
+#define __REPLACE_BUF_H__
 
-#include <list>
 #include <string>
 
 #include "buffer.h"
@@ -10,19 +9,18 @@ namespace models {
 class TextModel;
 }
 
-// group of text
 namespace actions {
 enum class KeyType;
 
-class Backspace final : public Buffer {
+class ReplaceBuf final : public Buffer {
 private:
     int y, x1, x2;
-    std::list<char> buffer;
+    std::string original;
+    std::string replacement;
 public:
-    Backspace(char c, int y, int x1);
-    Backspace(const std::string &s, int y, int x1);
+    ReplaceBuf(char r, char c, int y, int x);
     
-    void addEvent(char c, char, int x) override;
+    void addEvent(char r, char c, int x) override;
     
     bool canAdd(KeyType value) override;
     

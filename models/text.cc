@@ -141,6 +141,12 @@ void Text::replaceLine(const Row &row, int y) {
     text[y] = row;
 }
 
+char Text::replaceChar(char c, int y, int x) {
+    char orig = text[y][x];
+    text[y][x] = c;
+    return orig;
+}
+
 Row Text::delLine(int y) {
     Row r = *(text.begin() + y);
     text.erase(text.begin() + y);
