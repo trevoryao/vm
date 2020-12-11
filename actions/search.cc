@@ -18,7 +18,7 @@ void Search::execAction(TextModel &t) {
     switch (getValue()) {
         case SearchType::REPEAT_CHAR: {
             auto *last = t.getSearch().getSearch();
-            if (!last) break;
+            if (!last) return;
             if (last->getValue() == SearchType::NEXT_CHAR) {
                 t.getSearch().searchFwd(y, x, last->search, getMult());
             } else {

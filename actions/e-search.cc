@@ -25,7 +25,7 @@ void ESearch::execAction(models::TextModel &t) {
     switch (getValue()) {
         case ESearchType::REPEAT: {
             auto *last = t.getSearch().getESearch();
-            if (!last) break;
+            if (!last) return;
             if (last->getValue() == ESearchType::NEW_FWD_SEARCH) {
                 if (!t.getSearch().searchFwd(y, x, last->search, getMult(), cycles)) {
                     throw DisplayWarning{"Pattern not found: " + last->search};
@@ -40,7 +40,7 @@ void ESearch::execAction(models::TextModel &t) {
         }
         case ESearchType::REPEAT_OPP: {
             auto *last = t.getSearch().getESearch();
-            if (!last) break;
+            if (!last) return;
             if (last->getValue() == ESearchType::NEW_FWD_SEARCH) {
                 if (!t.getSearch().searchBwd(y, x, last->search, getMult(), cycles)) {
                     throw DisplayWarning{"Pattern not found: " + last->search};
