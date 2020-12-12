@@ -11,6 +11,7 @@ namespace models {
 class Text final {
 private:
     int topLine, botLine, width;
+    bool cpp;
     File file;
     std::vector<Row> text;
 public:
@@ -22,6 +23,8 @@ public:
     const std::vector<Row> &getTextFile();
     
     bool hasFile();
+    
+    bool isCpp();
     
     int getTopLine();
     int getBotLine();
@@ -66,6 +69,9 @@ public:
     
     void scrollUp(int n);
     void scrollDown(int n);
+
+    std::vector<std::string> getFullLines();
+    std::string getPreText();
 };
 }
 

@@ -45,6 +45,34 @@ void Window::writeStr(const std::string &s, int y, int x) {
     mvwaddstr(window, y, x, s.c_str());
 }
 
+void Window::writePurple(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(PURPLE));
+}
+
+void Window::writeOrange(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(ORANGE));
+}
+
+void Window::writeGreen(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(GREEN));
+}
+
+void Window::writeEmphGreen(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(EMPH_GREEN));
+}
+
+void Window::writeBlue(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(BLUE));
+}
+
+void Window::writeYellow(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(YELLOW));
+}
+
+void Window::writeTurq(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(TURQ));
+}
+
 void Window::writeFill(int y) {
     mvwaddch(window, y, 0, '~' | COLOR_PAIR(FILL));
 }

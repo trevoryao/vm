@@ -11,7 +11,10 @@ using namespace exceptions;
 using namespace std;
 
 namespace models {
-Text::Text(const string &fileName, int maxY, int maxX) : topLine{0}, width{maxX}, file{fileName} {
+Text::Text(const string &fileName, int maxY, int maxX) : topLine{0}, width{maxX}, 
+    cpp{(fileName.size() > 2 && fileName.back() == 'h') ||
+    (fileName.size() > 3 && fileName.substr(fileName.size() - 2) == "cc")},
+    file{fileName} {
     try {
         vector<string> data = file.read();
         
@@ -27,11 +30,18 @@ Text::Text(const string &fileName, int maxY, int maxX) : topLine{0}, width{maxX}
 }
 
 const string &Text::getFileName() { return file.getName(); }
-void Text::setFileName(const string &fileName) { file.setName(fileName); }
+
+void Text::setFileName(const string &fileName) { 
+    file.setName(fileName);
+    cpp = (fileName.size() > 2 && fileName.back() == 'h') ||
+        (fileName.size() > 3 && fileName.substr(fileName.size() - 2) == "cc");
+}
 
 const vector<Row> &Text::getTextFile() { return text; }
 
 bool Text::hasFile() { return getFileName().size() != 0; }
+
+bool Text::isCpp() { return cpp; }
 
 int Text::getTopLine() { return topLine; }
 int Text::getBotLine() { return botLine; }
@@ -198,5 +208,26 @@ size_t Text::height() {
     size_t size = 0;
     for (auto &row : text) size += row.getHeight();
     return size;
+}
+
+vector<string> Text::getFullLines() {
+    vector<string> lines;
+    lines.reserve(botLine - topLine);
+    
+    string l;
+    
+    for (int i = topLine; i <= botLine; ++i) {
+        lines.push_back(text[i].toString());
+    }
+    
+    return lines;
+}
+
+string Text::getPreText() {
+    string preText;
+    for (int i = 0; i <= botLine; ++i) {
+        preText.append(text[i].toString());
+    }
+    return preText;
 }
 }

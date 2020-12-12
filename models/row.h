@@ -9,6 +9,7 @@
 
 namespace models {
 class Row final {
+    friend class Text;
 private:
     int width;
     std::vector<std::string> rows;

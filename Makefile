@@ -11,8 +11,8 @@ OBJECTS = actions/action.o actions/add.o actions/backspace.o actions/buffer.o \
 	exceptions/display-message.o exceptions/display-warning.o \
 	models/clipboard.o models/file.o models/model-base.o \
 	models/move.o models/register.o models/row.o models/text-model.o \
-	models/text-search.o \
-	models/text.o models/undo.o ui/window.o ui/graphics.o views/status-view.o \
+	models/text-search.o models/text.o models/undo.o \
+	ui/graphics.o ui/syntax.o ui/window.o views/status-view.o \
 	views/text-view.o views/view-base.o vm.o
 DEPENDS = ${OBJECTS:.o=.d}
 

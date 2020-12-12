@@ -3,13 +3,15 @@
 
 #include <string>
 
-#include "../models/text-model.h"
 #include "view-base.h"
+#include "../models/text-model.h"
+#include "../ui/syntax.h"
 
 namespace views {
 class TextView final : public ViewBase {
 private:
     models::TextModel &instance;
+    ui::Syntax syntax;
 public:
     TextView(models::TextModel &instance);
     

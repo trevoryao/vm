@@ -37,9 +37,7 @@ using namespace std;
 namespace models {
 TextModel::TextModel(const string &fileName) :
     text{fileName, getmaxy(stdscr), getmaxx(stdscr)}, search{text}, move{text},
-    mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true},
-    cpp{(fileName.size() > 2 && fileName.back() == 'h') ||
-    (fileName.size() > 3 && fileName.substr(fileName.size() - 2) == "cc")} {
+    mode{ModeType::CMD}, curY{0}, curX{0}, runLoop{true} {
 
     addView(make_unique<views::StatusView>(*this));
     addInputController(make_unique<controllers::Input>());
@@ -54,8 +52,6 @@ TextSearch &TextModel::getSearch() { return search; }
 Move &TextModel::getMove() { return move; }
 Undo &TextModel::getUndo() { return undo; }
 Clipboard &TextModel::getClipboard() { return clipboard; }
-
-bool TextModel::isCpp() { return cpp; }
 
 void TextModel::getCursor(int &y, int &x) {
     y = curY;

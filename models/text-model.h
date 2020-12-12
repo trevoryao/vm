@@ -50,8 +50,6 @@ public:
     Undo &getUndo();
     Clipboard &getClipboard();
     
-    bool isCpp();
-    
     void getCursor(int &y, int &x);
     void moveAllCursor(int y, int x);
     

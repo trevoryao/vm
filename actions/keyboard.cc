@@ -32,7 +32,7 @@ void Keyboard::execAction(models::TextModel &t) {
                 c = t.getText().replaceChar(key, y, x);
             }
             
-            if (t.isCpp() && t.getMode() == ModeType::INSERT) {
+            if (t.getText().isCpp() && t.getMode() == ModeType::INSERT) {
                 switch (key) {
                     case '{': t.getText().insert('}', y, x + 1); break;
                     case '[': t.getText().insert(']', y, x + 1); break;
