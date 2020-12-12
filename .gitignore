@@ -40,3 +40,6 @@
 
 # binaries
 vm
+
+# submit script
+submit.sh 
