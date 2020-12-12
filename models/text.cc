@@ -190,7 +190,7 @@ void Text::newLine(int y) {
 }
 
 void Text::indent(int y, int x) {
-    text[y].indent();
+    text[y].indent(x);
 }
 
 void Text::scrollUp(int lines) {

@@ -38,7 +38,7 @@ public:
     void insert(int x, const Row &row);
     
     void append(char c);
-    void indent();
+    void indent(int x);
     
     void popBack();
     

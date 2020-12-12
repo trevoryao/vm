@@ -79,7 +79,7 @@ void TextView::moveCursor(int y, int x) {
     
     bY = y;
     bX = x;
-    if (bracket = instance.getText().getMatchingBracket(bY, bX)) {
+    if ((bracket = instance.getText().getMatchingBracket(bY, bX))) {
         instance.getText().getWindowCursor(bY, bX);
         window.writeBracketPair(bracket, bY, bX);
     }

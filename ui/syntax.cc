@@ -127,7 +127,8 @@ void Syntax::print(size_t maxY) {
     string preText = t.getPreText();
     regex r{"(\\w+\\s+)?(\\w+\\s+)?(\\w+(\\s+|\\s?(\\*|&)\\s?))([a-zA-Z_]\\w*)"};
     smatch m;
-    ids = unordered_set<string>{sregex_token_iterator{preText.begin(), preText.end(), r, 6}, sregex_token_iterator{}};
+    ids = unordered_set<string>{sregex_token_iterator{preText.begin(), preText.end(), r, 6}, 
+        sregex_token_iterator{}};
     
     vector<string> lines = t.getFullLines();
     while (y < lines.size()) {
@@ -245,7 +246,7 @@ void Syntax::print(size_t maxY) {
                     ++x;
                 }
                 
-            } else if (c == '#' && (line[x + 1] == ' ' || line[x + 1] == '\t')) {
+            } else if (c == '#') {
                 // preprocessor
                 // print entire line in colour
                 for (; x < line.size(); ++x) {

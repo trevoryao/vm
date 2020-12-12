@@ -85,14 +85,8 @@ void Row::append(char c) {
     }
 }
 
-void Row::indent() {
-    rows[0] = std::string(INDENT_SIZE, ' ') + rows[0];
-    std::string overflow;
-    for (auto &row : rows) {
-        row = overflow + row;
-        overflow = (static_cast<size_t>(width) < row.size()) ? row.substr(width) : "";
-        row = row.substr(0, width);
-    }
+void Row::indent(int x) {
+    insert(x, std::string(INDENT_SIZE, ' '));
 }
 
 void Row::popBack() { rows[rows.size() - 1].pop_back(); }
