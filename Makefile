@@ -17,7 +17,7 @@ OBJECTS = actions/action.o actions/add.o actions/backspace.o actions/buffer.o \
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${OBJECTS} -o ${EXEC} -lncurses 
+	${CXX} ${OBJECTS} -o ${EXEC} -lncurses
 
 -include ${DEPENDS}
 

@@ -54,7 +54,7 @@ void TextView::displayInfo() {
     int l = (getMaxHeight() - aboutText.size()) / 2;
     for (auto &s : aboutText) {
         int c = (getMaxWidth() - s.size()) / 2;
-        window.writeStr(s, l++, c);
+        window.writeInfoStr(s, l++, c);
     }
     
     moveCursor(y, x);
@@ -71,7 +71,12 @@ void TextView::resizeView() {
 int TextView::getMaxHeight() { return getmaxy(window.get()); }
 int TextView::getMaxWidth() { return getmaxx(window.get()); }
 
-void TextView::moveCursor(int y, int x) { 
+void TextView::moveCursor(int y, int x) {
+    int bY = y, bX = x;
+    if (char b = instance.getText().getMatchingBracket(bY, bX)) {
+        instance.getText().getWindowCursor(bY, bX);
+        window.writeBracketPair(b, bY, bX);
+    }
     instance.getText().getWindowCursor(y, x);
     window.move(y - instance.getText().getTopLine(), x); 
     window.refresh(); 

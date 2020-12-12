@@ -30,6 +30,8 @@ public:
     void writeStr(const std::string &s);
     void writeStr(const std::string &s, int y, int x);
     
+    void writeInfoStr(const std::string &s, int y, int x);
+    
     void writePurple(char c, int y, int x);
     void writeOrange(char c, int y, int x);
     void writeGreen(char c, int y, int x);
@@ -37,6 +39,8 @@ public:
     void writeBlue(char c, int y, int x);
     void writeYellow(char c, int y, int x);
     void writeTurq(char c, int y, int x);
+    
+    void writeBracketPair(char c, int y, int x);
     
     void writeFill(int y);
     void writeWarning(const std::string &s, int y, int x);

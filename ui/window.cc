@@ -45,6 +45,12 @@ void Window::writeStr(const std::string &s, int y, int x) {
     mvwaddstr(window, y, x, s.c_str());
 }
 
+void Window::writeInfoStr(const std::string &s, int y, int x) { 
+    wattron(window, COLOR_PAIR(PANTONE_BLUE));
+    writeStr(s, y, x);
+    wattroff(window, COLOR_PAIR(PANTONE_BLUE));
+}
+
 void Window::writePurple(char c, int y, int x) {
     mvwaddch(window, y, x, c | COLOR_PAIR(PURPLE));
 }
@@ -71,6 +77,10 @@ void Window::writeYellow(char c, int y, int x) {
 
 void Window::writeTurq(char c, int y, int x) {
     mvwaddch(window, y, x, c | COLOR_PAIR(TURQ));
+}
+
+void Window::writeBracketPair(char c, int y, int x) {
+    mvwaddch(window, y, x, c | COLOR_PAIR(EMPH_BRACKET));
 }
 
 void Window::writeFill(int y) {
