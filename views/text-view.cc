@@ -72,10 +72,16 @@ int TextView::getMaxHeight() { return getmaxy(window.get()); }
 int TextView::getMaxWidth() { return getmaxx(window.get()); }
 
 void TextView::moveCursor(int y, int x) {
-    int bY = y, bX = x;
-    if (char b = instance.getText().getMatchingBracket(bY, bX)) {
+    if (bracket) {
+        window.writeChar(bracket, bY, bX);
+        bracket = 0;
+    }
+    
+    bY = y;
+    bX = x;
+    if (bracket = instance.getText().getMatchingBracket(bY, bX)) {
         instance.getText().getWindowCursor(bY, bX);
-        window.writeBracketPair(b, bY, bX);
+        window.writeBracketPair(bracket, bY, bX);
     }
     instance.getText().getWindowCursor(y, x);
     window.move(y - instance.getText().getTopLine(), x); 

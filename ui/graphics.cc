@@ -16,6 +16,7 @@ Graphics::Graphics() {
     start_color();
     use_default_colors();
     init_pair(DEFAULT, DEFAULT_COLOUR, DEFAULT_COLOUR); // default text;
+    init_color(COLOR_WHITE, 1000, 1000, 1000);
     init_pair(WARNING, COLOR_WHITE, COLOR_RED); // warnings
     init_color(FILL_COLOUR, 820, 576, 902);
     init_pair(FILL, FILL_COLOUR, DEFAULT_COLOUR);
@@ -33,6 +34,10 @@ Graphics::Graphics() {
     init_pair(TURQ, COLOUR_TURQ, DEFAULT_COLOUR);
     init_color(COLOUR_EMPH_GREEN, 24, 349, 24);
     init_pair(EMPH_GREEN, COLOUR_EMPH_GREEN, DEFAULT_COLOUR);
+    init_color(COLOUR_EMPH_BRACKET, 4, 898, 902);
+    init_pair(EMPH_BRACKET, COLOR_WHITE, COLOUR_EMPH_BRACKET);
+    init_color(COLOUR_PANTONE_BLUE, 59, 298, 506);
+    init_pair(PANTONE_BLUE, COLOUR_PANTONE_BLUE, DEFAULT_COLOUR);
 }
 
 Graphics::~Graphics() { endwin(); }

@@ -275,6 +275,7 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                         a->getMult(), c
                     );
                 }
+                break;
             }
             else if (a->getFragment()[0] == 'r') {
                 if (32 <= c && c < 127) {
@@ -289,17 +290,21 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                     default: break;
                 }
             }
+            else if ('0' <= c && c <= '9') {
+                a->addFragment(c);
+                throw UpdateCmd{};
+            }
             try {
                 switch (a->getFragment()[0]) {
                     case 'c': 
                         return make_unique<Insert>(InsType::CH_MVT, 1, 
-                            make_unique<Movement>(mvtMap.at(c), a->getMult()));
+                            make_unique<Movement>(mvtMap.at(c), stoi(a->getFragment().substr(1)) * a->getMult()));
                     case 'd': 
                         return make_unique<TextEdit>(TextEditType::DEL_MVT, 1,
-                            make_unique<Movement>(mvtMap.at(c), a->getMult()));
+                            make_unique<Movement>(mvtMap.at(c), stoi(a->getFragment().substr(1)) * a->getMult()));
                     case 'y': 
                         return make_unique<TextEdit>(TextEditType::YANK_MVT, 1,
-                            make_unique<Movement>(mvtMap.at(c), a->getMult()));
+                            make_unique<Movement>(mvtMap.at(c), stoi(a->getFragment().substr(1)) * a->getMult()));
                     default: break;
                 }
             } catch (out_of_range &e) {

@@ -72,6 +72,8 @@ public:
 
     std::vector<std::string> getFullLines();
     std::string getPreText();
+    
+    char getMatchingBracket(int &y, int &x);
 };
 }
 

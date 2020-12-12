@@ -10,6 +10,8 @@
 namespace views {
 class TextView final : public ViewBase {
 private:
+    char bracket;
+    int bY, bX;
     models::TextModel &instance;
     ui::Syntax syntax;
 public:

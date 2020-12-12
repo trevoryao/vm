@@ -10,6 +10,21 @@
 using namespace exceptions;
 using namespace std;
 
+namespace {
+inline bool isOpenB(char c) {
+    return c == '(' || c == '{' || c == '[';
+}
+
+inline bool isCloseB(char c) {
+    return c == ')' || c == '}' || c == ']';
+}
+
+inline bool isMatch(char c, char o) {
+    return (o == '(' && c == ')') || (o == '{' && c == '}') 
+        || (o == '[' && c == ']');
+}
+}
+
 namespace models {
 Text::Text(const string &fileName, int maxY, int maxX) : topLine{0}, width{maxX}, 
     cpp{(fileName.size() > 2 && fileName.back() == 'h') ||
@@ -88,7 +103,7 @@ bool Text::insertFile(const std::string &filePath, int y, int &height) {
             text.insert(text.begin() + y + j++, Row{line, width});
         }
 
-        height = j - 1;
+    height = j - 1;
     } catch (FileDNE &e) {
         return false;
     }
@@ -229,5 +244,44 @@ string Text::getPreText() {
         preText.append(text[i].toString());
     }
     return preText;
+}
+
+char Text::getMatchingBracket(int &y, int &x) {
+    vector<char> s{text[y][x]};
+    if (isOpenB(text[y][x])) {
+        ++x;
+        while (static_cast<size_t>(y) < text.size()) {
+            while (static_cast<size_t>(x) < text[y].size()) {
+                if (isOpenB(text[y][x])) {
+                    s.push_back(text[y][x]);
+                } else if (isCloseB(text[y][x])) {
+                    if (isMatch(text[y][x], s.back())) {
+                        s.pop_back();
+                        if (s.empty()) return text[y][x];
+                    }
+                }
+                ++x;
+            }
+            x = 0;
+            ++y;
+        }
+    } else if (isCloseB(text[y][x])) {
+        --x;
+        while (y >= 0) {
+            while (x >= 0) {
+                if (isOpenB(text[y][x])) {
+                    if (isMatch(s.back(), text[y][x])) {
+                        s.pop_back();
+                        if (s.empty()) return text[y][x];
+                    }
+                } else if (isCloseB(text[y][x])) {
+                    s.push_back(text[y][x]);
+                }
+                --x;
+            }
+            x = text[--y].size();
+        }
+    }
+    return 0;
 }
 }

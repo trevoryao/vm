@@ -140,7 +140,8 @@ void TextModel::run() {
             clearExecCmd();
             displayWarn("Invalid Command: " + e.getEntry());
         } catch (UpdateCmd &e) {
-            execCmd->execAction(*this);
+            if (execCmd) execCmd->execAction(*this);
+            if (staticCmd) staticCmd->execAction(*this);
         } catch (DisplayWarning &e) {
             clearExecCmd();
             displayWarn(e.getWarning());

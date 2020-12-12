@@ -12,6 +12,8 @@
 #define YELLOW 8
 #define TURQ 9
 #define EMPH_GREEN 10
+#define EMPH_BRACKET 11
+#define PANTONE_BLUE 12
 
 // colors
 #define DEFAULT_COLOUR -1
@@ -20,5 +22,7 @@
 #define COLOUR_ORANGE 10
 #define COLOUR_TURQ 11
 #define COLOUR_EMPH_GREEN 12
+#define COLOUR_EMPH_BRACKET 13
+#define COLOUR_PANTONE_BLUE 14
 
 #endif
