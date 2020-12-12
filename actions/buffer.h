@@ -9,6 +9,7 @@ enum class KeyType;
 class Buffer : public Action {
 public:
     Buffer();
+    virtual ~Buffer() = default;
     
     virtual bool canAdd(KeyType value) = 0;
     virtual void addEvent(char c, char r, int x) = 0;
