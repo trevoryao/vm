@@ -23,11 +23,8 @@ public:
     WINDOW *get() const noexcept;
     
     // void clear();
-
-    void writeChar(char c);
     void writeChar(char c, int y, int x);
     
-    void writeStr(const std::string &s);
     void writeStr(const std::string &s, int y, int x);
     
     void writeInfoStr(const std::string &s, int y, int x);
@@ -52,8 +49,6 @@ public:
     void clear(int y, int x);
     
     void move(int y, int x);
-    
-    std::pair<int, int> getCursor();
     
     void resize(int rows, int cols, int y, int x);
     

@@ -30,15 +30,8 @@ Window::operator bool() const { return window; }
 
 WINDOW *Window::get() const noexcept { return window; }
 
-void Window::writeChar(char c) { 
-    waddch(window, c);
-}
 void Window::writeChar(char c, int y, int x) { 
     mvwaddch(window, y, x, c);
-}
-
-void Window::writeStr(const std::string &s) { 
-    waddstr(window, s.c_str());
 }
 
 void Window::writeStr(const std::string &s, int y, int x) { 
@@ -106,12 +99,6 @@ void Window::clear() { wclear(window); }
 void Window::clear(int y, int x) { writeChar(' ', y, x); }
 
 void Window::move(int y, int x) { wmove(window, y, x); }
-
-pair<int, int> Window::getCursor() {
-    int y, x;
-    getyx(window, y, x);
-    return make_pair(y, x);
-}
 
 // may have to rewrite to delete and make new
 void Window::resize(int rows, int cols, int x, int y) { 

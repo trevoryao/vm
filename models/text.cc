@@ -142,20 +142,6 @@ char Text::backSpace(int y, int x) {
     }
 }
 
-char Text::del(int y, int x) {
-    if (static_cast<size_t>(y) == text.size() - 1 && 
-        static_cast<size_t>(x) == text[y].size() - 1) return -1;
-    
-    if (static_cast<size_t>(x) != text[y].size() - 1) {
-        return text[y].erase(x);
-    } else {
-        text[y].popBack();
-        text[y] = text[y] + text[y + 1];
-        text.erase(text.begin() + y + 1);
-        return '\n';
-    }
-}
-
 Row Text::changeLine(int y) {
     Row r = text[y];
     text[y].clear();

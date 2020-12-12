@@ -55,10 +55,6 @@ size_t Row::size() const {
     return size;
 }
 
-bool Row::isBlank() const {
-    return rows.size() == 1 && rows[0] == "\n";
-}
-
 void Row::getPos(int &y, int &x) {
     y = x / width;
     x = x % width;

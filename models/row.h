@@ -28,8 +28,6 @@ public:
     
     size_t getHeight() const;
     size_t size() const;
-
-    bool isBlank() const;
     
     void getPos(int &y, int &x);
     

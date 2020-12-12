@@ -52,7 +52,6 @@ public:
     void insert(Row &row, int y);
     
     char backSpace(int y, int x);
-    char del(int y, int x);
     
     char delChar(int y, int x); // at
     Row delLine(int y);

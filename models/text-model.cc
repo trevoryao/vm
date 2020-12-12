@@ -64,8 +64,6 @@ void TextModel::setStaticCmd(Incomplete *a) {
     moveCursor(curY, curX);
 }
 
-Incomplete *TextModel::getStaticCmd() { return staticCmd.get(); }
-
 void TextModel::clearStaticCmd() {
     staticCmd.reset();
     clearStaticView();

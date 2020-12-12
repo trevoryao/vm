@@ -77,10 +77,6 @@ void ModelBase::clearStaticView() {
     for (auto &v : views) v->clearStatic();
 }
 
-void ModelBase::updateView(std::string &s, int y, int x) {
-    for (auto &v : views) v->update(s, y, x);
-}
-
 void ModelBase::writeMessage(const std::string &s) {
     for (auto &v : views) v->writeMessage(s);
 }

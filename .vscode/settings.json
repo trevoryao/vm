@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.h": "cpp",
         "cctype": "cpp",
         "clocale": "cpp",
         "cmath": "cpp",
@@ -46,6 +47,20 @@
         "list": "cpp",
         "vector": "cpp",
         "iterator": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "__hash_table": "cpp",
+        "__locale": "cpp",
+        "__split_buffer": "cpp",
+        "__tree": "cpp",
+        "bitset": "cpp",
+        "filesystem": "cpp",
+        "iomanip": "cpp",
+        "locale": "cpp",
+        "map": "cpp",
+        "queue": "cpp",
+        "regex": "cpp",
+        "stack": "cpp",
+        "unordered_set": "cpp",
+        "ios": "cpp"
     }
 }

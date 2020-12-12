@@ -48,8 +48,6 @@ public:
     
     void writeMessage(const std::string &s);
     void writeMode(const std::string &s);
-    
-    void updateView(std::string &s, int y, int x);
 };
 }
 

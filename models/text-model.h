@@ -38,7 +38,7 @@ private:
     Clipboard clipboard;
     ModeType mode;
     int curY, curX;
-    bool runLoop, cpp;
+    bool runLoop;
     std::unique_ptr<Incomplete> staticCmd;
     std::unique_ptr<Incomplete> execCmd;
 public:
@@ -54,7 +54,6 @@ public:
     void moveAllCursor(int y, int x);
     
     void setStaticCmd(actions::Incomplete *a);
-    actions::Incomplete *getStaticCmd();
     void clearStaticCmd();
     
     void setExecCmd(actions::Incomplete *a);
@@ -71,8 +70,9 @@ public:
     void displayAllViews();
     void resizeText(int maxY, int maxX);
     
-    void displayWarn(const std::string &m);
     void displayName();
+private:
+    void displayWarn(const std::string &m);
     void displayPlainMsg(const std::string &m);
 };
 }
