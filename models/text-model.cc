@@ -146,11 +146,20 @@ void TextModel::run() {
         } catch (DisplayMessage &e) {
             displayPlainMsg(e.getMessage());
         }
+        
+        if (curY >= text.getTextFile().size()) {
+            curY = text.getTextFile().size() - 1;
+            if (curY < 0) curY = 0;
+        }
+        if (curX >= text.getTextFile()[curY].size() - 1) {
+            curX = text.getTextFile()[curY].size() - (mode == ModeType::CMD ? 2 : 1);
+            if (curX < 0) curX = 0;
+        }
 
         size_t newHeight = text.height();
         size_t winHeight = getHeight() - 1;
         if (height != newHeight && newHeight < winHeight) {
-            text.setBotLine(text.getTopLine() + newHeight);
+            text.setBotLine(text.getTopLine() + newHeight - 1);
             displayViews();
             moveAllCursor(curY, curX);
         } else if (height != newHeight && text.getBotLine() < static_cast<int>(winHeight)) {
@@ -207,7 +216,7 @@ void TextModel::moveAllCursor(int y, int x) {
         text.scrollUp(text.getTopLine() - y);
         displayAllViews();
     }
-    else if (y > text.getBotLine()) {
+    else if (text.height() >= getHeight() && y > text.getBotLine()) {
         text.scrollDown(y - text.getBotLine());
         displayAllViews();
     }

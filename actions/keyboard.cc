@@ -53,6 +53,7 @@ void Keyboard::execAction(models::TextModel &t) {
             break;
         }
         case KeyType::BACKSPACE: {
+            if (x == 0 && y == 0) break;
             if (t.getMode() == ModeType::REPLACE) {
                 if (x > 0) {
                     x = 0;

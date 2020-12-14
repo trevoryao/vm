@@ -161,6 +161,7 @@ char Text::replaceChar(char c, int y, int x) {
 Row Text::delLine(int y) {
     Row r = *(text.begin() + y);
     text.erase(text.begin() + y);
+    if (text.size() == 0) text.emplace_back("\n", width);
     return r;
 }
 
