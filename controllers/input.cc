@@ -227,6 +227,7 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                 case '?':
                     return make_unique<Incomplete>(IncType::EXEC,
                         static_cast<char>(c), stoi(a->getFragment()));
+                case '0':
                 case '1':
                 case '2':
                 case '3':
@@ -295,16 +296,18 @@ unique_ptr<Action> Input::action(Incomplete *a) {
                 throw UpdateCmd{};
             }
             try {
+                int mult = a->getFragment().size() > 1 ? stoi(a->getFragment().substr(1)) : 1;
+                
                 switch (a->getFragment()[0]) {
                     case 'c': 
                         return make_unique<Insert>(InsType::CH_MVT, 1, 
-                            make_unique<Movement>(mvtMap.at(c), stoi(a->getFragment().substr(1)) * a->getMult()));
+                            make_unique<Movement>(mvtMap.at(c), mult * a->getMult()));
                     case 'd': 
                         return make_unique<TextEdit>(TextEditType::DEL_MVT, 1,
-                            make_unique<Movement>(mvtMap.at(c), stoi(a->getFragment().substr(1)) * a->getMult()));
+                            make_unique<Movement>(mvtMap.at(c), mult * a->getMult()));
                     case 'y': 
                         return make_unique<TextEdit>(TextEditType::YANK_MVT, 1,
-                            make_unique<Movement>(mvtMap.at(c), stoi(a->getFragment().substr(1)) * a->getMult()));
+                            make_unique<Movement>(mvtMap.at(c), mult * a->getMult()));
                     default: break;
                 }
             } catch (out_of_range &e) {

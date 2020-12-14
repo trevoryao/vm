@@ -265,6 +265,7 @@ char Text::getMatchingBracket(int &y, int &x) {
                 }
                 --x;
             }
+            if (y <= 0) return 0;
             x = text[--y].size();
         }
     }

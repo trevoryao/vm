@@ -149,7 +149,11 @@ void TextModel::run() {
 
         size_t newHeight = text.height();
         size_t winHeight = getHeight() - 1;
-        if (height != newHeight && text.getBotLine() < static_cast<int>(winHeight)) {
+        if (height != newHeight && newHeight < winHeight) {
+            text.setBotLine(text.getTopLine() + newHeight);
+            displayViews();
+            moveAllCursor(curY, curX);
+        } else if (height != newHeight && text.getBotLine() < static_cast<int>(winHeight)) {
             text.setBotLine(text.getBotLine() + newHeight - height > winHeight - 1 ?
                 winHeight - 1 : text.getBotLine() + newHeight - height);
             displayViews();
