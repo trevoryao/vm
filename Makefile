@@ -1,5 +1,5 @@
 CXX = g++-5
-CXXFLAGS = -std=c++14 -Wall -MMD -g
+CXXFLAGS = -std=c++14 -MMD
 EXEC = vm
 OBJECTS = actions/action.o actions/add.o actions/backspace.o actions/buffer.o \
 	actions/e-movement.o actions/e-search.o actions/file-op.o \
