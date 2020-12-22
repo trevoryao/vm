@@ -1,4 +1,3 @@
-PREFIX = /usr/local
 CXX = g++-5
 CXXFLAGS = -std=c++14 -MMD
 EXEC = vm
@@ -28,9 +27,9 @@ clean:
 
 .PHONY: install
 install:
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp $< $(DESTDIR)$(PREFIX)/bin/vm
+	mkdir -p ${PREFIX}/bin
+	cp ./vm ${PREFIX}/bin
 
 .PHONY: uninstall
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/mygame
+	rm -f ${PREFIX}/bin/vm

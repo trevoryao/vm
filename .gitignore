@@ -34,12 +34,14 @@
 # submitted zip files
 *.zip
 
-# other
-*.mdj
-*.pdf
-
 # binaries
 vm
 
 # submit script
 submit.sh 
+
+# Makefile
+Makefile
+
+# tests 
+tests
