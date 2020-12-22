@@ -8,5 +8,13 @@ A F I J N O P R S X ^ $ 0 . ; / ?
 ```
 vm also has an unlimited undo history, as well as many quality of life emprovements over vim.
 
-Demo vm with vm C++ sourcecode:
+## Demo vm with vm C++ sourcecode
 ![Demo vm with vm C++ sourcecode](demoscreen.jpg)
+
+## Installation
+In order to run vm, the NCurses library and the gcc compiler are required to be installed, both of which are standard on most *nix distributions. The installation then proceeds as normal for most GNU software.
+```
+./configure
+make
+make install
+```
