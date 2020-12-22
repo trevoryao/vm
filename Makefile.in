@@ -29,7 +29,7 @@ clean:
 .PHONY: install
 install:
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-    cp $< $(DESTDIR)$(PREFIX)/bin/vm
+	cp $< $(DESTDIR)$(PREFIX)/bin/vm
 
 .PHONY: uninstall
 uninstall:
