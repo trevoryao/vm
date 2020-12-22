@@ -1,3 +1,4 @@
+PREFIX = /usr/local
 CXX = g++-5
 CXXFLAGS = -std=c++14 -MMD
 EXEC = vm
@@ -22,6 +23,14 @@ ${EXEC}: ${OBJECTS}
 -include ${DEPENDS}
 
 .PHONY: clean
-
 clean:
 	rm ${OBJECTS} ${DEPENDS}
+
+.PHONY: install
+install:
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+    cp $< $(DESTDIR)$(PREFIX)/bin/vm
+
+.PHONY: uninstall
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/mygame
